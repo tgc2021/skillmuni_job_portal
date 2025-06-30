@@ -1,0 +1,157 @@
+<app-header></app-header>
+
+<div class="dashboard-container">
+  <div class="header-with-arrow">
+    <h2 class="dashboard-header">
+      Hello <strong>[Company Name]</strong>, Manage your hiring here.
+    </h2>
+    <img src="assets/icons/long-arrow.png" alt="Arrow" class="orange-arrow-img" />
+  </div>
+
+  <div class="post-job-bar">
+    <div class="post-job-left">
+      <img src="assets/icons/post-job-icon.png" alt="Post Icon" />
+      <span class="post-job-text">Ready to Post a Job Today?</span>
+    </div>
+    <button class="post-job-button">
+      Post a Job
+      <span class="material-icons">arrow_forward</span>
+    </button>
+  </div>
+
+  <div class="dashboard-cards">
+    <div class="info-card" *ngFor="let card of infoCards">
+      <div class="info-card-top">
+        <span class="card-title">{{ card.title }}</span>
+        <img [src]="card.icon" alt="Card Icon" />
+      </div>
+      <div class="card-value">{{ card.value }}</div>
+    </div>
+  </div>
+
+  <div class="job-section-header">
+    <div>
+      <span [class.active-tab]="viewMode === 'all'" [class.inactive-tab]="viewMode !== 'all'"
+        (click)="setViewMode('all')">
+        All Job Postings (30)
+      </span>
+      &nbsp;|&nbsp;
+      <span [class.active-tab]="viewMode === 'saved'" [class.inactive-tab]="viewMode !== 'saved'"
+        (click)="setViewMode('saved')">
+        Saved Jobs (12)
+      </span>
+    </div>
+
+    <div>
+      <div class="sort-container" (clickOutside)="closeSortDropdown()">
+        <button 
+        class="sort-btn" 
+        [class.disabled-btn]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
+        [disabled]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
+        (click)="toggleSortDropdown()"
+      >
+        Sort ▼
+      </button>
+
+        <div class="sort-dropdown" *ngIf="sortDropdownOpen">
+          <label class="sort-option" *ngFor="let option of sortOptions" (click)="selectSortOption(option)">
+            <span class="sort-radio" [class.selected]="selectedSortOption === option">
+              <span class="dot" *ngIf="selectedSortOption === option"></span>
+            </span>
+            <span class="sort-label">{{ option }}</span>
+          </label>
+        </div>
+      </div>
+
+      <button 
+  class="view-all-btn" 
+  [class.disabled-btn]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
+  [disabled]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
+>
+  View All &gt;
+</button>
+    </div>
+  </div>
+
+  <!-- All Job Postings View -->
+  <div class="job-table" *ngIf="viewMode === 'all'">
+    <div class="table-header">
+      <span>No.</span>
+      <span>Job Title</span>
+      <span>Date Posted</span>
+      <span>Status</span>
+      <span>Expiration</span>
+      <span>Interview Rounds</span>
+      <span>Applied</span>
+      <span>Candidates</span>
+      <span>Edit</span>
+    </div>
+
+    <div class="table-row" *ngFor="let job of jobList; let i = index">
+      <span>{{ i + 1 }}.</span>
+      <span>{{ job.title }}</span>
+      <span>{{ job.datePosted }}</span>
+      <span>
+        <div class="status-dropdown" (click)="toggleDropdown(i)">
+          <span [ngClass]="job.statusClass" class="status-badge">{{ job.status }}</span>
+          <span class="arrow-icon">▾</span>
+        </div>
+        <div class="status-options" *ngIf="dropdownOpenIndex === i">
+          <label class="status-option" *ngFor="let option of statusOptions" (click)="changeStatus(i, option)">
+            <span class="status-radio" [class.selected]="job.status === option.label">
+              <span class="dot" *ngIf="job.status === option.label"></span>
+            </span>
+            <span [ngClass]="option.class">{{ option.label }}</span>
+          </label>
+        </div>
+      </span>
+      <span>{{ job.expiry }}</span>
+      <span>{{ job.rounds }}</span>
+      <span>{{ job.applied }}</span>
+      <span>
+        <button class="view-btn">View &gt;</button>
+      </span>
+      <span class="edit-actions">
+        <img src="assets/icons/edit-icon.png" alt="Edit" />
+      </span>
+    </div>
+  </div>
+
+  <!-- No Jobs View -->
+  <div class="empty-state" *ngIf="viewMode === 'all' && jobList.length === 0">
+    <img src="assets/icons/no-jobs-icon.png" alt="No Jobs" class="empty-state-icon" />
+    <h3 class="empty-title">No Jobs Yet? <span class="highlight">Let’s Fix That!</span></h3>
+    <p class="empty-subtext">
+      Start posting to list open roles and manage applications —
+      you’re just a few steps away.
+    </p>
+  </div>
+
+  <!-- Saved Jobs View -->
+  <div class="job-table saved-table" *ngIf="viewMode === 'saved'">
+    <div class="saved-table-header">
+      <span>No.</span>
+      <span>Job Title</span>
+      <span>Last Saved</span>
+      <span>Edit</span>
+      <span>Delete</span>
+    </div>
+
+    <div class="saved-table-row" *ngFor="let job of savedJobs; let i = index">
+      <span>{{ i + 1 }}.</span>
+      <span>{{ job.title }}</span>
+      <span>{{ job.savedDate }}</span>
+      <span><img src="assets/icons/edit-icon.png" alt="Edit" /></span>
+      <span><img src="assets/icons/delete-icon.png" alt="Delete" /></span>
+    </div>
+
+    <!-- Empty State for Saved Jobs -->
+    <div class="empty-state" *ngIf="viewMode === 'saved' && savedJobs.length === 0">
+      <img src="assets/icons/no-jobs-icon.png" alt="No Saved Jobs" class="empty-state-icon" />
+      <h3 class="empty-title">No Saved Jobs</h3>
+      <p class="empty-subtext">
+        You haven't saved any jobs yet. Bookmark jobs to view them here later.
+      </p>
+    </div>
+  </div>
+</div>

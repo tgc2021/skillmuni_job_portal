@@ -1,0 +1,230 @@
+<app-header></app-header>
+
+<div class="profile-wrapper">
+  <!-- Page Header -->
+  <div class="header">
+    <div class="title-container">
+      <h1>COMPANY PROFILE</h1>
+      <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
+      <h2>COMPLETE IT TO PROCEED! TAKES 5 MINS TOPS!</h2>
+    </div>
+    <img src="assets/icons/article-header-icon.png" alt="Category Icon" class="header-icon" />
+  </div>
+
+  <!-- Company Profile Card -->
+  <div class="profile-card-wrapper">
+    <div class="profile-card">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+        <!-- Row 1 -->
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>1. Company <span class="highlight">Name</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('companyName')?.invalid && profileForm.get('companyName')?.touched">
+                  *This name doesn’t look right.
+                </div>
+              </div>
+              <input formControlName="companyName" placeholder="Type in your Company Name here..." />
+            </div>
+            <div class="profile-field">
+              <label>2. Company <span class="highlight">Email</span></label>
+              <input type="email" formControlName="companyEmail" placeholder="Written by Default (Same as Sign Up)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="profile-row">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>3. Company <span class="highlight">Website/LinkedIn Link</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('companyWebsite')?.errors?.['pattern'] && (profileForm.get('companyWebsite')?.dirty || profileForm.get('companyWebsite')?.touched)">
+                  *Not a proper URL.
+                </div>
+                <div class="error-text"
+                  *ngIf="profileForm.get('companyWebsite')?.errors?.['required'] && (profileForm.get('companyWebsite')?.dirty || profileForm.get('companyWebsite')?.touched)">
+                  *Website URL is required
+                </div>
+              </div>
+              <input formControlName="companyWebsite" placeholder="Drop your website or LinkedIn link here..." />
+            </div>
+            <div class="profile-field">
+              <div class="label-row">
+                <label>4. Company <span class="highlight">Logo</span></label>
+                <div class="error-text" *ngIf="logoError">
+                  *Unsupported format — try PNG or JPG.
+                </div>
+              </div>
+              <label class="upload-btn">
+                Click here to upload your company logo
+                <span class="material-icons upload-icon">upload</span>
+                <input type="file" accept="image/*" (change)="onLogoChange($event)" />
+              </label>
+              <span *ngIf="logoPreview" class="logo-preview">
+                <img [src]="logoPreview" alt="Logo Preview" />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>5. Head Office <span class="highlight">Country</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('country')?.invalid && profileForm.get('country')?.touched">
+                  *Choose Country from the drop-down
+                </div>
+              </div>
+              <div class="custom-dropdown">
+                <div class="selected-option" (click)="toggleCountryDropdown()">
+                  {{ selectedCountry || 'Choose Country from the drop-down' }}
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </div>
+                <ul class="options-list" *ngIf="countryDropdownOpen">
+                  <li *ngFor="let country of countryList" (click)="selectCountry(country)">{{ country }}</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <div class="label-row">
+                <label>6. Head Office <span class="highlight">City</span></label>
+                <div class="error-text" *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched">
+                  *Choose City from the drop-down
+                </div>
+              </div>
+              <div class="custom-dropdown">
+                <div class="selected-option" (click)="toggleCityDropdown()">
+                  {{ selectedCity || 'Choose City from the drop-down' }}
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </div>
+                <ul class="options-list" *ngIf="cityDropdownOpen">
+                  <li *ngFor="let city of cityList" (click)="selectCity(city)">{{ city }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="profile-row">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>7. Company’s <span class="highlight">Industry</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('industry')?.invalid && profileForm.get('industry')?.touched">
+                  *Choose Industry from the drop-down
+                </div>
+              </div>
+              <div class="custom-dropdown">
+                <div class="selected-option" (click)="toggleIndustryDropdown()">
+                  {{ selectedIndustry || 'Choose Industry from the drop-down' }}
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </div>
+                <ul class="options-list" *ngIf="industryDropdownOpen">
+                  <li *ngFor="let industry of industryList" (click)="selectIndustry(industry)">{{ industry }}</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="profile-field">
+              <div class="label-row">
+                <label>8. Company <span class="highlight">Size</span></label>
+                <div class="error-text" *ngIf="profileForm.get('size')?.invalid && profileForm.get('size')?.touched">
+                  *Team size required.
+                </div>
+              </div>
+              <input formControlName="size" placeholder="How big is your team? e.g. 11–50 people" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5 -->
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>9. Contact Person <span class="highlight">Name</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('contactName')?.invalid && profileForm.get('contactName')?.touched">
+                  *Don’t leave this blank!
+                </div>
+              </div>
+              <input formControlName="contactName" placeholder="Type in Full name of your point of contact..." />
+            </div>
+            <div class="profile-field">
+              <div class="label-row">
+                <label>10. Contact Person <span class="highlight">Email/No</span></label>
+                <div class="error-text"
+                  *ngIf="profileForm.get('contactEmail')?.invalid && profileForm.get('contactEmail')?.touched">
+                  *Enter a valid email or No.
+                </div>
+              </div>
+              <input formControlName="contactEmail" placeholder="Type in the best email or number to reach you..." />
+            </div>
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="profile-about">
+          <div class="label-row">
+            <label><span class="label-number">11.</span> About the <span class="highlight">Company</span></label>
+            <span class="about-limit" [class.exceeded]="isWordCountExceeded">
+              {{ aboutWordCount }}/100 words
+            </span>
+          </div>
+          <textarea formControlName="about" placeholder="Tell us about your company..."></textarea>
+          <div class="error-text" *ngIf="profileForm.get('about')?.errors?.['maxWords']">
+            *Maximum 100 words allowed ({{ profileForm.get('about')?.errors?.['maxWords'].actual }} words entered)
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="save-button-container">
+          <button class="save-button" type="submit">
+            Let's Go
+            <span class="submit-icon">&#10132;</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Profile Update Success Popup -->
+<div class="success-popup-overlay" *ngIf="showSuccessPopup">
+  <div class="success-popup">
+    <div class="success-popup-header">Profile Updated!</div>
+    <div class="success-popup-body">
+      <img src="assets/icons/profile-success-icon.png" alt="Success Icon" />
+      <p>Your profile’s looking sharp. We’ve saved your changes — now let’s head back to the dashboard and keep things
+        moving!</p>
+      <button class="dashboard-btn" (click)="goToDashboard()">Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exit Warning Popup -->
+<div class="success-popup-overlay" *ngIf="showExitWarningPopup">
+  <div class="success-popup">
+    <div class="success-popup-header">Wait! Your info isn’t Saved</div>
+    <div class="success-popup-body">
+      <img src="assets/icons/profile-warning-icon.png" alt="Warning Icon" />
+      <p>You haven’t completed your profile. If you leave now, your details won’t be saved.<br>
+        Complete it to unlock your dashboard and get things rolling!</p>
+      <div class="dialog-buttons">
+        <button class="exit-btn" (click)="exitAnyway()">Exit Anyway</button>
+        <button class="dashboard-btn" (click)="keepEditing()">Keep Editing</button>
+      </div>
+    </div>
+  </div>
+</div>

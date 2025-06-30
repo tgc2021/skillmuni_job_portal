@@ -1,0 +1,39 @@
+/* Ensure the route container takes up full height */
+:host {
+  display: block;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Style for the route container */
+.route-container {
+  position: relative;
+  min-height: calc(100vh - 60px); /* Adjust based on your header/footer height */
+  overflow: hidden;
+}
+
+/* Animation styles */
+.route-animation {
+  position: relative;
+  width: 100%;
+}
+
+/* Ensure the splash screen takes full viewport height */
+app-splash-screen {
+  display: block;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Add some padding to the bottom of the content to prevent footer overlap */
+router-outlet + * {
+  display: block;
+  padding-bottom: 80px; /* Adjust based on your footer height */
+}
+
+/* Footer styling */
+app-footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}

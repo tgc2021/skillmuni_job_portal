@@ -1,0 +1,61 @@
+.splash-container {
+  height: 100vh;
+  background: linear-gradient(to bottom, #f7f9ff, #e7ecff, #d2dbff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.splash-card {
+  background: #f8f9ff;
+  border: 2px solid #dcdffc;
+  border-radius: 24px;
+  padding: 120px 30px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0px 4px 12px rgba(36, 50, 106, 0.15);
+  border: 1px solid #34437a;
+}
+
+.splash-logo {
+  display: block;
+  margin: 0 auto 30px;
+  width: 200px;
+  height: auto;
+}
+
+.welcome-text h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #34437a;
+}
+
+.welcome-text p {
+  font-size: 15px;
+  font-weight: 700;
+  color: #34437a;
+  margin: 0;
+}
+
+.highlight {
+  color: #f18700;
+}
+
+.highlight-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.arrow-image {
+  width: 150px;
+  margin-left: 2px;
+}

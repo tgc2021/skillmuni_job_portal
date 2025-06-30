@@ -1,0 +1,52 @@
+<!-- login.component.html -->
+<div class="login-container">
+  <div class="login-card">
+    <img src="assets/logos/skillmuni-login-logo.png" alt="Skillmuni Logo" class="login-logo" />
+
+    <h2 class="login-title">Welcome back!</h2>
+    <p class="login-subtitle">
+      Let’s get you <span class="highlight">logged in and hiring.</span>
+    </p>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <div class="label-row">
+          <label>Your Company Email:</label>
+          <span *ngIf="showErrors && !companyName" class="error-text">Please enter this ❌</span>
+        </div>
+        <input type="text" [(ngModel)]="companyName" name="companyName" class="form-input" placeholder="Type in your Company Name here...." />
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label>Password:</label>
+          <span *ngIf="showErrors && password.length < 8" class="error-text">Please enter this ❌</span>
+        </div>
+        <div class="password-input">
+          <input [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" name="password" class="form-input" placeholder="Type in your password...." />
+          <span class="toggle-eye" (click)="togglePasswordVisibility()">
+            <i class="material-icons">{{ passwordVisible ? 'visibility' : 'visibility_off' }}</i>
+          </span>
+        </div>
+      </div>
+
+      <div class="forgot-password">
+        <a routerLink="/forgot-password">Forgot your password?</a>
+      </div>
+
+      <button type="submit" class="login-btn">
+        Log In <span class="submit-icon">&#10132;</span>
+      </button>
+
+      
+    </form>
+
+    <div class="login-footer">
+      <hr />
+      <p>
+        New here? Time to start hiring like a pro!
+        <button class="signup-inline-btn" (click)="navigateToSignUp()">Sign Up</button>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="login-container">
+  <div class="login-card">
+    <img src="assets/logos/skillmuni-login-logo.png" alt="Skillmuni Logo" class="login-logo" />
+
+    <h2 class="login-title">Hello there!</h2>
+    <p class="login-subtitle">
+      Let’s get your company <span class="highlight">signed up.</span>
+    </p>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <div class="label-row">
+          <label>Your Company Email:</label>
+          <span *ngIf="showErrors && !companyName" class="error-text">*Don’t leave this blank!</span>
+        </div>
+        <input type="text" [(ngModel)]="companyName" name="companyName" class="form-input" placeholder="Type in your Company Name here...." />
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label>Password:</label>
+          <span *ngIf="showErrors && password.length < 8" class="error-text">*Make it at least 8 characters long.</span>
+        </div>
+        <div class="password-input">
+          <input [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" name="password" class="form-input" placeholder="Type in a strong password...." />
+          <span class="toggle-eye" (click)="togglePasswordVisibility()">
+            <i class="material-icons">{{ passwordVisible ? 'visibility' : 'visibility_off' }}</i>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="label-row">
+          <label>Confirm Password:</label>
+          <span *ngIf="showErrors && password !== confirmPassword" class="error-text">*Oops! Passwords don’t match.</span>
+        </div>
+        <div class="password-input">
+          <input [type]="confirmPasswordVisible ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input" placeholder="Make sure to type in the same Password...." />
+          <span class="toggle-eye" (click)="toggleConfirmPasswordVisibility()">
+            <i class="material-icons">{{ confirmPasswordVisible ? 'visibility' : 'visibility_off' }}</i>
+          </span>
+        </div>
+      </div>
+
+      <button type="submit" class="signup-btn">
+        Sign Up <span class="submit-icon">&#10132;</span>
+      </button>
+
+    </form>
+
+    <div class="login-footer">
+      <hr />
+      <p>
+        Already part of the crew? Log in here!
+        <button class="login-inline-btn"(click)="navigateToLogin()">Log In</button>
+      </p>
+    </div>
+  </div>
+</div>
