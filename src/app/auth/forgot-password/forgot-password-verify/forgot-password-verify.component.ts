@@ -11,7 +11,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./forgot-password-verify.component.css']
 })
 export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
-  code: string[] = ['', '', '', '', '', ''];
+  code: { value: string }[] = [
+    { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+  ];
   email: string = '';
   errorMessage: string = '';
   successMessage: string = '';
@@ -39,22 +41,26 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onInput(event: any, idx: number) {
-    let value = event.target.value.replace(/[^0-9]/g, '');
-    if (value.length > 1) value = value.charAt(value.length - 1);
+onInput(event: any, idx: number) {
+  let value = event.target.value.replace(/[^0-9]/g, '');
 
-    this.code[idx] = value;
-    event.target.value = value;
+  if (value.length > 1) value = value.charAt(value.length - 1);
 
-    if (value && idx < 5) {
-      setTimeout(() => {
-        this.codeInputs.toArray()[idx + 1].nativeElement.focus();
-      });
+  this.code[idx].value = value;
+  event.target.value = value;
+
+  // Move focus only if a value was entered and not on last input
+  if (value && idx < 5) {
+    const nextInput = this.codeInputs.toArray()[idx + 1];
+    if (nextInput) {
+      nextInput.nativeElement.focus();
     }
   }
+}
+
 
   onKeyDown(event: KeyboardEvent, idx: number) {
-    if (event.key === 'Backspace' && this.code[idx] === '' && idx > 0) {
+    if (event.key === 'Backspace' && this.code[idx].value === '' && idx > 0) {
       this.codeInputs.toArray()[idx - 1].nativeElement.focus();
     }
   }
@@ -63,7 +69,7 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
     const pasted = event.clipboardData?.getData('text') || '';
     if (/^[0-9]{6}$/.test(pasted)) {
       for (let i = 0; i < 6; i++) {
-        this.code[i] = pasted[i];
+        this.code[i].value = pasted[i];
       }
       setTimeout(() => {
         this.codeInputs.toArray()[5].nativeElement.focus();
@@ -73,7 +79,7 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
   }
 
   get codeValue() {
-    return this.code.join('');
+    return this.code.map(d => d.value).join('');
   }
 
   onSubmit() {
@@ -102,7 +108,9 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
   resendLink() {
     if (this.countdown === 0) {
       this.countdown = 30;
-      this.code = ['', '', '', '', '', ''];
+      this.code = [
+        { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+      ];
       // Simulate resend
       setTimeout(() => {
         this.startCountdown();
