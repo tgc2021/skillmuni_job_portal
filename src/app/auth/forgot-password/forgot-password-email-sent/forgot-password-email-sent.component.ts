@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { ForgotPasswordService } from '../../services/forgot-password.service';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password-email-sent',
@@ -18,13 +17,13 @@ export class ForgotPasswordEmailSentComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private forgotPasswordService: ForgotPasswordService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    // Get the email from the service
-    this.forgotPasswordService.email$.subscribe(email => {
-      this.email = email || 'your email';
+    // Get the email from route params
+    this.route.queryParams.subscribe(params => {
+      this.email = params['email'] || 'your email';
     });
   }
 

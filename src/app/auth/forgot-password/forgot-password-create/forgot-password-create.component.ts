@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ForgotPasswordService } from '../../services/forgot-password.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,8 +22,7 @@ export class ForgotPasswordCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
-    private forgotPasswordService: ForgotPasswordService
+    private route: ActivatedRoute
   ) {
     this.passwordForm = this.fb.group({
       password: ['', [
@@ -37,9 +35,11 @@ export class ForgotPasswordCreateComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get email and token from the service or route params
-    this.forgotPasswordService.email$.subscribe(email => this.email = email || '');
-    this.forgotPasswordService.token$.subscribe(token => this.token = token || '');
+    // Get email and token from route params
+    this.route.queryParams.subscribe(params => {
+      this.email = params['email'] || '';
+      this.token = params['token'] || '';
+    });
     
     // In a real app, you might want to validate the token here
     if (!this.token) {

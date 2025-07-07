@@ -14,7 +14,6 @@ import { CompanyProfileComponent } from './company-profile/company-profile.compo
 import { ForgotPasswordEmailSentComponent } from './auth/forgot-password/forgot-password-email-sent/forgot-password-email-sent.component';
 import { ForgotPasswordCreateComponent } from './auth/forgot-password/forgot-password-create/forgot-password-create.component';
 import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-password-success/forgot-password-success.component';
-import { ForgotPasswordService } from './auth/services/forgot-password.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -36,14 +35,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
-    // Import standalone components
-    ForgotPasswordEmailSentComponent,
-    ForgotPasswordCreateComponent,
-    ForgotPasswordSuccessComponent
+    BrowserAnimationsModule
   ],
   providers: [
-    ForgotPasswordService
   ],
   bootstrap: [AppComponent]
 })
