@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService, SignInRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -7,31 +8,54 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  companyName: string = '';
+  email: string = '';
   password: string = '';
-  confirmPassword: string = '';
   showErrors: boolean = false;
   passwordVisible: boolean = false;
-  confirmPasswordVisible: boolean = false;
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  toggleConfirmPasswordVisibility(): void {
-    this.confirmPasswordVisible = !this.confirmPasswordVisible;
-  }
+
 
   onSubmit() {
     this.showErrors = true;
+    this.errorMessage = '';
 
-    if (!this.companyName || this.password.length < 8 || this.password !== this.confirmPassword) {
+    if (!this.email || !this.password) {
       return;
     }
 
-    // Proceed with submission logic
+    this.isLoading = true;
+
+    const signInRequest: SignInRequest = {
+      email: this.email,
+      password: this.password
+    };
+
+    this.authService.signIn(signInRequest).subscribe({
+      next: (response) => {
+        this.authService.setToken(response.token);
+        console.log('Login successful:', response);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   navigateToSignUp(): void {

@@ -5,22 +5,22 @@
 
     <h2 class="login-title">Welcome back!</h2>
     <p class="login-subtitle">
-      Let’s get you <span class="highlight">logged in and hiring.</span>
+      Let's get you <span class="highlight">logged in and hiring.</span>
     </p>
 
     <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <div class="label-row">
-          <label>Your Company Email:</label>
-          <span *ngIf="showErrors && !companyName" class="error-text">Please enter this ❌</span>
+          <label>Your Email:</label>
+          <span *ngIf="showErrors && !email" class="error-text">Please enter this ❌</span>
         </div>
-        <input type="text" [(ngModel)]="companyName" name="companyName" class="form-input" placeholder="Type in your Company Name here...." />
+        <input type="email" [(ngModel)]="email" name="email" class="form-input" placeholder="Type in your email here...." />
       </div>
 
       <div class="form-group">
         <div class="label-row">
           <label>Password:</label>
-          <span *ngIf="showErrors && password.length < 8" class="error-text">Please enter this ❌</span>
+          <span *ngIf="showErrors && !password" class="error-text">Please enter this ❌</span>
         </div>
         <div class="password-input">
           <input [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" name="password" class="form-input" placeholder="Type in your password...." />
@@ -34,8 +34,15 @@
         <a routerLink="/forgot-password">Forgot your password?</a>
       </div>
 
-      <button type="submit" class="login-btn">
-        Log In <span class="submit-icon">&#10132;</span>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="login-btn" [disabled]="isLoading">
+        <span *ngIf="isLoading">Logging in...</span>
+        <span *ngIf="!isLoading" class="login-btn-content">
+          Log In <span class="submit-icon">&#10132;</span>
+        </span>
       </button>
 
       
