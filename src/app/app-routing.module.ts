@@ -11,7 +11,7 @@ import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-pa
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgotPasswordVerifyComponent } from './auth/forgot-password/forgot-password-verify/forgot-password-verify.component';
 import { ForgotPasswordResetComponent } from './auth/forgot-password/forgot-password-reset/forgot-password-reset.component';
-
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   { 
@@ -21,6 +21,7 @@ const routes: Routes = [
   { 
     path: 'dashboard', 
     component: DashboardComponent,
+    canActivate: [AuthGuard],
     data: { title: 'Dashboard' }
   },
   { 
@@ -50,12 +51,10 @@ const routes: Routes = [
       { 
         path: 'create-password', 
         component: ForgotPasswordCreateComponent,
-
       },
       { 
         path: 'success', 
         component: ForgotPasswordSuccessComponent,
-
       },
       { 
         path: 'verify', 
@@ -69,15 +68,14 @@ const routes: Routes = [
   },
   {
     path: 'company-profile',
-    component: CompanyProfileComponent
+    component: CompanyProfileComponent,
+    canActivate: [AuthGuard]
   },
   { 
     path: '**', 
     redirectTo: '',
-
   }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
