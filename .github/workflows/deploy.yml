@@ -1,0 +1,47 @@
+name: Build & Deploy Angular to Windows EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOY_FOLDER: Skillmuni_Job_Portal
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Angular app with base href
+      run: npm run build -- --base-href "/${{ env.DEPLOY_FOLDER }}/"
+
+    - name: Prepare web.config with updated folder name
+      run: |
+        sed "s|/Skillmuni_Prod/index.html|/${DEPLOY_FOLDER}/index.html|" web.config > dist/skillmuni-job-portal/web.config
+
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    - name: Create (or clean) folder on Windows EC2 via SSH
+      run: |
+        sshpass -p "${{ secrets.EC2_PASSWORD }}" ssh -o StrictHostKeyChecking=no \
+        ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+        "powershell -Command \"New-Item -ItemType Directory -Force -Path 'E:\\${{ env.DEPLOY_FOLDER }}'; Remove-Item -Path 'E:\\${{ env.DEPLOY_FOLDER }}\\*' -Recurse -Force\""
+
+    - name: Copy build files to Windows EC2
+      run: |
+        sshpass -p "${{ secrets.EC2_PASSWORD }}" scp -r -o StrictHostKeyChecking=no \
+        dist/skillmuni-job-portal/* \
+        ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:"E:/${{ env.DEPLOY_FOLDER }}"

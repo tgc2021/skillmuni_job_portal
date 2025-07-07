@@ -11,8 +11,8 @@
     <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <div class="label-row">
-          <label>Your Email:</label>
-          <span *ngIf="showErrors && !email" class="error-text">Please enter this ❌</span>
+          <label>Your Company Email:</label>
+          <span *ngIf="showErrors && !email" class="error-text">Please enter your company email</span>
         </div>
         <input type="email" [(ngModel)]="email" name="email" class="form-input" placeholder="Type in your email here...." />
       </div>
@@ -20,7 +20,7 @@
       <div class="form-group">
         <div class="label-row">
           <label>Password:</label>
-          <span *ngIf="showErrors && !password" class="error-text">Please enter this ❌</span>
+          <span *ngIf="showErrors && !password" class="error-text">Please enter your password</span>
         </div>
         <div class="password-input">
           <input [type]="passwordVisible ? 'text' : 'password'" [(ngModel)]="password" name="password" class="form-input" placeholder="Type in your password...." />

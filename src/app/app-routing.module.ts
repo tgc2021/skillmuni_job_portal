@@ -9,6 +9,7 @@ import { CompanyProfileComponent } from './company-profile/company-profile.compo
 import { ForgotPasswordCreateComponent } from './auth/forgot-password/forgot-password-create/forgot-password-create.component';
 import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-password-success/forgot-password-success.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ForgotPasswordVerifyComponent } from './auth/forgot-password/forgot-password-verify/forgot-password-verify.component';
 
 
 const routes: Routes = [
@@ -54,7 +55,11 @@ const routes: Routes = [
         path: 'success', 
         component: ForgotPasswordSuccessComponent,
 
-      }
+      },
+      { 
+        path: 'verify', 
+        component: ForgotPasswordVerifyComponent,
+      },
     ]
   },
   {

@@ -14,35 +14,24 @@ export class ForgotPasswordComponent {
   timer: any = null;
   errorMessage: string = '';
   sentState: 'idle' | 'sending' | 'sent' = 'idle'; // idle, sending, sent
+  isLoading: boolean = false;
 
   constructor(
     private router: Router
   ) {}
 
   onSubmit() {
-    this.showError = true;
     if (!this.email) {
       this.errorMessage = 'Please enter your email address';
       return;
     }
-    if (!this.isValidEmail(this.email)) {
-      this.errorMessage = 'Please enter a valid email address';
-      return;
-    }
-    this.sentState = 'sending';
+    this.isLoading = true;
     this.errorMessage = '';
     // Simulate API call
     setTimeout(() => {
-      try {
-
-        this.sentState = 'sent';
-        this.startCountdown();
-      } catch (error) {
-        this.errorMessage = 'An error occurred. Please try again.';
-        this.sentState = 'idle';
-        console.error('Forgot password error:', error);
-      }
-    }, 1000);
+      this.isLoading = false;
+      this.router.navigate(['/forgot-password/verify'], { queryParams: { email: this.email } });
+    }, 1200);
   }
 
   resendLink() {
