@@ -91,7 +91,7 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
         this.verified = true;
         this.successMessage = "You're Verified!";
         setTimeout(() => {
-          this.router.navigate(['/forgot-password/create'], { queryParams: { email: this.email, token: 'dummy-token' } });
+          this.router.navigate(['/forgot-password/reset'], { queryParams: { email: this.email, token: 'dummy-token' } });
         }, 1200);
       },
       error: (err: any) => {

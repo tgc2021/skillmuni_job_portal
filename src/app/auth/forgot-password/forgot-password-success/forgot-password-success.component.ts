@@ -10,7 +10,11 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./forgot-password-success.component.css']
 })
 export class ForgotPasswordSuccessComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 1500);
+  }
 
   navigateToLogin() {
     this.router.navigate(['/login']);

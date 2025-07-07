@@ -10,6 +10,7 @@ import { ForgotPasswordCreateComponent } from './auth/forgot-password/forgot-pas
 import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-password-success/forgot-password-success.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgotPasswordVerifyComponent } from './auth/forgot-password/forgot-password-verify/forgot-password-verify.component';
+import { ForgotPasswordResetComponent } from './auth/forgot-password/forgot-password-reset/forgot-password-reset.component';
 
 
 const routes: Routes = [
@@ -59,6 +60,10 @@ const routes: Routes = [
       { 
         path: 'verify', 
         component: ForgotPasswordVerifyComponent,
+      },
+      { 
+        path: 'reset', 
+        component: ForgotPasswordResetComponent,
       },
     ]
   },
