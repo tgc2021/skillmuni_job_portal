@@ -4,9 +4,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { SplashScreenComponent } from './auth/splash-screen/splash-screen.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
-import { ForgotPasswordEmailSentComponent } from './auth/forgot-password/forgot-password-email-sent/forgot-password-email-sent.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
-import { ForgotPasswordCreateComponent } from './auth/forgot-password/forgot-password-create/forgot-password-create.component';
 import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-password-success/forgot-password-success.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgotPasswordVerifyComponent } from './auth/forgot-password/forgot-password-verify/forgot-password-verify.component';
@@ -43,14 +41,6 @@ const routes: Routes = [
       { 
         path: 'email', 
         component: ForgotPasswordComponent,
-      },
-      { 
-        path: 'email-sent', 
-        component: ForgotPasswordEmailSentComponent,
-      },
-      { 
-        path: 'create-password', 
-        component: ForgotPasswordCreateComponent,
       },
       { 
         path: 'success', 

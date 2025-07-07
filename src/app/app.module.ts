@@ -12,11 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
-import { ForgotPasswordEmailSentComponent } from './auth/forgot-password/forgot-password-email-sent/forgot-password-email-sent.component';
-import { ForgotPasswordCreateComponent } from './auth/forgot-password/forgot-password-create/forgot-password-create.component';
-import { ForgotPasswordSuccessComponent } from './auth/forgot-password/forgot-password-success/forgot-password-success.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
