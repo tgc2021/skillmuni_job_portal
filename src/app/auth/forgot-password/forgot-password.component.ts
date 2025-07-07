@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,7 +18,8 @@ export class ForgotPasswordComponent {
   isLoading: boolean = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   onSubmit() {
@@ -27,11 +29,16 @@ export class ForgotPasswordComponent {
     }
     this.isLoading = true;
     this.errorMessage = '';
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      this.router.navigate(['/forgot-password/verify'], { queryParams: { email: this.email } });
-    }, 1200);
+    this.authService.sendOtp(this.email).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/forgot-password/verify'], { queryParams: { email: this.email } });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err?.error?.message || 'Failed to send OTP. Please try again.';
+      }
+    });
   }
 
   resendLink() {

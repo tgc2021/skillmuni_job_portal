@@ -59,4 +59,16 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  sendOtp(email: string) {
+    const url = 'http://www.skillmuni.co.in/Jobportal_web_api/api/UserAuth/send-otp';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(url, { email }, { headers });
+  }
+
+  verifyOtp(email: string, otp: string) {
+    const url = 'http://www.skillmuni.co.in/Jobportal_web_api/api/UserAuth/verify-otp';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(url, { email, otp }, { headers });
+  }
 }

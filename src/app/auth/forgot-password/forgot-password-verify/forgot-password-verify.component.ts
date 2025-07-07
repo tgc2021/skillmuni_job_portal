@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChildren, QueryList, ElementRef, AfterViewInit }
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password-verify',
@@ -24,7 +25,7 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef>;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -41,23 +42,19 @@ export class ForgotPasswordVerifyComponent implements OnInit, AfterViewInit {
     });
   }
 
-onInput(event: any, idx: number) {
-  let value = event.target.value.replace(/[^0-9]/g, '');
-
-  if (value.length > 1) value = value.charAt(value.length - 1);
-
-  this.code[idx].value = value;
-  event.target.value = value;
-
-  // Move focus only if a value was entered and not on last input
-  if (value && idx < 5) {
-    const nextInput = this.codeInputs.toArray()[idx + 1];
-    if (nextInput) {
-      nextInput.nativeElement.focus();
+  onInput(event: any, idx: number) {
+    let value = event.target.value.replace(/[^0-9]/g, '');
+    if (value.length > 1) value = value.charAt(value.length - 1);
+    this.code[idx].value = value;
+    event.target.value = value;
+    // Move focus only if a value was entered and not on last input
+    if (value && idx < 5) {
+      const nextInput = this.codeInputs.toArray()[idx + 1];
+      if (nextInput) {
+        nextInput.nativeElement.focus();
+      }
     }
   }
-}
-
 
   onKeyDown(event: KeyboardEvent, idx: number) {
     if (event.key === 'Backspace' && this.code[idx].value === '' && idx > 0) {
@@ -89,20 +86,22 @@ onInput(event: any, idx: number) {
     }
     this.errorMessage = '';
     this.verifying = true;
-    // Simulate API call
-    setTimeout(() => {
-      if (this.codeValue === '123456') { // Simulate success
+    this.authService.verifyOtp(this.email, this.codeValue).subscribe({
+      next: () => {
         this.verified = true;
         this.successMessage = "You're Verified!";
         setTimeout(() => {
           this.router.navigate(['/forgot-password/create'], { queryParams: { email: this.email, token: 'dummy-token' } });
         }, 1200);
-      } else {
-        this.errorMessage = 'The verification code you entered is invalid or has expired.';
+      },
+      error: (err: any) => {
+        this.errorMessage = err?.error?.message || 'The verification code you entered is invalid or has expired.';
         this.verified = false;
+      },
+      complete: () => {
+        this.verifying = false;
       }
-      this.verifying = false;
-    }, 1200);
+    });
   }
 
   resendLink() {
@@ -111,10 +110,19 @@ onInput(event: any, idx: number) {
       this.code = [
         { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
       ];
-      // Simulate resend
-      setTimeout(() => {
-        this.startCountdown();
-      }, 500);
+      this.errorMessage = '';
+      this.successMessage = '';
+      this.verifying = true;
+      this.authService.sendOtp(this.email).subscribe({
+        next: () => {
+          this.verifying = false;
+          this.startCountdown();
+        },
+        error: (err: any) => {
+          this.verifying = false;
+          this.errorMessage = err?.error?.message || 'Failed to resend OTP. Please try again.';
+        }
+      });
     }
   }
 
