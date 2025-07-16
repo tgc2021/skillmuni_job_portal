@@ -14,6 +14,7 @@ import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     SignUpComponent,
     ForgotPasswordComponent,
     CompanyProfileComponent,
-    DashboardComponent
+    DashboardComponent,
+    ViewAllJobsComponent
   ],
   imports: [
     BrowserModule,

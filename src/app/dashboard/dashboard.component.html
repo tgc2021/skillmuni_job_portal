@@ -67,6 +67,7 @@
   class="view-all-btn" 
   [class.disabled-btn]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
   [disabled]="(viewMode === 'all' && jobList.length === 0) || (viewMode === 'saved' && savedJobs.length === 0)"
+  (click)="navigateToAllJobs()"
 >
   View All &gt;
 </button>
@@ -120,7 +121,7 @@
   <!-- No Jobs View -->
   <div class="empty-state" *ngIf="viewMode === 'all' && jobList.length === 0">
     <img src="assets/icons/no-jobs-icon.png" alt="No Jobs" class="empty-state-icon" />
-    <h3 class="empty-title">No Jobs Yet? <span class="highlight">Let’s Fix That!</span></h3>
+    <h3 class="empty-title"><span class="highlight">No Jobs Yet? </span> Let’s Fix That!</h3>
     <p class="empty-subtext">
       Start posting to list open roles and manage applications —
       you’re just a few steps away.

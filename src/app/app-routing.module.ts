@@ -10,6 +10,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForgotPasswordVerifyComponent } from './auth/forgot-password/forgot-password-verify/forgot-password-verify.component';
 import { ForgotPasswordResetComponent } from './auth/forgot-password/forgot-password-reset/forgot-password-reset.component';
 import { AuthGuard } from './services/auth.guard';
+import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
 
 const routes: Routes = [
   { 
@@ -21,6 +22,12 @@ const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     data: { title: 'Dashboard' }
+  },
+  { 
+    path: 'dashboard/view-all-jobs', 
+    component: ViewAllJobsComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'View All Jobs' }
   },
   { 
     path: 'sign-up', 

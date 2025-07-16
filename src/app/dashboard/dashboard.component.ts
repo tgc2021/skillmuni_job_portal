@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface JobPosting {
   title: string;
@@ -21,7 +22,11 @@ interface SavedJob {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  constructor() {}
+  constructor(private router: Router) {}
+
+  navigateToAllJobs() {
+    this.router.navigate(['/dashboard/view-all-jobs']);
+  }
 
   infoCards = [
     {
