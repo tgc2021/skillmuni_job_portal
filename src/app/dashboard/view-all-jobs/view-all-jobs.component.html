@@ -1,1 +1,90 @@
-<p>view-all-jobs works!</p>
+<app-header></app-header>
+
+<div class="view-all-wrapper">
+    <!-- Page Header -->
+    <div class="header">
+      <img src="assets/icons/back-arrow.png" alt="Back Icon" (click)="onBackClick()" class="back-button" />
+      <div class="title-container">
+        <h1>All Job Postings</h1>
+        <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
+        <h2>View All </h2>
+      </div>
+      <img src="assets/icons/job-header-icon.png" alt="Category Icon" class="header-icon" />
+    </div>
+
+    <!-- All Job Postings Table -->
+    <div class="job-table" *ngIf="viewType === 'all'">
+      <div class="table-header">
+        <span>No.</span>
+        <span>Job Title</span>
+        <span>Date Posted</span>
+        <span>Status</span>
+        <span>Expiration</span>
+        <span>Interview Rounds</span>
+        <span>Applied</span>
+        <span>Candidates</span>
+        <span>Edit</span>
+      </div>
+      <div class="table-row" *ngFor="let job of jobList; let i = index">
+        <span>{{ i + 1 }}.</span>
+        <span>{{ job.title }}</span>
+        <span>{{ job.datePosted }}</span>
+        <span>
+          <div class="status-dropdown" (click)="toggleDropdown(i)">
+            <span [ngClass]="job.statusClass" class="status-badge">{{ job.status }}</span>
+            <span class="arrow-icon">▾</span>
+          </div>
+          <div class="status-options" *ngIf="dropdownOpenIndex === i">
+            <label class="status-option" *ngFor="let option of statusOptions" (click)="changeStatus(i, option)">
+              <span class="status-radio" [class.selected]="job.status === option.label">
+                <span class="dot" *ngIf="job.status === option.label"></span>
+              </span>
+              <span [ngClass]="option.class">{{ option.label }}</span>
+            </label>
+          </div>
+        </span>
+        <span>{{ job.expiry }}</span>
+        <span>{{ job.rounds }}</span>
+        <span>{{ job.applied }}</span>
+        <span>
+          <button class="view-btn">View &gt;</button>
+        </span>
+        <span class="edit-actions">
+          <img src="assets/icons/edit-icon.png" alt="Edit" />
+        </span>
+      </div>
+      <div class="empty-state" *ngIf="jobList.length === 0">
+        <img src="assets/icons/no-jobs-icon.png" alt="No Jobs" class="empty-state-icon" />
+        <h3 class="empty-title"><span class="highlight">No Jobs Yet? </span> Let’s Fix That!</h3>
+        <p class="empty-subtext">
+          Start posting to list open roles and manage applications —
+          you’re just a few steps away.
+        </p>
+      </div>
+    </div>
+
+    <!-- Saved Jobs Table -->
+    <div class="job-table saved-table" *ngIf="viewType === 'saved'">
+      <div class="saved-table-header">
+        <span>No.</span>
+        <span>Job Title</span>
+        <span>Last Saved</span>
+        <span>Edit</span>
+        <span>Delete</span>
+      </div>
+      <div class="saved-table-row" *ngFor="let job of savedJobs; let i = index">
+        <span>{{ i + 1 }}.</span>
+        <span>{{ job.title }}</span>
+        <span>{{ job.savedDate }}</span>
+        <span><img src="assets/icons/edit-icon.png" alt="Edit" /></span>
+        <span><img src="assets/icons/delete-icon.png" alt="Delete" /></span>
+      </div>
+      <div class="empty-state" *ngIf="savedJobs.length === 0">
+        <img src="assets/icons/no-jobs-icon.png" alt="No Saved Jobs" class="empty-state-icon" />
+        <h3 class="empty-title">No Saved Jobs</h3>
+        <p class="empty-subtext">
+          You haven't saved any jobs yet. Bookmark jobs to view them here later.
+        </p>
+      </div>
+    </div>
+</div>

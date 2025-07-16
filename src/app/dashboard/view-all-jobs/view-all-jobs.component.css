@@ -1,0 +1,260 @@
+.view-all-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #F6F8FF;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 5px 0;
+  background: linear-gradient(to right, #d2dbff, #f7f9ff, #e7ecff);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 85px;
+  margin-top: 45px;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header h1 {
+  font-size: 18px;
+  color: #34437a;
+  margin: 0;
+}
+
+.header h2 {
+  font-size: 16px;
+  color: #34437a;
+  margin: 0;
+  font-weight: 500;
+}
+
+.long-arrow {
+  width: 160px;
+}
+
+.back-button {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+
+.header-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 85px;
+}
+
+.job-table {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 15px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 40px 2fr 140px 120px 140px 140px 100px 120px 40px;
+  background: linear-gradient(to right, #fff4e6, #ffe9d6);
+  color: #f58634;
+  font-weight: 600;
+  padding: 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border: 2px solid #f58634;
+  border-radius: 12px 12px 0 0;
+}
+
+.table-row,
+.saved-table-row {
+  display: grid;
+  background-color: #ecf0ff;
+  padding: 0 15px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #2f3260;
+  border-radius: 10px;
+  border: 1px solid #34437a;
+  align-items: center;
+  min-height: 60px;
+}
+
+.table-row {
+  grid-template-columns: 40px 2fr 140px 120px 140px 140px 100px 120px 40px;
+}
+
+.saved-table-row {
+  grid-template-columns: 40px 2fr 140px 60px 60px;
+}
+
+.saved-table-row img {
+  width: 16px;
+  cursor: pointer;
+}
+
+.status-badge {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-open {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.status-paused {
+  color: #f9a825;
+  font-weight: 600;
+}
+
+.status-closed {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.status-expired {
+  color: #6e6e6e;
+}
+
+.view-btn {
+  padding: 10px 15px;
+  background: #ffffff;
+  color: #34437a;
+  border: none;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(44, 55, 135, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+}
+
+.edit-actions img {
+  width: 16px;
+  cursor: pointer;
+}
+
+.saved-table-header {
+  display: grid;
+  grid-template-columns: 40px 2fr 140px 60px 60px;
+  background: linear-gradient(to right, #fff4e6, #ffe9d6);
+  color: #f58634;
+  font-weight: 600;
+  padding: 15px;
+  border: 2px solid #f58634;
+  border-radius: 12px 12px 0 0;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f6f8ff;
+}
+
+.empty-state-icon {
+  width: 40px;
+  margin-bottom: 15px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2f3260;
+  margin-bottom: 10px;
+}
+
+.empty-title .highlight {
+  color: #f58634;
+}
+
+.empty-subtext {
+  font-size: 15px;
+  color: #2f3260;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.status-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 5px 15px;
+  width: 80%;
+  box-shadow: 0px 2px 6px rgba(44, 55, 135, 0.1);
+  border: 1px solid #e0e6f5;
+  cursor: pointer;
+  position: relative;
+}
+
+.arrow-icon {
+  font-size: 16px;
+  color: #2f3260;
+  margin-left: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.status-options {
+  position: absolute;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  z-index: 999;
+  margin-top: 5px;
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.status-radio {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #2f3260;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-radio .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: orange;
+}
+
+.status-radio.selected {
+  border-color: orange;
+}
