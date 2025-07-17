@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-post-job',
@@ -39,7 +40,7 @@ export class PostJobComponent implements OnInit {
   selectedCountry = '';
   selectedCity = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private location: Location) {}
 
   ngOnInit() {
     this.jobForm = this.fb.group({
@@ -97,5 +98,10 @@ export class PostJobComponent implements OnInit {
     } else {
       this.jobForm.markAllAsTouched();
     }
+  }
+
+
+  onBackClick() {
+    this.location.back();
   }
 }

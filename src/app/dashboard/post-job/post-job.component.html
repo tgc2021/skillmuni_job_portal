@@ -1,16 +1,28 @@
 <app-header></app-header>
 
 <div class="profile-wrapper">
-  <!-- Page Header -->
-  <div class="header">
-    <div class="title-container">
-      <h1>Post a Job</h1>
-      <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
-      <h2>Fill it out. Send it out.</h2>
-    </div>
-    <img src="assets/icons/job-header-icon.png" alt="Job Icon" class="header-icon" />
+ <!-- Page Header -->
+ <div class="header">
+  <img src="assets/icons/back-arrow.png" alt="Back Icon" (click)="onBackClick()" class="back-button" />
+  <div class="title-container">
+    <h1>All Job Postings</h1>
+    <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
+    <h2>View All </h2>
   </div>
-
+  <img src="assets/icons/job-header-icon.png" alt="Category Icon" class="header-icon" />
+</div>
+  <!-- Step Indicator -->
+  <div class="step-indicator">
+    <div class="step active">
+      <div class="circle">1</div>
+      <div class="label"><strong>Job Overview</strong></div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="circle">2</div>
+      <div class="label">Skills & Details</div>
+    </div>
+  </div>
   <!-- Job Posting Card -->
   <div class="profile-card-wrapper">
     <div class="profile-card">
