@@ -13,20 +13,21 @@
 </div>
   <!-- Step Indicator -->
   <div class="step-indicator">
-    <div class="step active">
+    <div class="step" [class.active]="currentStep === 1" (click)="currentStep = 1">
       <div class="circle">1</div>
-      <div class="label"><strong>Job Overview</strong></div>
+      <div class="label"><strong *ngIf="currentStep === 1">Job Overview</strong><span *ngIf="currentStep !== 1">Job Overview</span></div>
     </div>
     <div class="step-line"></div>
-    <div class="step">
+    <div class="step" [class.active]="currentStep === 2" (click)="currentStep = 2">
       <div class="circle">2</div>
-      <div class="label">Skills & Details</div>
+      <div class="label"><strong *ngIf="currentStep === 2">Skills & Details</strong><span *ngIf="currentStep !== 2">Skills & Details</span></div>
     </div>
   </div>
-  <!-- Job Posting Card -->
+<!-- Job Overview Step -->
+<div *ngIf="currentStep === 1">
   <div class="profile-card-wrapper">
     <div class="profile-card">
-      <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="jobForm">
         <!-- Row 1 -->
         <div class="profile-row row-alt">
           <div class="profile-grid">
@@ -219,10 +220,85 @@
 
         <!-- Submit -->
         <div class="save-button-container">
-          <button class="save-button" type="submit">
+          <button class="save-button" type="button" (click)="onNextStep()">
             On to the Next
             <span class="submit-icon">&#10132;</span>
           </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Skills & Details Step -->
+<div *ngIf="currentStep === 2">
+  <div class="profile-card-wrapper">
+    <div class="profile-card">
+      <form>
+        <!-- Skills & Details Layout like screenshot -->
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label>1. Required <span class="highlight">Proficiency Level</span></label>
+              <div class="custom-dropdown">
+                <!-- Example dropdown -->
+                <div class="selected-option">Choose Proficiency Level from the drop-down</div>
+              </div>
+            </div>
+            <div class="profile-field">
+              <label>2. Required <span class="highlight">Skills</span></label>
+              <input placeholder="Type in the Skills Required for this Job...." />
+            </div>
+          </div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label>3. Job <span class="highlight">Description</span></label>
+              <textarea placeholder="Type in the Job Description here...."></textarea>
+            </div>
+            <div class="profile-field">
+              <label>4. Job <span class="highlight">Requirements</span></label>
+              <textarea placeholder="Type in the Job Requirements here...."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label>5. <span class="highlight">Minimum Job Credits</span> Required to Apply</label>
+              <input placeholder="Set minimum job credits required (between 5 and 100)" />
+            </div>
+            <div class="profile-field">
+              <label>6. <span class="highlight">CV Type</span> Required</label>
+              <div class="custom-dropdown">
+                <div class="selected-option">Choose one or more CV Types from the drop-down</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <label>7. Contact Person <span class="highlight">Name</span></label>
+              <input placeholder="Type in the Contact Person Name here...." />
+            </div>
+            <div class="profile-field">
+              <label>8. Contact Person <span class="highlight">Email/No.</span></label>
+              <input placeholder="Type in the Contact Person Email/No. here...." />
+            </div>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="save-button-container">
+        <!-- Save as Draft Button -->
+        <button class="save-button draft">
+          <span class="check-icon">&#10003;</span> Save as Draft
+        </button>
+
+<!-- Publish Job Button -->
+<button class="save-button publish">
+  Publish Job  <span class="submit-icon">&#10132;</span>  </button>
+
         </div>
       </form>
     </div>

@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 })
 export class PostJobComponent implements OnInit {
   jobForm!: FormGroup;
+  currentStep = 1; // Step indicator, starts with Job Overview
 
   // Dropdown lists (sample data)
   industryList = ['Technology', 'Finance', 'Healthcare', 'Education', 'Retail'];
@@ -93,13 +94,17 @@ export class PostJobComponent implements OnInit {
 
   onSubmit() {
     if (this.jobForm.valid) {
-      // Handle form submission (e.g., call API)
-      alert('Job posted successfully!');
+      // Move to Step 2: Skills & Details
+      this.currentStep = 2;
     } else {
       this.jobForm.markAllAsTouched();
     }
   }
 
+  // Method to move to the next step (Skills & Details)
+  onNextStep() {
+    this.currentStep = 2; // Set currentStep to 2 to show Skills & Details step
+  }
 
   onBackClick() {
     this.location.back();
