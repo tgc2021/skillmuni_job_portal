@@ -20,6 +20,10 @@ export class DashboardComponent {
     this.router.navigate(['/dashboard/view-all-jobs'], { queryParams: { type: this.viewMode } });
   }
 
+  navigateToPostJob() {
+    this.router.navigate(['/dashboard/post-job']);
+  }
+
   infoCards = [
     {
       title: 'Live Jobs',

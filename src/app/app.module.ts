@@ -12,10 +12,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
-
+import { PostJobComponent } from './dashboard/post-job/post-job.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,14 +27,15 @@ import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.co
     ForgotPasswordComponent,
     CompanyProfileComponent,
     DashboardComponent,
-    ViewAllJobsComponent
+    ViewAllJobsComponent,
+    PostJobComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     HttpClientModule
   ],
   providers: [
