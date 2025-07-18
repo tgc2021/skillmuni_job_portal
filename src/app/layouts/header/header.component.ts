@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -12,12 +13,18 @@ export class HeaderComponent {
   notifications: string[] = ['Welcome to SkillMuni!', 'You have a new message.'];
   showNotifications = false;
 
+  constructor(private router: Router) {}
+
   setActiveLink(link: 'home' | 'leaderboard' | 'dashboard') {
     this.activeLink = link;
   }
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+  }
+
+  onLogoClick() {
+    this.router.navigate(['/dashboard']);
   }
 }
 

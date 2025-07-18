@@ -242,8 +242,13 @@
               <div class="profile-field">
                 <label>1. Required <span class="highlight">Proficiency Level</span></label>
                 <div class="custom-dropdown">
-                  <!-- Example dropdown -->
-                  <input formControlName="proficiencyLevel" placeholder="Choose Proficiency Level from the drop-down" />
+                  <div class="selected-option" (click)="toggleProficiencyLevelDropdown()">
+                    {{ selectedProficiencyLevel || 'Choose Proficiency Level from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="proficiencyLevelDropdownOpen">
+                    <li *ngFor="let level of proficiencyLevelList" (click)="selectProficiencyLevel(level)">{{ level }}</li>
+                  </ul>
                 </div>
               </div>
               <div class="profile-field">
@@ -276,7 +281,13 @@
               <div class="profile-field">
                 <label>6. <span class="highlight">CV Type</span> Required</label>
                 <div class="custom-dropdown">
-                  <input formControlName="cvType" placeholder="Choose one or more CV Types from the drop-down" />
+                  <div class="selected-option" (click)="toggleCvTypeDropdown()">
+                    {{ selectedCvType || 'Choose one or more CV Types from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="cvTypeDropdownOpen">
+                    <li *ngFor="let type of cvTypeList" (click)="selectCvType(type)">{{ type }}</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -297,12 +308,12 @@
           <!-- Buttons -->
           <div class="save-button-container">
             <!-- Save as Draft Button -->
-            <button class="save-button draft">
+            <button class="save-button draft" type="button" (click)="onSaveAsDraft()">
               <span class="check-icon">&#10003;</span> Save as Draft
             </button>
 
             <!-- Publish Job Button -->
-            <button class="save-button publish">
+            <button class="save-button publish" type="button" (click)="onPublishJob()">
               Publish Job <span class="submit-icon">&#10132;</span> </button>
 
           </div>

@@ -22,6 +22,8 @@ export class PostJobComponent implements OnInit, OnDestroy {
   experienceList = ['0-1 years', '1-3 years', '3-5 years', '5+ years'];
   countryList = ['India', 'United States', 'United Kingdom', 'Australia', 'Canada'];
   cityList = ['Mumbai', 'Delhi', 'Bangalore', 'New York', 'London', 'Sydney'];
+  proficiencyLevelList = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+  cvTypeList = ['Standard CV', 'Video CV', 'Portfolio', 'Other'];
 
   // Dropdown state
   industryDropdownOpen = false;
@@ -32,6 +34,8 @@ export class PostJobComponent implements OnInit, OnDestroy {
   experienceDropdownOpen = false;
   countryDropdownOpen = false;
   cityDropdownOpen = false;
+  proficiencyLevelDropdownOpen = false;
+  cvTypeDropdownOpen = false;
 
   // Selected values
   selectedIndustry = '';
@@ -42,6 +46,8 @@ export class PostJobComponent implements OnInit, OnDestroy {
   selectedExperience = '';
   selectedCountry = '';
   selectedCity = '';
+  selectedProficiencyLevel = '';
+  selectedCvType = '';
 
   constructor(private fb: FormBuilder, private location: Location, private router: Router) {}
 
@@ -110,6 +116,8 @@ export class PostJobComponent implements OnInit, OnDestroy {
   toggleExperienceDropdown() { this.experienceDropdownOpen = !this.experienceDropdownOpen; this.closeOtherDropdowns('experience'); }
   toggleCountryDropdown() { this.countryDropdownOpen = !this.countryDropdownOpen; this.closeOtherDropdowns('country'); }
   toggleCityDropdown() { this.cityDropdownOpen = !this.cityDropdownOpen; this.closeOtherDropdowns('city'); }
+  toggleProficiencyLevelDropdown() { this.proficiencyLevelDropdownOpen = !this.proficiencyLevelDropdownOpen; this.closeOtherDropdowns('proficiencyLevel'); }
+  toggleCvTypeDropdown() { this.cvTypeDropdownOpen = !this.cvTypeDropdownOpen; this.closeOtherDropdowns('cvType'); }
 
   closeOtherDropdowns(open: string) {
     this.industryDropdownOpen = open === 'industry' ? this.industryDropdownOpen : false;
@@ -120,6 +128,8 @@ export class PostJobComponent implements OnInit, OnDestroy {
     this.experienceDropdownOpen = open === 'experience' ? this.experienceDropdownOpen : false;
     this.countryDropdownOpen = open === 'country' ? this.countryDropdownOpen : false;
     this.cityDropdownOpen = open === 'city' ? this.cityDropdownOpen : false;
+    this.proficiencyLevelDropdownOpen = open === 'proficiencyLevel' ? this.proficiencyLevelDropdownOpen : false;
+    this.cvTypeDropdownOpen = open === 'cvType' ? this.cvTypeDropdownOpen : false;
   }
 
   // Dropdown selects (no markAsDirty needed)
@@ -171,6 +181,18 @@ export class PostJobComponent implements OnInit, OnDestroy {
     this.jobForm.markAsDirty();
     this.cityDropdownOpen = false;
   }
+  selectProficiencyLevel(level: string) {
+    this.selectedProficiencyLevel = level;
+    this.jobForm.get('proficiencyLevel')?.setValue(level);
+    this.jobForm.markAsDirty();
+    this.proficiencyLevelDropdownOpen = false;
+  }
+  selectCvType(type: string) {
+    this.selectedCvType = type;
+    this.jobForm.get('cvType')?.setValue(type);
+    this.jobForm.markAsDirty();
+    this.cvTypeDropdownOpen = false;
+  }
 
   onSubmit() {
     if (this.jobForm.valid) {
@@ -191,5 +213,65 @@ export class PostJobComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['/dashboard']);
     }
+  }
+
+  onSaveAsDraft() {
+    const jobOverview = {
+      jobTitle: this.jobForm.get('jobTitle')?.value,
+      jobRole: this.jobForm.get('jobRole')?.value,
+      industry: this.jobForm.get('industry')?.value,
+      category: this.jobForm.get('category')?.value,
+      jobType: this.jobForm.get('jobType')?.value,
+      workMode: this.jobForm.get('workMode')?.value,
+      openings: this.jobForm.get('openings')?.value,
+      experience: this.jobForm.get('experience')?.value,
+      country: this.jobForm.get('country')?.value,
+      city: this.jobForm.get('city')?.value,
+      expirationDate: this.jobForm.get('expirationDate')?.value,
+      salary: this.jobForm.get('salary')?.value,
+      careerFest: this.jobForm.get('careerFest')?.value
+    };
+    const skillsDetails = {
+      proficiencyLevel: this.jobForm.get('proficiencyLevel')?.value,
+      requiredSkills: this.jobForm.get('requiredSkills')?.value,
+      jobDescription: this.jobForm.get('jobDescription')?.value,
+      jobRequirements: this.jobForm.get('jobRequirements')?.value,
+      minJobCredits: this.jobForm.get('minJobCredits')?.value,
+      cvType: this.jobForm.get('cvType')?.value,
+      contactPersonName: this.jobForm.get('contactPersonName')?.value,
+      contactPersonEmail: this.jobForm.get('contactPersonEmail')?.value
+    };
+    const combined = { jobOverview, skillsDetails };
+    console.log('Save as Draft:', combined);
+  }
+
+  onPublishJob() {
+    const jobOverview = {
+      jobTitle: this.jobForm.get('jobTitle')?.value,
+      jobRole: this.jobForm.get('jobRole')?.value,
+      industry: this.jobForm.get('industry')?.value,
+      category: this.jobForm.get('category')?.value,
+      jobType: this.jobForm.get('jobType')?.value,
+      workMode: this.jobForm.get('workMode')?.value,
+      openings: this.jobForm.get('openings')?.value,
+      experience: this.jobForm.get('experience')?.value,
+      country: this.jobForm.get('country')?.value,
+      city: this.jobForm.get('city')?.value,
+      expirationDate: this.jobForm.get('expirationDate')?.value,
+      salary: this.jobForm.get('salary')?.value,
+      careerFest: this.jobForm.get('careerFest')?.value
+    };
+    const skillsDetails = {
+      proficiencyLevel: this.jobForm.get('proficiencyLevel')?.value,
+      requiredSkills: this.jobForm.get('requiredSkills')?.value,
+      jobDescription: this.jobForm.get('jobDescription')?.value,
+      jobRequirements: this.jobForm.get('jobRequirements')?.value,
+      minJobCredits: this.jobForm.get('minJobCredits')?.value,
+      cvType: this.jobForm.get('cvType')?.value,
+      contactPersonName: this.jobForm.get('contactPersonName')?.value,
+      contactPersonEmail: this.jobForm.get('contactPersonEmail')?.value
+    };
+    const combined = { jobOverview, skillsDetails };
+    console.log('Publish Job:', combined);
   }
 }
