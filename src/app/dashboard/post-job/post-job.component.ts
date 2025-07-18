@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-job',
   templateUrl: './post-job.component.html',
   styleUrls: ['./post-job.component.css']
 })
-export class PostJobComponent implements OnInit {
+export class PostJobComponent implements OnInit, OnDestroy {
   jobForm!: FormGroup;
-  currentStep = 1; // Step indicator, starts with Job Overview
+  currentStep = 1;
+  showExitWarningPopup = false;
 
   // Dropdown lists (sample data)
   industryList = ['Technology', 'Finance', 'Healthcare', 'Education', 'Retail'];
@@ -41,7 +43,7 @@ export class PostJobComponent implements OnInit {
   selectedCountry = '';
   selectedCity = '';
 
-  constructor(private fb: FormBuilder, private location: Location) {}
+  constructor(private fb: FormBuilder, private location: Location, private router: Router) {}
 
   ngOnInit() {
     this.jobForm = this.fb.group({
@@ -57,8 +59,46 @@ export class PostJobComponent implements OnInit {
       city: ['', Validators.required],
       expirationDate: ['', Validators.required],
       salary: [''],
-      careerFest: ['No', Validators.required]
+      careerFest: ['No', Validators.required],
+      proficiencyLevel: [''],
+      requiredSkills: [''],
+      jobDescription: [''],
+      jobRequirements: [''],
+      minJobCredits: [''],
+      cvType: [''],
+      contactPersonName: [''],
+      contactPersonEmail: ['']
     });
+
+  // Detect any interaction with the form
+  this.jobForm.valueChanges.subscribe(() => {
+    if (this.jobForm.pristine) {
+      this.jobForm.markAsDirty();
+    }
+  });
+
+  history.pushState(null, '', window.location.href);
+  window.addEventListener('popstate', this.handleBrowserBack);
+}
+
+  ngOnDestroy() {
+    window.removeEventListener('popstate', this.handleBrowserBack);
+  }
+
+  handleBrowserBack = (event: PopStateEvent) => {
+    if (!this.jobForm.pristine && !this.showExitWarningPopup) {
+      this.showExitWarningPopup = true;
+      // No extra pushState here
+    }
+  };
+
+  exitAnyway() {
+    this.showExitWarningPopup = false;
+    this.router.navigate(['/dashboard']);
+  }
+
+  keepEditing() {
+    this.showExitWarningPopup = false;
   }
 
   // Dropdown toggles
@@ -82,19 +122,58 @@ export class PostJobComponent implements OnInit {
     this.cityDropdownOpen = open === 'city' ? this.cityDropdownOpen : false;
   }
 
-  // Dropdown selects
-  selectIndustry(industry: string) { this.selectedIndustry = industry; this.jobForm.get('industry')?.setValue(industry); this.industryDropdownOpen = false; }
-  selectCategory(category: string) { this.selectedCategory = category; this.jobForm.get('category')?.setValue(category); this.categoryDropdownOpen = false; }
-  selectJobType(type: string) { this.selectedJobType = type; this.jobForm.get('jobType')?.setValue(type); this.jobTypeDropdownOpen = false; }
-  selectWorkMode(mode: string) { this.selectedWorkMode = mode; this.jobForm.get('workMode')?.setValue(mode); this.workModeDropdownOpen = false; }
-  selectOpenings(opening: string) { this.selectedOpenings = opening; this.jobForm.get('openings')?.setValue(opening); this.openingsDropdownOpen = false; }
-  selectExperience(exp: string) { this.selectedExperience = exp; this.jobForm.get('experience')?.setValue(exp); this.experienceDropdownOpen = false; }
-  selectCountry(country: string) { this.selectedCountry = country; this.jobForm.get('country')?.setValue(country); this.countryDropdownOpen = false; }
-  selectCity(city: string) { this.selectedCity = city; this.jobForm.get('city')?.setValue(city); this.cityDropdownOpen = false; }
+  // Dropdown selects (no markAsDirty needed)
+  selectIndustry(industry: string) {
+    this.selectedIndustry = industry;
+    this.jobForm.get('industry')?.setValue(industry);
+    this.jobForm.markAsDirty();
+    this.industryDropdownOpen = false;
+  }
+  selectCategory(category: string) {
+    this.selectedCategory = category;
+    this.jobForm.get('category')?.setValue(category);
+    this.jobForm.markAsDirty();
+    this.categoryDropdownOpen = false;
+  }
+  selectJobType(type: string) {
+    this.selectedJobType = type;
+    this.jobForm.get('jobType')?.setValue(type);
+    this.jobForm.markAsDirty();
+    this.jobTypeDropdownOpen = false;
+  }
+  selectWorkMode(mode: string) {
+    this.selectedWorkMode = mode;
+    this.jobForm.get('workMode')?.setValue(mode);
+    this.jobForm.markAsDirty();
+    this.workModeDropdownOpen = false;
+  }
+  selectOpenings(opening: string) {
+    this.selectedOpenings = opening;
+    this.jobForm.get('openings')?.setValue(opening);
+    this.jobForm.markAsDirty();
+    this.openingsDropdownOpen = false;
+  }
+  selectExperience(exp: string) {
+    this.selectedExperience = exp;
+    this.jobForm.get('experience')?.setValue(exp);
+    this.jobForm.markAsDirty();
+    this.experienceDropdownOpen = false;
+  }
+  selectCountry(country: string) {
+    this.selectedCountry = country;
+    this.jobForm.get('country')?.setValue(country);
+    this.jobForm.markAsDirty();
+    this.countryDropdownOpen = false;
+  }
+  selectCity(city: string) {
+    this.selectedCity = city;
+    this.jobForm.get('city')?.setValue(city);
+    this.jobForm.markAsDirty();
+    this.cityDropdownOpen = false;
+  }
 
   onSubmit() {
     if (this.jobForm.valid) {
-      // Move to Step 2: Skills & Details
       this.currentStep = 2;
     } else {
       this.jobForm.markAllAsTouched();
@@ -107,6 +186,10 @@ export class PostJobComponent implements OnInit {
   }
 
   onBackClick() {
-    this.location.back();
+    if (!this.jobForm.pristine) {
+      this.showExitWarningPopup = true;
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 }

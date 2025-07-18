@@ -1,306 +1,328 @@
 <app-header></app-header>
 
 <div class="profile-wrapper">
- <!-- Page Header -->
- <div class="header">
-  <img src="assets/icons/back-arrow.png" alt="Back Icon" (click)="onBackClick()" class="back-button" />
-  <div class="title-container">
-    <h1>All Job Postings</h1>
-    <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
-    <h2>View All </h2>
+  <!-- Page Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" alt="Back Icon" (click)="onBackClick()" class="back-button" />
+    <div class="title-container">
+      <h1>All Job Postings</h1>
+      <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
+      <h2>View All </h2>
+    </div>
+    <img src="assets/icons/job-header-icon.png" alt="Category Icon" class="header-icon" />
   </div>
-  <img src="assets/icons/job-header-icon.png" alt="Category Icon" class="header-icon" />
-</div>
   <!-- Step Indicator -->
   <div class="step-indicator">
     <div class="step" [class.active]="currentStep === 1" (click)="currentStep = 1">
       <div class="circle">1</div>
-      <div class="label"><strong *ngIf="currentStep === 1">Job Overview</strong><span *ngIf="currentStep !== 1">Job Overview</span></div>
+      <div class="label"><strong *ngIf="currentStep === 1">Job Overview</strong><span *ngIf="currentStep !== 1">Job
+          Overview</span></div>
     </div>
     <div class="step-line"></div>
     <div class="step" [class.active]="currentStep === 2" (click)="currentStep = 2">
       <div class="circle">2</div>
-      <div class="label"><strong *ngIf="currentStep === 2">Skills & Details</strong><span *ngIf="currentStep !== 2">Skills & Details</span></div>
+      <div class="label"><strong *ngIf="currentStep === 2">Skills & Details</strong><span
+          *ngIf="currentStep !== 2">Skills & Details</span></div>
     </div>
   </div>
-<!-- Job Overview Step -->
-<div *ngIf="currentStep === 1">
-  <div class="profile-card-wrapper">
-    <div class="profile-card">
-      <form [formGroup]="jobForm">
-        <!-- Row 1 -->
-        <div class="profile-row row-alt">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>1. Job <span class="highlight">Title</span></label>
-              </div>
-              <input formControlName="jobTitle" placeholder="Type in the Job Title here...e.g., Sales Executive" />
-            </div>
-            <div class="profile-field">
-              <label>2. Job <span class="highlight">Role</span></label>
-              <input formControlName="jobRole" placeholder="Type in the Job Role here...e.g., Marketing" />
-            </div>
-          </div>
-        </div>
-        <!-- Row 2 -->
-        <div class="profile-row">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>3. Job <span class="highlight">Industry Type</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleIndustryDropdown()">
-                  {{ selectedIndustry || 'Choose Industry Type from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+  <!-- Job Overview Step -->
+  <div *ngIf="currentStep === 1">
+    <div class="profile-card-wrapper">
+      <div class="profile-card">
+        <form [formGroup]="jobForm">
+          <!-- Row 1 -->
+          <div class="profile-row row-alt">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>1. Job <span class="highlight">Title</span></label>
                 </div>
-                <ul class="options-list" *ngIf="industryDropdownOpen">
-                  <li *ngFor="let industry of industryList" (click)="selectIndustry(industry)">{{ industry }}</li>
-                </ul>
+                <input formControlName="jobTitle" placeholder="Type in the Job Title here...e.g., Sales Executive" />
               </div>
-            </div>
-            <div class="profile-field">
-              <label>4. Job <span class="highlight">Category</span></label>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleCategoryDropdown()">
-                  {{ selectedCategory || 'Choose Category from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
-                </div>
-                <ul class="options-list" *ngIf="categoryDropdownOpen">
-                  <li *ngFor="let category of categoryList" (click)="selectCategory(category)">{{ category }}</li>
-                </ul>
+              <div class="profile-field">
+                <label>2. Job <span class="highlight">Role</span></label>
+                <input formControlName="jobRole" placeholder="Type in the Job Role here...e.g., Marketing" />
               </div>
             </div>
           </div>
-        </div>
-        <!-- Row 3 -->
-        <div class="profile-row row-alt">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>5. Job <span class="highlight">Type</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleJobTypeDropdown()">
-                  {{ selectedJobType || 'Choose Job Type from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+          <!-- Row 2 -->
+          <div class="profile-row">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>3. Job <span class="highlight">Industry Type</span></label>
                 </div>
-                <ul class="options-list" *ngIf="jobTypeDropdownOpen">
-                  <li *ngFor="let type of jobTypeList" (click)="selectJobType(type)">{{ type }}</li>
-                </ul>
-              </div>
-            </div>
-            <div class="profile-field">
-              <div class="label-row">
-                <label>6. Work <span class="highlight">Mode</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleWorkModeDropdown()">
-                  {{ selectedWorkMode || 'Choose Work from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleIndustryDropdown()">
+                    {{ selectedIndustry || 'Choose Industry Type from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="industryDropdownOpen">
+                    <li *ngFor="let industry of industryList" (click)="selectIndustry(industry)">{{ industry }}</li>
+                  </ul>
                 </div>
-                <ul class="options-list" *ngIf="workModeDropdownOpen">
-                  <li *ngFor="let mode of workModeList" (click)="selectWorkMode(mode)">{{ mode }}</li>
-                </ul>
+              </div>
+              <div class="profile-field">
+                <label>4. Job <span class="highlight">Category</span></label>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleCategoryDropdown()">
+                    {{ selectedCategory || 'Choose Category from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="categoryDropdownOpen">
+                    <li *ngFor="let category of categoryList" (click)="selectCategory(category)">{{ category }}</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Row 4 -->
-        <div class="profile-row">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>7. No. of <span class="highlight">Openings</span> <span
-                    style="font-weight:400; color:#7f8cb7;">(Optional)</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleOpeningsDropdown()">
-                  {{ selectedOpenings || 'Choose No. of Openings from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+          <!-- Row 3 -->
+          <div class="profile-row row-alt">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>5. Job <span class="highlight">Type</span></label>
                 </div>
-                <ul class="options-list" *ngIf="openingsDropdownOpen">
-                  <li *ngFor="let opening of openingsList" (click)="selectOpenings(opening)">{{ opening }}</li>
-                </ul>
-              </div>
-            </div>
-            <div class="profile-field">
-              <div class="label-row">
-                <label>8. Work <span class="highlight">Experience</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleExperienceDropdown()">
-                  {{ selectedExperience || 'Choose Experience range from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleJobTypeDropdown()">
+                    {{ selectedJobType || 'Choose Job Type from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="jobTypeDropdownOpen">
+                    <li *ngFor="let type of jobTypeList" (click)="selectJobType(type)">{{ type }}</li>
+                  </ul>
                 </div>
-                <ul class="options-list" *ngIf="experienceDropdownOpen">
-                  <li *ngFor="let exp of experienceList" (click)="selectExperience(exp)">{{ exp }}</li>
-                </ul>
+              </div>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>6. Work <span class="highlight">Mode</span></label>
+                </div>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleWorkModeDropdown()">
+                    {{ selectedWorkMode || 'Choose Work from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="workModeDropdownOpen">
+                    <li *ngFor="let mode of workModeList" (click)="selectWorkMode(mode)">{{ mode }}</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Row 5 -->
-        <div class="profile-row row-alt">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>9. Job Location - <span class="highlight">Country</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleCountryDropdown()">
-                  {{ selectedCountry || 'Choose Country from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+          <!-- Row 4 -->
+          <div class="profile-row">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>7. No. of <span class="highlight">Openings</span> <span
+                      style="font-weight:400; color:#7f8cb7;">(Optional)</span></label>
                 </div>
-                <ul class="options-list" *ngIf="countryDropdownOpen">
-                  <li *ngFor="let country of countryList" (click)="selectCountry(country)">{{ country }}</li>
-                </ul>
-              </div>
-            </div>
-            <div class="profile-field">
-              <div class="label-row">
-                <label>10. Job Location - <span class="highlight">City</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleCityDropdown()">
-                  {{ selectedCity || 'Choose City from the drop-down' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleOpeningsDropdown()">
+                    {{ selectedOpenings || 'Choose No. of Openings from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="openingsDropdownOpen">
+                    <li *ngFor="let opening of openingsList" (click)="selectOpenings(opening)">{{ opening }}</li>
+                  </ul>
                 </div>
-                <ul class="options-list" *ngIf="cityDropdownOpen">
-                  <li *ngFor="let city of cityList" (click)="selectCity(city)">{{ city }}</li>
-                </ul>
+              </div>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>8. Work <span class="highlight">Experience</span></label>
+                </div>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleExperienceDropdown()">
+                    {{ selectedExperience || 'Choose Experience range from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="experienceDropdownOpen">
+                    <li *ngFor="let exp of experienceList" (click)="selectExperience(exp)">{{ exp }}</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Row 6 -->
-        <div class="profile-row">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>11. Job <span class="highlight">Expiration Date</span></label>
+          <!-- Row 5 -->
+          <div class="profile-row row-alt">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>9. Job Location - <span class="highlight">Country</span></label>
+                </div>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleCountryDropdown()">
+                    {{ selectedCountry || 'Choose Country from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="countryDropdownOpen">
+                    <li *ngFor="let country of countryList" (click)="selectCountry(country)">{{ country }}</li>
+                  </ul>
+                </div>
               </div>
-              <input type="date" formControlName="expirationDate"
-                placeholder="Select an Expiration Date from the Calendar" />
-            </div>
-            <div class="profile-field">
-              <div class="label-row">
-                <label>12. <span class="highlight">Salary</span> <span
-                    style="font-weight:400; color:#7f8cb7;">(Optional)</span></label>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>10. Job Location - <span class="highlight">City</span></label>
+                </div>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleCityDropdown()">
+                    {{ selectedCity || 'Choose City from the drop-down' }}
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="cityDropdownOpen">
+                    <li *ngFor="let city of cityList" (click)="selectCity(city)">{{ city }}</li>
+                  </ul>
+                </div>
               </div>
-              <input formControlName="salary" placeholder="Type or Choose Salary range from the drop-down" />
             </div>
           </div>
-        </div>
-        <!-- Row 7 -->
-        <div class="profile-row row-alt">
-          <div class="profile-grid career-fest-row">
-            <div class="profile-field single-toggle horizontal-toggle">
-              <div class="label-and-toggle">
-                <label class="careerfest-label">
-                  13. Is this Job Part of <span class="highlight">Career Fest?</span>
-                </label>
-                <div class="careerfest-toggle-group">
-                  <label class="toggle-option" [class.selected]="jobForm.get('careerFest')?.value === 'No'">
-                    <input type="radio" formControlName="careerFest" value="No" />
-                    <span class="toggle-dot"></span>
-                    No
+          <!-- Row 6 -->
+          <div class="profile-row">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>11. Job <span class="highlight">Expiration Date</span></label>
+                </div>
+                <input type="date" formControlName="expirationDate"
+                  placeholder="Select an Expiration Date from the Calendar" />
+              </div>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>12. <span class="highlight">Salary</span> <span
+                      style="font-weight:400; color:#7f8cb7;">(Optional)</span></label>
+                </div>
+                <input formControlName="salary" placeholder="Type or Choose Salary range from the drop-down" />
+              </div>
+            </div>
+          </div>
+          <!-- Row 7 -->
+          <div class="profile-row row-alt">
+            <div class="profile-grid career-fest-row">
+              <div class="profile-field single-toggle horizontal-toggle">
+                <div class="label-and-toggle">
+                  <label class="careerfest-label">
+                    13. Is this Job Part of <span class="highlight">Career Fest?</span>
                   </label>
-                  <label class="toggle-option" [class.selected]="jobForm.get('careerFest')?.value === 'Yes'">
-                    <input type="radio" formControlName="careerFest" value="Yes" />
-                    <span class="toggle-dot"></span>
-                    Yes
-                  </label>
+                  <div class="careerfest-toggle-group">
+                    <label class="toggle-option" [class.selected]="jobForm.get('careerFest')?.value === 'No'">
+                      <input type="radio" formControlName="careerFest" value="No" />
+                      <span class="toggle-dot"></span>
+                      No
+                    </label>
+                    <label class="toggle-option" [class.selected]="jobForm.get('careerFest')?.value === 'Yes'">
+                      <input type="radio" formControlName="careerFest" value="Yes" />
+                      <span class="toggle-dot"></span>
+                      Yes
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Submit -->
-        <div class="save-button-container">
-          <button class="save-button" type="button" (click)="onNextStep()">
-            On to the Next
-            <span class="submit-icon">&#10132;</span>
-          </button>
-        </div>
-      </form>
+          <!-- Submit -->
+          <div class="save-button-container">
+            <button class="save-button" type="button" (click)="onNextStep()">
+              On to the Next
+              <span class="submit-icon">&#10132;</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-<!-- Skills & Details Step -->
-<div *ngIf="currentStep === 2">
-  <div class="profile-card-wrapper">
-    <div class="profile-card">
-      <form>
-        <!-- Skills & Details Layout like screenshot -->
-        <div class="profile-row row-alt">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <label>1. Required <span class="highlight">Proficiency Level</span></label>
-              <div class="custom-dropdown">
-                <!-- Example dropdown -->
-                <div class="selected-option">Choose Proficiency Level from the drop-down</div>
+  <!-- Skills & Details Step -->
+  <div *ngIf="currentStep === 2">
+    <div class="profile-card-wrapper">
+      <div class="profile-card">
+        <form [formGroup]="jobForm">
+          <!-- Skills & Details Layout like screenshot -->
+          <div class="profile-row row-alt">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <label>1. Required <span class="highlight">Proficiency Level</span></label>
+                <div class="custom-dropdown">
+                  <!-- Example dropdown -->
+                  <input formControlName="proficiencyLevel" placeholder="Choose Proficiency Level from the drop-down" />
+                </div>
               </div>
-            </div>
-            <div class="profile-field">
-              <label>2. Required <span class="highlight">Skills</span></label>
-              <input placeholder="Type in the Skills Required for this Job...." />
-            </div>
-          </div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <label>3. Job <span class="highlight">Description</span></label>
-              <textarea placeholder="Type in the Job Description here...."></textarea>
-            </div>
-            <div class="profile-field">
-              <label>4. Job <span class="highlight">Requirements</span></label>
-              <textarea placeholder="Type in the Job Requirements here...."></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="profile-row row-alt">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <label>5. <span class="highlight">Minimum Job Credits</span> Required to Apply</label>
-              <input placeholder="Set minimum job credits required (between 5 and 100)" />
-            </div>
-            <div class="profile-field">
-              <label>6. <span class="highlight">CV Type</span> Required</label>
-              <div class="custom-dropdown">
-                <div class="selected-option">Choose one or more CV Types from the drop-down</div>
+              <div class="profile-field">
+                <label>2. Required <span class="highlight">Skills</span></label>
+                <input formControlName="requiredSkills" placeholder="Type in the Skills Required for this Job...." />
               </div>
             </div>
           </div>
-        </div>
-        <div class="profile-row">
-          <div class="profile-grid">
-            <div class="profile-field">
-              <label>7. Contact Person <span class="highlight">Name</span></label>
-              <input placeholder="Type in the Contact Person Name here...." />
-            </div>
-            <div class="profile-field">
-              <label>8. Contact Person <span class="highlight">Email/No.</span></label>
-              <input placeholder="Type in the Contact Person Email/No. here...." />
+          <div class="profile-row">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <label>3. Job <span class="highlight">Description</span></label>
+                <textarea formControlName="jobDescription"
+                  placeholder="Type in the Job Description here...."></textarea>
+              </div>
+              <div class="profile-field">
+                <label>4. Job <span class="highlight">Requirements</span></label>
+                <textarea formControlName="jobRequirements"
+                  placeholder="Type in the Job Requirements here...."></textarea>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Buttons -->
-        <div class="save-button-container">
-        <!-- Save as Draft Button -->
-        <button class="save-button draft">
-          <span class="check-icon">&#10003;</span> Save as Draft
-        </button>
+          <div class="profile-row row-alt">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <label>5. <span class="highlight">Minimum Job Credits</span> Required to Apply</label>
+                <input formControlName="minJobCredits"
+                  placeholder="Set minimum job credits required (between 5 and 100)" />
+              </div>
+              <div class="profile-field">
+                <label>6. <span class="highlight">CV Type</span> Required</label>
+                <div class="custom-dropdown">
+                  <input formControlName="cvType" placeholder="Choose one or more CV Types from the drop-down" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-row">
+            <div class="profile-grid">
+              <div class="profile-field">
+                <label>7. Contact Person <span class="highlight">Name</span></label>
+                <input formControlName="contactPersonName" placeholder="Type in the Contact Person Name here...." />
+              </div>
+              <div class="profile-field">
+                <label>8. Contact Person <span class="highlight">Email/No.</span></label>
+                <input formControlName="contactPersonEmail"
+                  placeholder="Type in the Contact Person Email/No. here...." />
+              </div>
+            </div>
+          </div>
+          <!-- Buttons -->
+          <div class="save-button-container">
+            <!-- Save as Draft Button -->
+            <button class="save-button draft">
+              <span class="check-icon">&#10003;</span> Save as Draft
+            </button>
 
-<!-- Publish Job Button -->
-<button class="save-button publish">
-  Publish Job  <span class="submit-icon">&#10132;</span>  </button>
+            <!-- Publish Job Button -->
+            <button class="save-button publish">
+              Publish Job <span class="submit-icon">&#10132;</span> </button>
 
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Exit Warning Popup -->
+  <div class="success-popup-overlay" *ngIf="showExitWarningPopup">
+    <div class="success-popup">
+      <div class="success-popup-header">Incomplete Job Post</div>
+      <div class="success-popup-body">
+        <img src="assets/icons/job-incomplete.png" alt="Warning Icon" />
+        <p>You haven’t completed this job post. If you exit now, we’ll save it as a draft — you can finish it later from
+          your dashboard (click the ✏️ icon on the job).</p>
+        <div class="dialog-buttons">
+          <button class="exit-btn" (click)="exitAnyway()">Save & Exit</button>
+          <button class="dashboard-btn" (click)="keepEditing()">Stay & Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>

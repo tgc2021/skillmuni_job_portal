@@ -384,7 +384,7 @@ input[type="file"] {
 .success-popup {
   width: 90%;
   max-width: 480px;
-  border-radius: 16px;
+  border-radius: 10px;
   background: #ffffff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   overflow: hidden;
