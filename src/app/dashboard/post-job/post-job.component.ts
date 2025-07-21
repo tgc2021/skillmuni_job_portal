@@ -12,6 +12,9 @@ export class PostJobComponent implements OnInit, OnDestroy {
   jobForm!: FormGroup;
   currentStep = 1;
   showExitWarningPopup = false;
+  showSavedAsDraftPopup = false; // Add this line
+  showPublishErrorPopup = false; // Add for publish error popup
+  showInterviewSetupPopup = false; // Add for interview setup popup
 
   // Dropdown lists (sample data)
   industryList = ['Technology', 'Finance', 'Healthcare', 'Education', 'Retail'];
@@ -243,9 +246,23 @@ export class PostJobComponent implements OnInit, OnDestroy {
     };
     const combined = { jobOverview, skillsDetails };
     console.log('Save as Draft:', combined);
+    this.showSavedAsDraftPopup = true; // Show the popup
+  }
+
+  closeSavedAsDraftPopup() {
+    this.showSavedAsDraftPopup = false;
+  }
+
+  goToDashboardFromDraft() {
+    this.showSavedAsDraftPopup = false;
+    this.router.navigate(['/dashboard']);
   }
 
   onPublishJob() {
+    if (!this.jobForm.valid) {
+      this.showPublishErrorPopup = true;
+      return;
+    }
     const jobOverview = {
       jobTitle: this.jobForm.get('jobTitle')?.value,
       jobRole: this.jobForm.get('jobRole')?.value,
@@ -273,5 +290,26 @@ export class PostJobComponent implements OnInit, OnDestroy {
     };
     const combined = { jobOverview, skillsDetails };
     console.log('Publish Job:', combined);
+    this.showInterviewSetupPopup = true; // Show interview setup popup
+  }
+
+  closeInterviewSetupPopup() {
+    this.showInterviewSetupPopup = false;
+  }
+
+  maybeLater() {
+    this.showInterviewSetupPopup = false;
+    this.router.navigate(['/dashboard']);
+  }
+
+  yesSetUp() {
+    this.showInterviewSetupPopup = false;
+    // Navigate to interview setup page (update route as needed)
+    this.router.navigate(['/dashboard/interview-setup']);
+  }
+
+  closePublishErrorPopup() {
+    this.showPublishErrorPopup = false;
+    this.jobForm.markAllAsTouched(); // Show errors after closing popup
   }
 }

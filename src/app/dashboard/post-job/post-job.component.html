@@ -337,3 +337,50 @@
       </div>
     </div>
   </div>
+
+  <!-- Saved as Draft Popup -->
+  <div class="success-popup-overlay" *ngIf="showSavedAsDraftPopup">
+    <div class="success-popup">
+      <div class="success-popup-header">Saved as Draft!</div>
+      <div class="success-popup-body">
+        <img src="assets/icons/post-job-icon.png" alt="Draft Saved Icon" />
+        <p>Your job post has been saved. You can continue editing it anytime from your dashboard (look for the ✏️ icon).</p>
+        <div class="dialog-buttons">
+          <button class="exit-btn" (click)="goToDashboardFromDraft()">Dashboard</button>
+          <button class="dashboard-btn" (click)="closeSavedAsDraftPopup()">Stay & Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Can't Publish Yet Popup -->
+  <div class="success-popup-overlay" *ngIf="showPublishErrorPopup">
+    <div class="success-popup">
+      <div class="success-popup-header">Can't Publish Yet!</div>
+      <div class="success-popup-body">
+        <img src="assets/icons/job-incomplete.png" alt="Can't Publish Icon" />
+        <p>Some required details are missing. Fill them out so your job post can go live. You can also save it as a draft and finish later from your dashboard.</p>
+        <div class="dialog-buttons">
+          <button class="exit-btn" (click)="onSaveAsDraft(); closePublishErrorPopup();">Save as Draft</button>
+          <button class="dashboard-btn" (click)="closePublishErrorPopup()">Stay & Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Set Up Interview Rounds Popup -->
+  <div class="success-popup-overlay" *ngIf="showInterviewSetupPopup">
+    <div class="success-popup">
+      <div class="success-popup-header">Set Up Interview Rounds?</div>
+      <div class="success-popup-body">
+        <img src="assets/icons/post-job-icon.png" alt="Interview Setup Icon" />
+        <p>Your job post is now live.<br>
+        Want to streamline your hiring with interview rounds?</p>
+        <p>Set up custom interview rounds to easily move candidates forward, send offers, and track everything.</p>
+        <div class="dialog-buttons">
+          <button class="exit-btn" (click)="maybeLater()">Maybe Later</button>
+          <button class="dashboard-btn" (click)="yesSetUp()">Yes, Set Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
