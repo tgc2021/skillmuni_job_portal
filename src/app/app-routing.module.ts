@@ -12,6 +12,7 @@ import { ForgotPasswordResetComponent } from './auth/forgot-password/forgot-pass
 import { AuthGuard } from './services/auth.guard';
 import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
 import { PostJobComponent } from './dashboard/post-job/post-job.component';
+import { InterviewSetupComponent } from './dashboard/interview-setup/interview-setup.component';
 
 const routes: Routes = [
   { 
@@ -35,6 +36,12 @@ const routes: Routes = [
     component: PostJobComponent,
     canActivate: [AuthGuard],
     data: { title: 'Post a Job' }
+  },
+  { 
+    path: 'dashboard/interview-setup', 
+    component: InterviewSetupComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Interview Set-up' }
   },
   { 
     path: 'sign-up', 

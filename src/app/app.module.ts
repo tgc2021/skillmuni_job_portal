@@ -16,6 +16,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
 import { PostJobComponent } from './dashboard/post-job/post-job.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InterviewSetupComponent } from './dashboard/interview-setup/interview-setup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CompanyProfileComponent,
     DashboardComponent,
     ViewAllJobsComponent,
-    PostJobComponent
+    PostJobComponent,
+    InterviewSetupComponent
   ],
   imports: [
     BrowserModule,
