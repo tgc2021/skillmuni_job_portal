@@ -1,1 +1,71 @@
-<p>interview-setup works!</p>
+<app-header></app-header>
+
+<div class="profile-wrapper">
+  <!-- Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" class="back-button" (click)="onBackClick()" />
+    <div class="title-container">
+      <h1>Interview Rounds</h1>
+      <h2>Set it up. Send it out.</h2>
+    </div>
+    <img src="assets/icons/job-header-icon.png" class="header-icon" />
+  </div>
+
+  <!-- Step Tabs -->
+  <div class="step-indicator">
+    <div class="step" [class.active]="step === 1" (click)="step = 1">
+      <div class="circle">1</div>
+      <div class="label">Set-up Rounds</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" [class.active]="step === 2" (click)="step = 2">
+      <div class="circle">2</div>
+      <div class="label">Sort Rounds</div>
+    </div>
+  </div>
+
+  <!-- Round Form -->
+  <div class="profile-card-wrapper">
+    <div class="profile-card">
+      <form [formGroup]="interviewForm">
+        <div class="profile-row row-alt">
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="label-row">
+                <label>1. Interview Round <span class="highlight">Name</span></label>
+              </div>
+              <input formControlName="roundName" placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
+            </div>
+            <div class="profile-field">
+              <div class="label-row">
+                <label>2. Interview Round <span class="highlight">Type</span></label>
+              </div>
+              <div class="custom-dropdown">
+                <div class="selected-option" (click)="toggleTypeDropdown()">
+                  {{ selectedType || 'Select Type from the drop-down below.' }}
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </div>
+                <ul class="options-list" *ngIf="typeDropdownOpen">
+                  <li *ngFor="let type of roundTypes" (click)="selectType(type)">
+                    {{ type }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add More Button -->
+        <div class="save-button-container">
+          <button class="save-button draft" type="button" (click)="addRound()">
+            <span class="check-icon">+</span> Add more
+          </button>
+
+          <button class="save-button" type="button" (click)="goToSortStep()">
+            Good to Go <span class="submit-icon">&#10132;</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

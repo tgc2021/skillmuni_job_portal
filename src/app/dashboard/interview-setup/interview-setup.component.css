@@ -1,0 +1,334 @@
+/* --- Wrapper --- */
+.profile-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f6f8ff;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 5px 0;
+  background: linear-gradient(to right, #d2dbff, #f7f9ff, #e7ecff);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 85px;
+  margin-top: 45px;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.header h1 {
+  font-size: 20px;
+  color: #34437a;
+  margin: 0;
+}
+
+.header h2 {
+  font-size: 15px;
+  color: #34437a;
+  margin: 0;
+  font-weight: 500;
+}
+
+.long-arrow {
+  width: 160px;
+}
+
+.header-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 85px;
+}
+.back-button {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* --- Step Indicator --- */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  gap: 12px;
+  font-family: inherit;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2f3260;
+  font-size: 16px;
+  cursor: pointer;
+}
+.step .circle {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #2f3260;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  background-color: #fff;
+}
+.step.active .circle {
+  background-color: #ecf0ff;
+  font-weight: bold;
+}
+.step.active .label {
+  font-weight: 600;
+  text-decoration: underline;
+}
+.step-line {
+  height: 2px;
+  width: 50px;
+  background-color: #2f3260;
+}
+
+/* --- Card Wrapper --- */
+.profile-card-wrapper {
+  background: transparent;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.profile-card {
+  background: white;
+  border: 1.5px solid #34437a;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(52, 67, 122, 0.1);
+  width: 80%;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-height: 400px;
+  height: auto;
+}
+
+/* --- Form Layout --- */
+.profile-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.profile-row.row-alt {
+  background-color: #ecf0ff;
+}
+.profile-grid {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.profile-field {
+  flex: 1;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  border-radius: 12px;
+}
+
+/* --- Labels and Inputs --- */
+label {
+  font-weight: 500;
+  color: #2f3260;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.highlight {
+  color: #ff8a3d;
+  font-weight: 600;
+}
+input {
+  border: 1px solid #2f2854;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14px;
+  background: white;
+  color: #34437a;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+input:focus {
+  border-color: #34437a;
+}
+
+/* --- Custom Dropdown --- */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  font-size: 14px;
+  color: #2f2854;
+}
+.custom-dropdown .selected-option {
+  border: 1px solid #2f2854;
+  border-radius: 10px;
+  padding: 14px 16px;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.custom-dropdown .material-icons {
+  color: #3b4b89;
+}
+.custom-dropdown .options-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #2f2854;
+  border-radius: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.custom-dropdown .options-list li {
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: #ecf0ff;
+  border-bottom: 1px solid #dfe4ff;
+}
+.custom-dropdown .options-list li:nth-child(even) {
+  background-color: white;
+}
+.custom-dropdown .options-list li:hover {
+  background-color: #dbe3ff;
+}
+.custom-dropdown .options-list::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-dropdown .options-list::-webkit-scrollbar-thumb {
+  background-color: #ff8a3d;
+  border-radius: 10px;
+}
+.custom-dropdown .options-list::-webkit-scrollbar-track {
+  background-color: #f0f4ff;
+}
+
+/* --- Buttons --- */
+.save-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Adjust the gap between the buttons */
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+}
+.save-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff9800;
+  color: white;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 30px;
+  padding: 5px 10px;
+  font-weight: 600;
+  gap: 8px;
+}
+.save-button:hover {
+  background: #e68900;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.save-button:active {
+  transform: scale(0.98);
+}
+.save-button .submit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  transition: transform 0.2s ease-in-out;
+  margin-left: 10px;
+  font-weight: bold;
+}
+.save-button:hover .submit-icon {
+  transform: translateX(10px) scale(1.08);
+}
+
+/* --- Add More Button --- */
+.save-button.draft {
+  background: #ffffff;
+  color: #34437a;
+  border: 2px solid #34437a;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+.save-button.draft .check-icon {
+  font-size: 18px;
+  color: #34437a;
+  border: 2px solid #34437a;
+  border-radius: 10%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.save-button.draft:hover {
+  background-color: #f0f4ff;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .profile-grid {
+    flex-direction: column;
+  }
+  .profile-field {
+    padding: 16px;
+  }
+  .save-button {
+    font-size: 14px;
+  }
+  input {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  .custom-dropdown .selected-option {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  .custom-dropdown .options-list li {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
