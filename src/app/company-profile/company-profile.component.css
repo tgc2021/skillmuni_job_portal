@@ -353,7 +353,7 @@ input[type="file"] {
 }
 
 .error-text {
-  color: #E75665;
+  color: #e75665;
   font-size: 13px;
   font-weight: 500;
   margin-top: 2px;
@@ -361,6 +361,7 @@ input[type="file"] {
   text-align: right;
   letter-spacing: 0.01em;
 }
+
 .error-text .asterisk {
   color: #ff3d3d;
   font-weight: bold;

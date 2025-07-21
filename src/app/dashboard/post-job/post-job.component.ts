@@ -69,14 +69,14 @@ export class PostJobComponent implements OnInit, OnDestroy {
       expirationDate: ['', Validators.required],
       salary: [''],
       careerFest: ['No', Validators.required],
-      proficiencyLevel: [''],
-      requiredSkills: [''],
-      jobDescription: [''],
-      jobRequirements: [''],
-      minJobCredits: [''],
-      cvType: [''],
-      contactPersonName: [''],
-      contactPersonEmail: ['']
+      proficiencyLevel: ['', Validators.required],
+      requiredSkills: ['', Validators.required],
+      jobDescription: ['', Validators.required],
+      jobRequirements: ['', Validators.required],
+      minJobCredits: ['', Validators.required],
+      cvType: ['', Validators.required],
+      contactPersonName: ['', Validators.required],
+      contactPersonEmail: ['', Validators.required]
     });
 
   // Detect any interaction with the form

@@ -36,11 +36,19 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>1. Job <span class="highlight">Title</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('jobTitle')?.invalid && jobForm.get('jobTitle')?.touched">
+                    *Job Title is required
+                  </div>
                 </div>
                 <input formControlName="jobTitle" placeholder="Type in the Job Title here...e.g., Sales Executive" />
               </div>
               <div class="profile-field">
-                <label>2. Job <span class="highlight">Role</span></label>
+                <div class="label-row">
+                  <label>2. Job <span class="highlight">Role</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('jobRole')?.invalid && jobForm.get('jobRole')?.touched">
+                    *Job Role is required
+                  </div>
+                </div>
                 <input formControlName="jobRole" placeholder="Type in the Job Role here...e.g., Marketing" />
               </div>
             </div>
@@ -51,6 +59,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>3. Job <span class="highlight">Industry Type</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('industry')?.invalid && jobForm.get('industry')?.touched">
+                    *Choose Industry Type from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleIndustryDropdown()">
@@ -63,7 +74,12 @@
                 </div>
               </div>
               <div class="profile-field">
-                <label>4. Job <span class="highlight">Category</span></label>
+                <div class="label-row">
+                  <label>4. Job <span class="highlight">Category</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('category')?.invalid && jobForm.get('category')?.touched">
+                    *Choose Category from the drop-down
+                  </div>
+                </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleCategoryDropdown()">
                     {{ selectedCategory || 'Choose Category from the drop-down' }}
@@ -82,6 +98,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>5. Job <span class="highlight">Type</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('jobType')?.invalid && jobForm.get('jobType')?.touched">
+                    *Choose Job Type from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleJobTypeDropdown()">
@@ -96,6 +115,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>6. Work <span class="highlight">Mode</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('workMode')?.invalid && jobForm.get('workMode')?.touched">
+                    *Choose Work Mode from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleWorkModeDropdown()">
@@ -130,6 +152,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>8. Work <span class="highlight">Experience</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
+                    *Choose Experience from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleExperienceDropdown()">
@@ -149,6 +174,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>9. Job Location - <span class="highlight">Country</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('country')?.invalid && jobForm.get('country')?.touched">
+                    *Choose Country from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleCountryDropdown()">
@@ -163,6 +191,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>10. Job Location - <span class="highlight">City</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('city')?.invalid && jobForm.get('city')?.touched">
+                    *Choose City from the drop-down
+                  </div>
                 </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleCityDropdown()">
@@ -182,6 +213,9 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>11. Job <span class="highlight">Expiration Date</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('expirationDate')?.invalid && jobForm.get('expirationDate')?.touched">
+                    *Expiration Date is required
+                  </div>
                 </div>
                 <input type="date" formControlName="expirationDate"
                   placeholder="Select an Expiration Date from the Calendar" />
@@ -200,9 +234,14 @@
             <div class="profile-grid career-fest-row">
               <div class="profile-field single-toggle horizontal-toggle">
                 <div class="label-and-toggle">
-                  <label class="careerfest-label">
-                    13. Is this Job Part of <span class="highlight">Career Fest?</span>
-                  </label>
+                  <div class="label-row">
+                    <label class="careerfest-label">
+                      13. Is this Job Part of <span class="highlight">Career Fest?</span>
+                    </label>
+                    <div class="error-text" *ngIf="jobForm.get('careerFest')?.invalid && jobForm.get('careerFest')?.touched">
+                      *Please select Yes or No
+                    </div>
+                  </div>
                   <div class="careerfest-toggle-group">
                     <label class="toggle-option" [class.selected]="jobForm.get('careerFest')?.value === 'No'">
                       <input type="radio" formControlName="careerFest" value="No" />
@@ -240,7 +279,12 @@
           <div class="profile-row row-alt">
             <div class="profile-grid">
               <div class="profile-field">
-                <label>1. Required <span class="highlight">Proficiency Level</span></label>
+                <div class="label-row">
+                  <label>1. Required <span class="highlight">Proficiency Level</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('proficiencyLevel')?.invalid && jobForm.get('proficiencyLevel')?.touched">
+                    *Choose Proficiency Level from the drop-down
+                  </div>
+                </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleProficiencyLevelDropdown()">
                     {{ selectedProficiencyLevel || 'Choose Proficiency Level from the drop-down' }}
@@ -252,7 +296,12 @@
                 </div>
               </div>
               <div class="profile-field">
-                <label>2. Required <span class="highlight">Skills</span></label>
+                <div class="label-row">
+                  <label>2. Required <span class="highlight">Skills</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('requiredSkills')?.invalid && jobForm.get('requiredSkills')?.touched">
+                    *Required Skills are required
+                  </div>
+                </div>
                 <input formControlName="requiredSkills" placeholder="Type in the Skills Required for this Job...." />
               </div>
             </div>
@@ -260,12 +309,22 @@
           <div class="profile-row">
             <div class="profile-grid">
               <div class="profile-field">
-                <label>3. Job <span class="highlight">Description</span></label>
+                <div class="label-row">
+                  <label>3. Job <span class="highlight">Description</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('jobDescription')?.invalid && jobForm.get('jobDescription')?.touched">
+                    *Job Description is required
+                  </div>
+                </div>
                 <textarea formControlName="jobDescription"
                   placeholder="Type in the Job Description here...."></textarea>
               </div>
               <div class="profile-field">
-                <label>4. Job <span class="highlight">Requirements</span></label>
+                <div class="label-row">
+                  <label>4. Job <span class="highlight">Requirements</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('jobRequirements')?.invalid && jobForm.get('jobRequirements')?.touched">
+                    *Job Requirements are required
+                  </div>
+                </div>
                 <textarea formControlName="jobRequirements"
                   placeholder="Type in the Job Requirements here...."></textarea>
               </div>
@@ -274,12 +333,22 @@
           <div class="profile-row row-alt">
             <div class="profile-grid">
               <div class="profile-field">
-                <label>5. <span class="highlight">Minimum Job Credits</span> Required to Apply</label>
+                <div class="label-row">
+                  <label>5. <span class="highlight">Minimum Job Credits</span> Required to Apply</label>
+                  <div class="error-text" *ngIf="jobForm.get('minJobCredits')?.invalid && jobForm.get('minJobCredits')?.touched">
+                    *Minimum Job Credits are required
+                  </div>
+                </div>
                 <input formControlName="minJobCredits"
                   placeholder="Set minimum job credits required (between 5 and 100)" />
               </div>
               <div class="profile-field">
-                <label>6. <span class="highlight">CV Type</span> Required</label>
+                <div class="label-row">
+                  <label>6. <span class="highlight">CV Type</span> Required</label>
+                  <div class="error-text" *ngIf="jobForm.get('cvType')?.invalid && jobForm.get('cvType')?.touched">
+                    *Choose CV Type from the drop-down
+                  </div>
+                </div>
                 <div class="custom-dropdown">
                   <div class="selected-option" (click)="toggleCvTypeDropdown()">
                     {{ selectedCvType || 'Choose one or more CV Types from the drop-down' }}
@@ -295,11 +364,21 @@
           <div class="profile-row">
             <div class="profile-grid">
               <div class="profile-field">
-                <label>7. Contact Person <span class="highlight">Name</span></label>
+                <div class="label-row">
+                  <label>7. Contact Person <span class="highlight">Name</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('contactPersonName')?.invalid && jobForm.get('contactPersonName')?.touched">
+                    *Contact Person Name is required
+                  </div>
+                </div>
                 <input formControlName="contactPersonName" placeholder="Type in the Contact Person Name here...." />
               </div>
               <div class="profile-field">
-                <label>8. Contact Person <span class="highlight">Email/No.</span></label>
+                <div class="label-row">
+                  <label>8. Contact Person <span class="highlight">Email/No.</span></label>
+                  <div class="error-text" *ngIf="jobForm.get('contactPersonEmail')?.invalid && jobForm.get('contactPersonEmail')?.touched">
+                    *Contact Person Email/No. is required
+                  </div>
+                </div>
                 <input formControlName="contactPersonEmail"
                   placeholder="Type in the Contact Person Email/No. here...." />
               </div>
