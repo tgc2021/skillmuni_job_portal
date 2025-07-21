@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class InterviewSetupComponent implements OnInit {
   interviewForm!: FormGroup;
-  roundTypes = ['Telephonic', 'Technical', 'HR', 'Group Discussion'];
+  roundTypes = ['Assessment', 'Online', 'Offline'];
   selectedType = '';
   typeDropdownOpen = false;
   step = 1;
