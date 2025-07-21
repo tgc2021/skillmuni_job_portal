@@ -114,16 +114,29 @@
   margin-bottom: 20px;
 }
 .profile-card {
-  background: white;
-  border: 1.5px solid #34437a;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(52, 67, 122, 0.1);
-  width: 80%;
-  box-sizing: border-box;
-  overflow: hidden;
-  min-height: 400px;
-  height: auto;
-}
+    background: white;
+    border: 1.5px solid #34437a;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(52, 67, 122, 0.1);
+    width: 80%;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 400px; /* keep fixed height */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-card form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+  }
+
+  .form-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+  }
 
 /* --- Form Layout --- */
 .profile-row {
@@ -234,13 +247,14 @@ input:focus {
 
 /* --- Buttons --- */
 .save-button-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px; /* Adjust the gap between the buttons */
-  background-color: #ffffff;
-  padding: 16px;
-  border-radius: 12px;
-}
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: auto; /* pin to bottom */
+  }
 .save-button {
   display: flex;
   align-items: center;
