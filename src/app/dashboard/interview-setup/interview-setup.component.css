@@ -67,7 +67,6 @@
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-  margin-bottom: 15px;
   gap: 12px;
   font-family: inherit;
 }
@@ -114,29 +113,16 @@
   margin-bottom: 20px;
 }
 .profile-card {
-    background: white;
-    border: 1.5px solid #34437a;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(52, 67, 122, 0.1);
-    width: 80%;
-    box-sizing: border-box;
-    overflow: hidden;
-    height: 400px; /* keep fixed height */
-    display: flex;
-    flex-direction: column;
-  }
-
-  .profile-card form {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
-  }
-
-  .form-scroll-area {
-    flex: 1;
-    overflow-y: auto;
-  }
+  background: white;
+  border: 1.5px solid #34437a;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(52, 67, 122, 0.1);
+  width: 80%;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-height: 300px;
+  height: auto;
+}
 
 /* --- Form Layout --- */
 .profile-row {
@@ -144,7 +130,7 @@
   display: flex;
   flex-direction: column;
 }
-.profile-row.row-alt {
+.profile-grid.top {
   background-color: #ecf0ff;
 }
 .profile-grid {
@@ -182,10 +168,13 @@ input {
   outline: none;
   width: 100%;
   box-sizing: border-box;
+  height: 50px; /* ✅ Add this line */
 }
 input:focus {
   border-color: #34437a;
 }
+
+
 
 /* --- Custom Dropdown --- */
 .custom-dropdown {
@@ -194,16 +183,21 @@ input:focus {
   font-size: 14px;
   color: #2f2854;
 }
+
 .custom-dropdown .selected-option {
+  width: 100%;
+  height: 50px;  /* Same height as input */
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border: 1px solid #2f2854;
   border-radius: 10px;
-  padding: 14px 16px;
   background-color: white;
+  box-sizing: border-box;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
+
 .custom-dropdown .material-icons {
   color: #3b4b89;
 }
@@ -222,6 +216,7 @@ input:focus {
   z-index: 10;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 .custom-dropdown .options-list li {
   padding: 12px 16px;
   cursor: pointer;
@@ -247,14 +242,13 @@ input:focus {
 
 /* --- Buttons --- */
 .save-button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    background-color: #ffffff;
-    padding: 16px;
-    border-radius: 12px;
-    margin-top: auto; /* pin to bottom */
-  }
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Adjust the gap between the buttons */
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+}
 .save-button {
   display: flex;
   align-items: center;
@@ -321,6 +315,116 @@ input:focus {
 .save-button.draft:hover {
   background-color: #f0f4ff;
 }
+.custom-assessment {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.create-btn {
+  background: transparent;
+  border: 1px solid #2f2854;
+  color: #34437a;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.create-btn .highlight {
+  color: #ff8a3d;
+  font-weight: 600;
+}
+
+.plus-btn {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 2px solid #2f2854;
+  border-radius: 50%;
+  font-size: 24px;
+  color: #2f2854;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.assessment-row .profile-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.assessment-left,
+.assessment-right {
+  flex: 1;
+  padding: 25px;
+}
+
+.assessment-create-box,
+.custom-dropdown .selected-option {
+  border: 1px solid #2f2854;
+  border-radius: 10px;
+  padding: 14px 16px;
+  background-color: white;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.create-text {
+  font-size: 14px;
+  color: #34437a;
+}
+
+.create-text .highlight {
+  color: #ff8a3d;
+  font-weight: 600;
+}
+
+.create-icon {
+  width: 32px;
+  height: 32px;
+  background: white;
+  color: #2f2854;
+  border: 2px solid #2f2854;
+  font-size: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assessment-note {
+  font-size: 12px;
+  color: #2f2854;
+  margin-top: 8px;
+  display: block;
+}
+
+.invisible-label {
+  visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .assessment-create-box {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .assessment-row .profile-grid {
+    flex-direction: column;
+  }
+
+  .assessment-right, .assessment-left {
+    padding: 16px !important;
+  }
+}
+
 
 /* --- Responsive --- */
 @media (max-width: 768px) {

@@ -28,15 +28,14 @@
   <div class="profile-card-wrapper">
     <div class="profile-card">
       <form [formGroup]="interviewForm">
-
-        <div class="form-scroll-area">
-          <div class="profile-row row-alt">
-          <div class="profile-grid">
+        <div class="profile-row row-alt">
+          <div class="profile-grid top">
             <div class="profile-field">
               <div class="label-row">
                 <label>1. Interview Round <span class="highlight">Name</span></label>
               </div>
-              <input formControlName="roundName" placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
+              <input formControlName="roundName"
+                placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
             </div>
             <div class="profile-field">
               <div class="label-row">
@@ -55,9 +54,56 @@
               </div>
             </div>
           </div>
+
+          <!-- Conditionally show Assessment fields -->
+          <div class="profile-row assessment-row" *ngIf="selectedType === 'Assessment'">
+            <div class="profile-grid">
+              <div class="profile-field assessment-left">
+                <div class="label-row">
+                  <label>3. Add <span class="highlight">Assessment</span></label>
+                </div>
+                <div class="assessment-create-box">
+                  <span class="create-text">Click here to <span class="highlight">Create</span> Assessment</span>
+                  <div class="create-icon">+</div>
+                </div>
+              </div>
+
+              <div class="profile-field assessment-right">
+                <div class="label-row invisible-label">
+                  <label>&nbsp;</label>
+                </div>
+                <div class="custom-dropdown">
+                  <div class="selected-option" (click)="toggleAssessmentDropdown()">
+                    <span class="assessment-text">
+                      {{ selectedAssessment || 'Choose a ' }} 
+                      <span class="highlight">previously created assessment</span>
+                    </span>
+                    <span class="material-icons">keyboard_arrow_down</span>
+                  </div>
+                  <ul class="options-list" *ngIf="assessmentDropdownOpen">
+                    <li *ngFor="let a of previousAssessments" (click)="selectAssessment(a)">
+                      {{ a }}
+                    </li>
+                  </ul>
+                </div>
+                
+              </div>
+            </div>
+
+            <div class="profile-grid">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>4. Assessment Link</label>
+                </div>
+                <input type="text" placeholder="Paste Assessment Link here..." />
+                <small class="assessment-note">
+                 <i> *Using your own assessment? Add the link — candidates will be sent there.</i>
+                </small>
+              </div>
+            </div>
+          </div>
+
         </div>
-        </div>
-        
 
         <!-- Add More Button -->
         <div class="save-button-container">

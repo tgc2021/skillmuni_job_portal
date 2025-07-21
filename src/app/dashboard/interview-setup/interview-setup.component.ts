@@ -52,6 +52,26 @@ export class InterviewSetupComponent implements OnInit {
     }
   }
 
+  selectedAssessmentOption: string = '';
+
+selectAssessmentOption(option: string) {
+  this.selectedAssessmentOption = option;
+  // Trigger next step or logic based on this selection
+}
+previousAssessments = ['Java Test', 'Soft Skills Round', 'Logical Test'];
+assessmentDropdownOpen = false;
+selectedAssessment = '';
+
+toggleAssessmentDropdown() {
+  this.assessmentDropdownOpen = !this.assessmentDropdownOpen;
+}
+
+selectAssessment(a: string) {
+  this.selectedAssessment = a;
+  this.assessmentDropdownOpen = false;
+}
+
+
   onBackClick() {
     this.router.navigate(['/dashboard']);
   }
