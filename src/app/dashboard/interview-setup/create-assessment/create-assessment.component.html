@@ -1,0 +1,55 @@
+<app-header></app-header>
+
+<div class="profile-wrapper">
+  <!-- Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" class="back-button" (click)="onBackClick()" />
+    <div class="title-container">
+      <h1>Create Assessment</h1>
+      <h2>Set up your assessment details</h2>
+    </div>
+    <img src="assets/icons/job-header-icon.png" class="header-icon" />
+  </div>
+
+  <div class="profile-card-wrapper">
+    <div class="profile-card">
+      <form [formGroup]="assessmentForm" class="assessment-form" (ngSubmit)="onSubmit()">
+        <div class="assessment-title">
+          Enter Assessment Name & Total Questions to Continue
+        </div>
+        <div class="assessment-fields">
+          <div class="assessment-field">
+            <div class="label-row">
+              <label>1. Assessment <span class="highlight">Name</span></label>
+              <div class="error-text" *ngIf="assessmentForm.get('assessmentName')?.errors?.['required'] && assessmentForm.get('assessmentName')?.touched">
+                *Don’t leave this blank!
+              </div>
+            </div>
+            <input formControlName="assessmentName" placeholder="Type the name to create your assessment...."
+              [class.ng-touched]="assessmentForm.get('assessmentName')?.touched"
+              [class.ng-invalid]="assessmentForm.get('assessmentName')?.invalid" />
+          </div>
+          <div class="assessment-field">
+            <div class="label-row">
+              <label>2. Total Number of Questions</label>
+              <div class="error-text" *ngIf="assessmentForm.get('totalQuestions')?.errors?.['required'] && assessmentForm.get('totalQuestions')?.touched">
+                *Don’t leave this blank!
+              </div>
+              <div class="error-text" *ngIf="(assessmentForm.get('totalQuestions')?.errors?.['min'] || assessmentForm.get('totalQuestions')?.errors?.['max']) && assessmentForm.get('totalQuestions')?.touched">
+                Total Questions must be between 2 and 30
+              </div>
+            </div>
+            <input formControlName="totalQuestions" type="number" min="2" max="30" placeholder="Set number of questions required (between 2 and 30)"
+              [class.ng-touched]="assessmentForm.get('totalQuestions')?.touched"
+              [class.ng-invalid]="assessmentForm.get('totalQuestions')?.invalid" />
+          </div>
+        </div>
+        <div class="assessment-btn-row save-button-container">
+          <button class="save-button" type="submit">
+            Next &nbsp;<span class="submit-icon">&#10132;</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

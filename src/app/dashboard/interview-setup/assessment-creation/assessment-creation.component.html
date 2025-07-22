@@ -1,0 +1,125 @@
+<app-header></app-header>
+
+<div class="profile-wrapper">
+  <!-- Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" class="back-button" (click)="onBackClick()" />
+    <div class="title-container">
+      <h1>Interview Rounds</h1>
+      <h2>Create Assessment</h2>
+    </div>
+    <img src="assets/icons/job-header-icon.png" class="header-icon" />
+  </div>
+
+  <!-- Assessment Form -->
+  <div class="profile-card-wrapper">
+    <div class="profile-card">
+      <form [formGroup]="assessmentForm" (ngSubmit)="onSubmit()">
+        <!-- Dynamic Question Blocks -->
+        <div formArrayName="questions">
+          <div *ngFor="let question of questionsArray.controls; let i = index;" [formGroupName]="i" class="question-block">
+            <div class="question-label">{{i + 1}}. Type in the Question/Scenario.</div>
+            <textarea 
+              class="question-input" 
+              placeholder="Type in the Question/Scenario here...."
+              formControlName="questionText">
+            </textarea>
+            
+            <div class="question-row">
+              <div class="upload-box">
+                <span class="upload-label">
+                  <span class="highlight">Upload</span> Question Image (Optional)
+                  <input 
+                    #questionImageInput
+                    type="file" 
+                    style="display: none;" 
+                    (change)="onFileSelected($event, i)"
+                    accept="image/*">
+                </span>
+                <button type="button" class="upload-btn" (click)="triggerFileInput($event, questionImageInput)">
+                  <span class="material-icons">upload</span>
+                </button>
+              </div>
+              <div class="question-note">* You can type the question, upload an image, or do both.<br>Same goes for options.</div>
+            </div>
+
+            <!-- Options Grid -->
+            <div class="options-grid">
+              <div class="option-col" *ngFor="let option of answerOptions; let optionIndex = index">
+                <div class="option-label">
+                  {{option}}. Type in {{optionIndex === 0 ? 'first' : optionIndex === 1 ? 'second' : optionIndex === 2 ? 'third' : 'fourth'}} option
+                  {{optionIndex >= 2 ? '(Optional)' : ''}}
+                </div>
+                <input 
+                  class="option-input" 
+                  [placeholder]="'Type in Option ' + (optionIndex + 1) + ' here....'"
+                  [formControl]="getOptionControl(i, optionIndex)">
+                
+                <div class="upload-box">
+                  <span class="upload-label">
+                    <span class="highlight">Upload</span> Option {{option}} Image {{optionIndex >= 2 ? '(Optional)' : ''}}
+                    <input 
+                      #fileInput
+                      type="file" 
+                      style="display: none;" 
+                      (change)="onFileSelected($event, i, optionIndex)"
+                      accept="image/*">
+                  </span>
+                  <button type="button" class="upload-btn" (click)="triggerFileInput($event, fileInput)">
+                    <span class="material-icons">upload</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Answer Selection -->
+            <div class="answer-row">
+              <span>Select the <span class="highlight correct">correct answer</span> (from filled options):--</span>
+              <label class="answer-radio" *ngFor="let option of answerOptions">
+                
+                {{option}}.
+                <input 
+                  type="radio" 
+                  [name]="'answer' + i" 
+                  [value]="option"
+                  [formControl]="getCorrectAnswerControl(i)">
+                
+              </label>
+            </div>
+
+            <!-- Remove Question Button (only show if not the first question) -->
+            <div class="remove-question" *ngIf="i > 0">
+              <button type="button" class="remove-btn" (click)="removeQuestion(i)">
+                <span class="material-icons">delete</span> Remove Question
+              </button>
+            </div>
+
+            <hr *ngIf="i < questionsArray.length - 1" class="question-divider">
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="save-button-container">
+          <button type="button" class="save-button draft" (click)="addQuestion()">
+            <span class="check-icon">+</span> Add More Question
+          </button>
+          <button type="submit" class="save-button" [class.disabled]="!isFormValid()" [disabled]="!isFormValid()">
+            Finish & Save <span class="submit-icon">&#10132;</span>
+          </button>
+        </div>
+        
+        <!-- Form Validation Summary -->
+        <div *ngIf="assessmentForm.invalid && (assessmentForm.dirty || assessmentForm.touched)" class="validation-summary">
+          <p>Please fill in all required fields before submitting:</p>
+          <ul>
+            <li *ngFor="let question of questionsArray.controls; let i = index">
+              <span *ngIf="question.invalid">
+                Question {{i + 1}} is incomplete. Please provide a question text, at least one option, and select the correct answer.
+              </span>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

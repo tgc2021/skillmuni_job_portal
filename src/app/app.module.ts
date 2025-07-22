@@ -17,6 +17,8 @@ import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.co
 import { PostJobComponent } from './dashboard/post-job/post-job.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InterviewSetupComponent } from './dashboard/interview-setup/interview-setup.component';
+import { CreateAssessmentComponent } from './dashboard/interview-setup/create-assessment/create-assessment.component';
+import { AssessmentCreationComponent } from './dashboard/interview-setup/assessment-creation/assessment-creation.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,9 @@ import { InterviewSetupComponent } from './dashboard/interview-setup/interview-s
     DashboardComponent,
     ViewAllJobsComponent,
     PostJobComponent,
-    InterviewSetupComponent
+    InterviewSetupComponent,
+    CreateAssessmentComponent,
+    AssessmentCreationComponent
   ],
   imports: [
     BrowserModule,

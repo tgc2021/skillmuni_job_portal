@@ -64,7 +64,7 @@
                 </div>
                 <div class="assessment-create-box">
                   <span class="create-text">Click here to <span class="highlight">Create</span> Assessment</span>
-                  <div class="create-icon">+</div>
+                  <div class="create-icon" (click)="onCreateAssessment()">+</div>
                 </div>
               </div>
 
@@ -95,10 +95,43 @@
                 <div class="label-row">
                   <label>4. Assessment Link</label>
                 </div>
-                <input type="text" placeholder="Paste Assessment Link here..." />
+                <input type="text" placeholder="Paste Assessment Link here..."
+                  [ngModel]="assessmentLink" (ngModelChange)="onAssessmentLinkInput($event)" name="assessmentLink" />
                 <small class="assessment-note">
                  <i> *Using your own assessment? Add the link — candidates will be sent there.</i>
                 </small>
+              </div>
+            </div>
+
+            <!-- Dynamic fields: Deadline and Passing Score -->
+            <div class="profile-grid" *ngIf="isAssessmentAdded">
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>5. Assessment <span class="highlight">Deadline</span></label>
+                  <div class="error-text" *ngIf="interviewForm.get('assessmentDeadline')?.invalid && interviewForm.get('assessmentDeadline')?.touched">
+                    Assessment Deadline is required
+                  </div>
+                </div>
+                <input type="date" formControlName="assessmentDeadline"
+                  [class.ng-touched]="interviewForm.get('assessmentDeadline')?.touched"
+                  [class.ng-invalid]="interviewForm.get('assessmentDeadline')?.invalid" />
+                  <small class="assessment-note">
+                    <i> *Candidates must complete the assessment before this date to be considered for the next round.</i>
+                   </small>
+              </div>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>6. Minimum Passing <span class="highlight">Score (%)</span></label>
+                  <div class="error-text" *ngIf="interviewForm.get('minPassingScore')?.invalid && interviewForm.get('minPassingScore')?.touched">
+                    Minimum Passing Score must be between 20 and 100
+                  </div>
+                </div>
+                <input type="number" formControlName="minPassingScore" placeholder="Set minimum score required (between 20 and 100)"
+                  [class.ng-touched]="interviewForm.get('minPassingScore')?.touched"
+                  [class.ng-invalid]="interviewForm.get('minPassingScore')?.invalid" />
+                  <small class="assessment-note">
+                    <i> *This is the minimum score candidates need to qualify for the next round.</i>
+                   </small>
               </div>
             </div>
           </div>
@@ -107,15 +140,20 @@
 
         <!-- Add More Button -->
         <div class="save-button-container">
-          <button class="save-button draft" type="button" (click)="addRound()">
+          <button class="save-button draft" type="button" (click)="addRound()" [disabled]="!isAssessmentAdded" [style.opacity]="isAssessmentAdded ? 1 : 0.5">
             <span class="check-icon">+</span> Add more
           </button>
 
-          <button class="save-button" type="button" (click)="goToSortStep()">
+          <button class="save-button" type="button" (click)="goToSortStep()" [disabled]="!isAssessmentAdded" [style.opacity]="isAssessmentAdded ? 1 : 0.5">
             Good to Go <span class="submit-icon">&#10132;</span>
           </button>
         </div>
       </form>
     </div>
   </div>
+</div>
+
+<!-- Error message for round name -->
+<div *ngIf="interviewForm.get('roundName')?.invalid && interviewForm.get('roundName')?.touched">
+  <p class="error-message">Round Name is required</p>
 </div>

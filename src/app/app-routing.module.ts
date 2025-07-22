@@ -13,6 +13,8 @@ import { AuthGuard } from './services/auth.guard';
 import { ViewAllJobsComponent } from './dashboard/view-all-jobs/view-all-jobs.component';
 import { PostJobComponent } from './dashboard/post-job/post-job.component';
 import { InterviewSetupComponent } from './dashboard/interview-setup/interview-setup.component';
+import { CreateAssessmentComponent } from './dashboard/interview-setup/create-assessment/create-assessment.component';
+import { AssessmentCreationComponent } from './dashboard/interview-setup/assessment-creation/assessment-creation.component';
 
 const routes: Routes = [
   { 
@@ -42,6 +44,18 @@ const routes: Routes = [
     component: InterviewSetupComponent,
     canActivate: [AuthGuard],
     data: { title: 'Interview Set-up' }
+  },
+  { 
+    path: 'dashboard/interview-setup/create-assessment', 
+    component: CreateAssessmentComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Create Assessment' }
+  },
+  { 
+    path: 'dashboard/interview-setup/assessment-creation', 
+    component: AssessmentCreationComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Assessment Creation' }
   },
   { 
     path: 'sign-up', 

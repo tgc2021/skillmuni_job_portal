@@ -14,12 +14,20 @@ export class InterviewSetupComponent implements OnInit {
   typeDropdownOpen = false;
   step = 1;
 
+  previousAssessments = ['Java Test', 'Soft Skills Round', 'Logical Test'];
+  assessmentDropdownOpen = false;
+  selectedAssessment = '';
+  isAssessmentAdded = false;
+  assessmentLink = '';
+
   constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
       roundName: ['', Validators.required],
-      roundType: ['', Validators.required]
+      roundType: ['', Validators.required],
+      assessmentDeadline: [''],
+      minPassingScore: ['', [Validators.required, Validators.min(20), Validators.max(100)]]
     });
   }
 
@@ -34,45 +42,65 @@ export class InterviewSetupComponent implements OnInit {
   }
 
   addRound() {
-    if (this.interviewForm.valid) {
+    if (this.interviewForm.valid && this.isAssessmentAdded) {
       const roundData = this.interviewForm.value;
       console.log('Added Round:', roundData);
       this.interviewForm.reset();
       this.selectedType = '';
+      this.selectedAssessment = '';
+      this.isAssessmentAdded = false;
+      this.assessmentLink = '';
     } else {
       this.interviewForm.markAllAsTouched();
     }
   }
 
   goToSortStep() {
-    if (this.interviewForm.valid) {
+    if (this.interviewForm.valid && this.isAssessmentAdded) {
       this.step = 2;
     } else {
       this.interviewForm.markAllAsTouched();
     }
   }
 
-  selectedAssessmentOption: string = '';
+  toggleAssessmentDropdown() {
+    this.assessmentDropdownOpen = !this.assessmentDropdownOpen;
+  }
 
-selectAssessmentOption(option: string) {
-  this.selectedAssessmentOption = option;
-  // Trigger next step or logic based on this selection
-}
-previousAssessments = ['Java Test', 'Soft Skills Round', 'Logical Test'];
-assessmentDropdownOpen = false;
-selectedAssessment = '';
+  selectAssessment(a: string) {
+    this.selectedAssessment = a;
+    this.isAssessmentAdded = true;
+    this.assessmentDropdownOpen = false;
+    // Show deadline and minPassingScore fields
+    this.interviewForm.get('assessmentDeadline')?.setValidators([Validators.required]);
+    this.interviewForm.get('assessmentDeadline')?.updateValueAndValidity();
+    this.interviewForm.get('minPassingScore')?.setValidators([Validators.required, Validators.min(20), Validators.max(100)]);
+    this.interviewForm.get('minPassingScore')?.updateValueAndValidity();
+  }
 
-toggleAssessmentDropdown() {
-  this.assessmentDropdownOpen = !this.assessmentDropdownOpen;
-}
-
-selectAssessment(a: string) {
-  this.selectedAssessment = a;
-  this.assessmentDropdownOpen = false;
-}
-
+  onAssessmentLinkInput(link: string) {
+    this.assessmentLink = link;
+    if (link && link.trim() !== '') {
+      this.isAssessmentAdded = true;
+      this.interviewForm.get('assessmentDeadline')?.setValidators([Validators.required]);
+      this.interviewForm.get('assessmentDeadline')?.updateValueAndValidity();
+      this.interviewForm.get('minPassingScore')?.setValidators([Validators.required, Validators.min(20), Validators.max(100)]);
+      this.interviewForm.get('minPassingScore')?.updateValueAndValidity();
+    } else {
+      this.isAssessmentAdded = false;
+      this.interviewForm.get('assessmentDeadline')?.clearValidators();
+      this.interviewForm.get('assessmentDeadline')?.updateValueAndValidity();
+      this.interviewForm.get('minPassingScore')?.clearValidators();
+      this.interviewForm.get('minPassingScore')?.updateValueAndValidity();
+    }
+  }
 
   onBackClick() {
     this.router.navigate(['/dashboard']);
+  }
+
+  // Add this method for navigation
+  onCreateAssessment() {
+    this.router.navigate(['/dashboard/interview-setup/create-assessment']);
   }
 }
