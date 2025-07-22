@@ -27,18 +27,29 @@
             
             <div class="question-row">
               <div class="upload-box">
-                <span class="upload-label">
-                  <span class="highlight">Upload</span> Question Image (Optional)
-                  <input 
-                    #questionImageInput
-                    type="file" 
-                    style="display: none;" 
-                    (change)="onFileSelected($event, i)"
-                    accept="image/*">
-                </span>
-                <button type="button" class="upload-btn" (click)="triggerFileInput($event, questionImageInput)">
-                  <span class="material-icons">upload</span>
-                </button>
+                <div class="upload-content">
+                  <span class="upload-label">
+                    <span class="highlight">Upload</span> Question Image (Optional)
+                    <input 
+                      #questionImageInput
+                      type="file" 
+                      style="display: none;" 
+                      (change)="onFileSelected($event, i)"
+                      accept="image/png, image/jpeg, image/jpg, image/gif">
+                  </span>
+                  <button type="button" class="upload-btn" (click)="triggerFileInput($event, questionImageInput)">
+                    <span class="material-icons">upload</span>
+                  </button>
+                </div>
+                <div *ngIf="questionsArray.at(i).get('questionImage')?.value" class="file-info">
+                  <span class="file-name">{{ questionsArray.at(i).get('questionImage')?.value?.name }}</span>
+                  <button type="button" class="remove-file" (click)="removeFile(i, 'questionImage')">
+                    <span class="material-icons">close</span>
+                  </button>
+                </div>
+                <div *ngIf="questionsArray.at(i).get('questionImage')?.value" class="image-preview">
+                  <img [src]="getImagePreview(questionsArray.at(i).get('questionImage')?.value)" alt="Preview">
+                </div>
               </div>
               <div class="question-note">* You can type the question, upload an image, or do both.<br>Same goes for options.</div>
             </div>
@@ -56,18 +67,29 @@
                   [formControl]="getOptionControl(i, optionIndex)">
                 
                 <div class="upload-box">
-                  <span class="upload-label">
-                    <span class="highlight">Upload</span> Option {{option}} Image {{optionIndex >= 2 ? '(Optional)' : ''}}
-                    <input 
-                      #fileInput
-                      type="file" 
-                      style="display: none;" 
-                      (change)="onFileSelected($event, i, optionIndex)"
-                      accept="image/*">
-                  </span>
-                  <button type="button" class="upload-btn" (click)="triggerFileInput($event, fileInput)">
-                    <span class="material-icons">upload</span>
-                  </button>
+                  <div class="upload-content">
+                    <span class="upload-label">
+                      <span class="highlight">Upload</span> Option {{option}} Image {{optionIndex >= 2 ? '(Optional)' : ''}}
+                      <input 
+                        #fileInput
+                        type="file" 
+                        style="display: none;" 
+                        (change)="onFileSelected($event, i, optionIndex)"
+                        accept="image/png, image/jpeg, image/jpg, image/gif">
+                    </span>
+                    <button type="button" class="upload-btn" (click)="triggerFileInput($event, fileInput)">
+                      <span class="material-icons">upload</span>
+                    </button>
+                  </div>
+                  <div *ngIf="getOptionImageControl(i, optionIndex)?.value" class="file-info">
+                    <span class="file-name">{{ getOptionImageControl(i, optionIndex)?.value?.name }}</span>
+                    <button type="button" class="remove-file" (click)="removeFile(i, 'optionImage', optionIndex)">
+                      <span class="material-icons">close</span>
+                    </button>
+                  </div>
+                  <div *ngIf="getOptionImageControl(i, optionIndex)?.value" class="image-preview">
+                    <img [src]="getImagePreview(getOptionImageControl(i, optionIndex)?.value)" alt="Option {{option}} Preview">
+                  </div>
                 </div>
               </div>
             </div>

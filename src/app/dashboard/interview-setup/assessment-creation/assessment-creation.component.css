@@ -112,17 +112,75 @@
 }
 
 .upload-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
   border: 1px solid #2f2854;
   border-radius: 8px;
   background-color: #fff;
   box-sizing: border-box;
   margin-bottom: 15px;
   width: 100%;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.upload-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #f0f2ff;
+  border-top: 1px solid #e8e8ff;
+}
+
+.file-name {
+  font-size: 13px;
+  color: #2f2854;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
+
+.remove-file {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.remove-file:hover {
+  background-color: rgba(255, 77, 79, 0.1);
+}
+
+.remove-file .material-icons {
+  font-size: 18px;
+}
+
+.image-preview {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #e8e8ff;
+  background-color: #fff;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 150px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
 }
 
 .upload-label {
@@ -416,6 +474,7 @@
   background-color: #fff8f8;
   border-left: 4px solid #ff5252;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 .validation-summary p {

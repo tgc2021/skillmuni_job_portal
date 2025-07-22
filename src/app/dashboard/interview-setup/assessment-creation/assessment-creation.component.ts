@@ -150,12 +150,35 @@ export class AssessmentCreationComponent implements OnInit {
     return optionsArray.at(optionIndex) as FormControl;
   }
 
+  getOptionImageControl(questionIndex: number, optionIndex: number): FormControl {
+    const optionImagesArray = this.questionsArray.at(questionIndex).get('optionImages') as FormArray;
+    return optionImagesArray.at(optionIndex) as FormControl;
+  }
+
   getCorrectAnswerControl(questionIndex: number): FormControl {
     return this.questionsArray.at(questionIndex).get('correctAnswer') as FormControl;
   }
 
-  triggerFileInput(event: MouseEvent, fileInput: HTMLInputElement) {
+  // Get image preview URL for display
+  getImagePreview(file: File): string {
+    if (!file) return '';
+    return URL.createObjectURL(file);
+  }
+
+  // Remove uploaded file
+  removeFile(questionIndex: number, fileType: 'questionImage' | 'optionImage', optionIndex?: number): void {
+    if (fileType === 'questionImage') {
+      this.questionsArray.at(questionIndex).get('questionImage')?.setValue(null);
+    } else if (fileType === 'optionImage' && typeof optionIndex === 'number') {
+      const optionImagesArray = this.questionsArray.at(questionIndex).get('optionImages') as FormArray;
+      optionImagesArray.at(optionIndex).setValue(null);
+    }
+  }
+
+  // Trigger file input click
+  triggerFileInput(event: Event, fileInput: HTMLInputElement): void {
     event.preventDefault();
+    event.stopPropagation();
     fileInput.click();
   }
 
