@@ -1,0 +1,69 @@
+<app-header></app-header>
+<div class="profile-wrapper">
+  <!-- Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" class="back-button" (click)="onBackClick()" />
+    <div class="title-container">
+      <h1>Interview Rounds</h1>
+      <h2>Preview Assessment</h2>
+    </div>
+    <img src="assets/icons/job-header-icon.png" class="header-icon" />
+  </div>
+
+  <div class="preview-container">
+    <!-- Questions Container -->
+    <div class="questions-container">
+      <div *ngFor="let question of questions; let i = index" class="question-card">
+        <!-- Question Number -->
+        <div class="question-number">{{ i + 1 }}</div>
+
+        <!-- Question Content -->
+        <div class="question-content">
+          <!-- Question Content -->
+          <div class="question-content">
+            <!-- Question Text (if exists) -->
+            <div class="question-text" *ngIf="question.question">
+              <b>Q.</b> {{ question.question }}
+            </div>
+
+            <!-- Question Image (if exists) -->
+            <div *ngIf="question.questionImage" class="question-image-container">
+              <img [src]="getImagePreview(question.questionImage)" [alt]="'Question ' + (i + 1) + ' Image'"
+                class="question-image">
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div class="options-container">
+            <div *ngFor="let option of question.options; let j = index" class="option-item"
+              [class.selected]="question.correctAnswer === getOptionLetter(j)">
+
+              <div class="option-content">
+                <!-- Option Image (if exists) -->
+                <img *ngIf="getOptionImage(question, j)" [src]="getImagePreview(getOptionImage(question, j)!)"
+                  [alt]="'Option ' + getOptionLetter(j) + ' Image'" class="option-image">
+
+                <!-- Option Text -->
+                <span class="option-text" *ngIf="option">{{ option }}</span>
+              </div>
+
+              <!-- Radio Button -->
+              <div class="option-radio"></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions"><button class="save-button draft" (click)="onBackClick()">
+        <span class="check-icon">✏️</span> Edit Assessment
+      </button>
+
+      <button type="submit" class="save-button">
+        Looks Good<span class="submit-icon">&#10132;</span>
+      </button>
+    </div>
+  </div>
+</div>

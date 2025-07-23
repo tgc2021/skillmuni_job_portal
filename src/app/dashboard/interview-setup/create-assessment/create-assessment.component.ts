@@ -25,8 +25,15 @@ export class CreateAssessmentComponent implements OnInit {
 
   onSubmit() {
     if (this.assessmentForm.valid) {
-      // Navigate to Assessment Creation step
-      this.router.navigate(['/dashboard/interview-setup/assessment-creation']);
+      // Navigate to Assessment Creation step with form data
+      this.router.navigate(['/dashboard/interview-setup/assessment-creation'], {
+        state: {
+          assessmentData: {
+            title: this.assessmentForm.get('assessmentName')?.value,
+            totalQuestions: this.assessmentForm.get('totalQuestions')?.value
+          }
+        }
+      });
     } else {
       this.assessmentForm.markAllAsTouched();
     }

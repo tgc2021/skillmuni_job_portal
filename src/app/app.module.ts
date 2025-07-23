@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InterviewSetupComponent } from './dashboard/interview-setup/interview-setup.component';
 import { CreateAssessmentComponent } from './dashboard/interview-setup/create-assessment/create-assessment.component';
 import { AssessmentCreationComponent } from './dashboard/interview-setup/assessment-creation/assessment-creation.component';
+import { PreviewAssessmentComponent } from './dashboard/interview-setup/preview-assessment/preview-assessment.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { AssessmentCreationComponent } from './dashboard/interview-setup/assessm
     PostJobComponent,
     InterviewSetupComponent,
     CreateAssessmentComponent,
-    AssessmentCreationComponent
+    AssessmentCreationComponent,
+    PreviewAssessmentComponent
   ],
   imports: [
     BrowserModule,

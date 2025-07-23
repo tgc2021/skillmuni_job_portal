@@ -17,24 +17,19 @@
       <form [formGroup]="assessmentForm" (ngSubmit)="onSubmit()">
         <!-- Dynamic Question Blocks -->
         <div formArrayName="questions">
-          <div *ngFor="let question of questionsArray.controls; let i = index;" [formGroupName]="i" class="question-block">
+          <div *ngFor="let question of questionsArray.controls; let i = index;" [formGroupName]="i"
+            class="question-block">
             <div class="question-label">{{i + 1}}. Type in the Question/Scenario.</div>
-            <textarea 
-              class="question-input" 
-              placeholder="Type in the Question/Scenario here...."
+            <textarea class="question-input" placeholder="Type in the Question/Scenario here...."
               formControlName="questionText">
             </textarea>
-            
+
             <div class="question-row">
               <div class="upload-box">
                 <div class="upload-content">
                   <span class="upload-label">
                     <span class="highlight">Upload</span> Question Image (Optional)
-                    <input 
-                      #questionImageInput
-                      type="file" 
-                      style="display: none;" 
-                      (change)="onFileSelected($event, i)"
+                    <input #questionImageInput type="file" style="display: none;" (change)="onFileSelected($event, i)"
                       accept="image/png, image/jpeg, image/jpg, image/gif">
                   </span>
                   <button type="button" class="upload-btn" (click)="triggerFileInput($event, questionImageInput)">
@@ -51,29 +46,27 @@
                   <img [src]="getImagePreview(questionsArray.at(i).get('questionImage')?.value)" alt="Preview">
                 </div>
               </div>
-              <div class="question-note">* You can type the question, upload an image, or do both.<br>Same goes for options.</div>
+              <div class="question-note">* You can type the question, upload an image, or do both.<br>Same goes for
+                options.</div>
             </div>
 
             <!-- Options Grid -->
             <div class="options-grid">
               <div class="option-col" *ngFor="let option of answerOptions; let optionIndex = index">
                 <div class="option-label">
-                  {{option}}. Type in {{optionIndex === 0 ? 'first' : optionIndex === 1 ? 'second' : optionIndex === 2 ? 'third' : 'fourth'}} option
+                  {{option}}. Type in {{optionIndex === 0 ? 'first' : optionIndex === 1 ? 'second' : optionIndex === 2 ?
+                  'third' : 'fourth'}} option
                   {{optionIndex >= 2 ? '(Optional)' : ''}}
                 </div>
-                <input 
-                  class="option-input" 
-                  [placeholder]="'Type in Option ' + (optionIndex + 1) + ' here....'"
+                <input class="option-input" [placeholder]="'Type in Option ' + (optionIndex + 1) + ' here....'"
                   [formControl]="getOptionControl(i, optionIndex)">
-                
+
                 <div class="upload-box">
                   <div class="upload-content">
                     <span class="upload-label">
-                      <span class="highlight">Upload</span> Option {{option}} Image {{optionIndex >= 2 ? '(Optional)' : ''}}
-                      <input 
-                        #fileInput
-                        type="file" 
-                        style="display: none;" 
+                      <span class="highlight">Upload</span> Option {{option}} Image {{optionIndex >= 2 ? '(Optional)' :
+                      ''}}
+                      <input #fileInput type="file" style="display: none;"
                         (change)="onFileSelected($event, i, optionIndex)"
                         accept="image/png, image/jpeg, image/jpg, image/gif">
                     </span>
@@ -82,13 +75,14 @@
                     </button>
                   </div>
                   <div *ngIf="getOptionImageControl(i, optionIndex)?.value" class="file-info">
-                    <span class="file-name">{{ getOptionImageControl(i, optionIndex)?.value?.name }}</span>
-                    <button type="button" class="remove-file" (click)="removeFile(i, 'optionImage', optionIndex)">
+                    <span class="file-name">{{ getOptionImageControl(i, optionIndex).value?.name }}</span> <button
+                      type="button" class="remove-file" (click)="removeFile(i, 'optionImage', optionIndex)">
                       <span class="material-icons">close</span>
                     </button>
                   </div>
                   <div *ngIf="getOptionImageControl(i, optionIndex)?.value" class="image-preview">
-                    <img [src]="getImagePreview(getOptionImageControl(i, optionIndex)?.value)" alt="Option {{option}} Preview">
+                    <img [src]="getImagePreview(getOptionImageControl(i, optionIndex).value)"
+                      alt="Option {{option}} Preview">
                   </div>
                 </div>
               </div>
@@ -96,16 +90,10 @@
 
             <!-- Answer Selection -->
             <div class="answer-row">
-              <span>Select the <span class="highlight correct">correct answer</span> (from filled options):--</span>
+              <span class="answer-label">Select the <span class="highlight correct">correct answer</span> (from filled options):</span>
               <label class="answer-radio" *ngFor="let option of answerOptions">
-                
-                {{option}}.
-                <input 
-                  type="radio" 
-                  [name]="'answer' + i" 
-                  [value]="option"
-                  [formControl]="getCorrectAnswerControl(i)">
-                
+                <input type="radio" [name]="'answer' + i" [value]="option" [formControl]="getCorrectAnswerControl(i)">
+                <span>{{option}}</span>
               </label>
             </div>
 
@@ -129,14 +117,16 @@
             Finish & Save <span class="submit-icon">&#10132;</span>
           </button>
         </div>
-        
+
         <!-- Form Validation Summary -->
-        <div *ngIf="assessmentForm.invalid && (assessmentForm.dirty || assessmentForm.touched)" class="validation-summary">
+        <div *ngIf="assessmentForm.invalid && (assessmentForm.dirty || assessmentForm.touched)"
+          class="validation-summary">
           <p>Please fill in all required fields before submitting:</p>
           <ul>
             <li *ngFor="let question of questionsArray.controls; let i = index">
               <span *ngIf="question.invalid">
-                Question {{i + 1}} is incomplete. Please provide a question text, at least one option, and select the correct answer.
+                Question {{i + 1}} is incomplete. Please provide a question text, at least one option, and select the
+                correct answer.
               </span>
             </li>
           </ul>
