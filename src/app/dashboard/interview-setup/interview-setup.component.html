@@ -183,8 +183,8 @@
             </div>
           </div>
 
-          <!-- Step 4: Manual Scheduling Deadline and Info -->
-          <div class="profile-grid" *ngIf="schedulingTypeValue === 'manual'">
+          <!-- Manual Scheduling Deadline (only for manual scheduling and not for Assessment) -->
+          <div class="profile-grid" *ngIf="schedulingTypeValue === 'manual' && selectedType !== 'Assessment'">
             <div class="profile-field half-width">
               <div class="label-row">
                 <label>4. Round <span class="highlight">Deadline</span></label>
@@ -205,8 +205,8 @@
             </div>
           </div>
 
-          <!-- Info Text Block -->
-          <div class="info-note" *ngIf="schedulingTypeValue === 'manual'">
+          <!-- Info Text Block (not shown for Assessment type) -->
+          <div class="info-note" *ngIf="schedulingTypeValue === 'manual' && selectedType !== 'Assessment'">
             You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
           </div>
 
@@ -320,6 +320,7 @@
             Good to Go <span class="submit-icon">&#10132;</span>
           </button>
         </div>
+
       </form>
     </div>
   </div>

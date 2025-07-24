@@ -62,17 +62,27 @@ export class InterviewSetupComponent implements OnInit {
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
-      roundName: ["", Validators.required],
+      roundName: ["", [Validators.required, Validators.minLength(1)]],
       roundType: ["", Validators.required],
       schedulingType: ["calendar"],
       assessmentDeadline: [""],
       manualDeadline: [""],
       minPassingScore: [
         "",
-        [Validators.required, Validators.min(20), Validators.max(100)],
+        [Validators.min(20), Validators.max(100)] // Required validator will be added dynamically
       ],
       assessmentLink: [""],
-      interviewLocation: ["", Validators.required], 
+      interviewLocation: [""] // Required validator will be added dynamically for Offline type
+    });
+
+    // Subscribe to form value changes to update validation
+    this.interviewForm.get('roundType')?.valueChanges.subscribe(type => {
+      this.updateFormValidation(type);
+    });
+
+    // Subscribe to scheduling type changes
+    this.interviewForm.get('schedulingType')?.valueChanges.subscribe(() => {
+      this.updateFormValidation(this.selectedType);
     });
 
     this.generateCalendar();
@@ -281,17 +291,69 @@ export class InterviewSetupComponent implements OnInit {
     this.typeDropdownOpen = !this.typeDropdownOpen;
   }
 
-// When selecting a round type
-selectType(type: string) {
-  this.selectedType = type;
-  this.interviewForm.get("roundType")?.setValue(type);
-  this.typeDropdownOpen = false;
-  
-  // Reset Interview Location field when type changes to Online
-  if (this.selectedType !== 'Offline') {
-    this.interviewForm.get("interviewLocation")?.reset();
+  // Update form validation based on selected type
+  private updateFormValidation(type: string) {
+    const assessmentLinkControl = this.interviewForm.get('assessmentLink');
+    const assessmentDeadlineControl = this.interviewForm.get('assessmentDeadline');
+    const minPassingScoreControl = this.interviewForm.get('minPassingScore');
+    const interviewLocationControl = this.interviewForm.get('interviewLocation');
+
+    // Reset all validators first
+    assessmentLinkControl?.clearValidators();
+    assessmentDeadlineControl?.clearValidators();
+    minPassingScoreControl?.clearValidators();
+    interviewLocationControl?.clearValidators();
+
+    if (type === 'Assessment') {
+      // Only add required validators if not using a previous assessment
+      if (!this.isAssessmentAdded) {
+        assessmentLinkControl?.setValidators([Validators.required]);
+        assessmentDeadlineControl?.setValidators([Validators.required]);
+        minPassingScoreControl?.setValidators([
+          Validators.required,
+          Validators.min(20),
+          Validators.max(100)
+        ]);
+      }
+    } else if (type === 'Offline') {
+      interviewLocationControl?.setValidators([Validators.required]);
+    }
+
+    // Update validation state
+    assessmentLinkControl?.updateValueAndValidity();
+    assessmentDeadlineControl?.updateValueAndValidity();
+    minPassingScoreControl?.updateValueAndValidity();
+    interviewLocationControl?.updateValueAndValidity();
   }
-}
+
+  selectType(type: string) {
+    this.selectedType = type;
+    this.interviewForm.get("roundType")?.setValue(type);
+    this.typeDropdownOpen = false;
+    
+    // Reset fields that might be conditionally required
+    if (type !== 'Assessment') {
+      this.interviewForm.get("assessmentLink")?.reset();
+      this.interviewForm.get("assessmentDeadline")?.reset();
+      this.interviewForm.get("minPassingScore")?.reset();
+      this.isAssessmentAdded = false;
+    }
+    
+    if (type !== 'Offline') {
+      this.interviewForm.get("interviewLocation")?.reset();
+    }
+    
+    // Reset scheduling related fields
+    if (type !== 'Online') {
+      this.startDate = null;
+      this.endDate = null;
+    }
+    
+    // Update form validation
+    this.interviewForm.updateValueAndValidity();
+  }
+  
+  
 
 
   // Toggle Assessment Dropdown
@@ -327,20 +389,56 @@ selectType(type: string) {
   }
 
   // Form validation helper
-  isFormValid(): boolean {
-    if (!this.interviewForm.valid) return false;
-    if (!this.interviewForm.get("roundName")?.value || !this.selectedType)
-      return false;
-    if (this.selectedType === "Assessment" && !this.isAssessmentAdded)
-      return false;
-    if (
-      this.selectedType === "Online" &&
-      this.schedulingTypeValue === "calendar" &&
-      (!this.startDate || !this.endDate)
-    )
-      return false;
-    return true;
+// Form validation helper
+isFormValid(): boolean {
+  // 1. Check basic required fields
+  if (!this.interviewForm.get("roundName")?.value || !this.selectedType) {
+    return false;
   }
+
+  // 2. Check validation based on round type
+  if (this.selectedType === "Assessment") {
+    // For Assessment type, either:
+    // - A previous assessment is selected (isAssessmentAdded = true)
+    // OR
+    // - Assessment link is provided and all assessment fields are valid
+    const hasAssessmentLink = !!this.interviewForm.get("assessmentLink")?.value?.trim();
+    const isAssessmentValid = hasAssessmentLink && 
+                            this.interviewForm.get("assessmentDeadline")?.valid &&
+                            this.interviewForm.get("minPassingScore")?.valid;
+    
+    if (!this.isAssessmentAdded && !isAssessmentValid) {
+      return false;
+    }
+  } 
+  else if (this.selectedType === "Online") {
+    // For Online type:
+    // - If calendar scheduling: require start and end dates
+    // - If manual scheduling: require manual deadline
+    if (this.schedulingTypeValue === "calendar") {
+      if (!this.startDate || !this.endDate) return false;
+    } else {
+      const manualDeadline = this.interviewForm.get("manualDeadline")?.value;
+      if (!manualDeadline) return false;
+    }
+  } 
+  else if (this.selectedType === "Offline") {
+    // For Offline type:
+    // - Always require interview location
+    // - If manual scheduling: require manual deadline
+    const location = this.interviewForm.get("interviewLocation")?.value?.trim();
+    if (!location) return false;
+
+    if (this.schedulingTypeValue === "manual") {
+      const manualDeadline = this.interviewForm.get("manualDeadline")?.value;
+      if (!manualDeadline) return false;
+    }
+  }
+
+  return true;
+}
+
+
 
   // Array to store all rounds
   rounds: any[] = [];
