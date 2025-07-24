@@ -67,7 +67,7 @@
                   <input type="radio" formControlName="schedulingType" value="calendar" />
                   <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
                 </label>
-              
+
                 <label class="radio-option right-radio">
                   <input type="radio" formControlName="schedulingType" value="manual" />
                   <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
@@ -118,6 +118,71 @@
               </div>
             </div>
           </div>
+
+          <!-- Offline Scheduling Section -->
+          <div class="profile-grid" *ngIf="selectedType === 'Offline'">
+            <div class="profile-field" style="flex: 1 1 100%">
+              <div class="label-row">
+                <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
+              </div>
+
+              <div class="radio-group split-radio-group">
+                <label class="radio-option left-radio">
+                  <input type="radio" formControlName="schedulingType" value="calendar" />
+                  <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
+                </label>
+
+                <label class="radio-option right-radio">
+                  <input type="radio" formControlName="schedulingType" value="manual" />
+                  <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
+                </label>
+              </div>
+
+              <!-- Calendar and Time Picker -->
+              <div *ngIf="schedulingTypeValue === 'calendar'" class="calendar-time-wrapper">
+                <div class="calendar-container">
+                  <!-- Calendar Header -->
+                  <div class="calendar-header">
+                    <button type="button" class="nav-button" (click)="previousMonth()">
+                      <span>&lt;</span>
+                    </button>
+                    <h3 class="month-year">{{ getMonthName(currentMonth) }} {{ currentYear }}</h3>
+                    <button type="button" class="nav-button" (click)="nextMonth()">
+                      <span>&gt;</span>
+                    </button>
+                  </div>
+
+                  <!-- Calendar Grid -->
+                  <div class="calendar-grid">
+                    <!-- Day Headers -->
+                    <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
+
+                    <!-- Calendar Days -->
+                    <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="day.otherMonth"
+                      [class.selected]="day.selected || day.isStart || day.isEnd" [class.in-range]="day.inRange"
+                      [class.range-start]="day.isStart" [class.range-end]="day.isEnd" [class.today]="day.isToday"
+                      [class.past-date]="isPastDate(day.fullDate)" (click)="selectDate(day)">
+                      <span class="day-number">{{ day.date }}</span>
+                      <span class="day-indicator" *ngIf="day.isToday">•</span>
+                    </div>
+                  </div>
+
+                  <!-- Time Picker -->
+                  <div class="time-picker">
+                    <label class="time-label">Interview Time (Hours : Mins)</label>
+                    <div class="time-inputs">
+                      <input type="number" class="time-input" [(ngModel)]="selectedHours"
+                        [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
+                      <span class="time-separator">:</span>
+                      <input type="number" class="time-input" [(ngModel)]="selectedMinutes"
+                        [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Step 4: Manual Scheduling Deadline and Info -->
           <div class="profile-grid" *ngIf="schedulingTypeValue === 'manual'">
             <div class="profile-field half-width">
@@ -129,12 +194,22 @@
                 <i>*This is the last date to conduct all interviews for this round.</i>
               </small>
             </div>
+
+            <!-- Interview Location Field (only for Offline) -->
+            <div class="profile-field half-width" *ngIf="selectedType === 'Offline'">
+              <div class="label-row">
+                <label>5. Interview <span class="highlight">Location</span></label>
+              </div>
+              <input type="text" formControlName="interviewLocation"
+                placeholder="Type in the Location for the Walk-in interview...." />
+            </div>
           </div>
 
           <!-- Info Text Block -->
           <div class="info-note" *ngIf="schedulingTypeValue === 'manual'">
             You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
           </div>
+
 
           <!-- Conditionally show Assessment fields -->
           <div class="profile-row assessment-row" *ngIf="selectedType === 'Assessment'">
@@ -194,7 +269,7 @@
                 </small>
               </div>
             </div>
-            
+
 
             <!-- Dynamic fields: Deadline and Passing Score -->
             <div class="profile-grid" *ngIf="isAssessmentAdded">

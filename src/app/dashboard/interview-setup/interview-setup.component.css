@@ -658,8 +658,7 @@ input.ng-touched.ng-invalid {
 }
 
 .calendar-day.today {
-  background-color: #ff8a3d;
-  color: white;
+  background-color: #f0f4ff;
   font-weight: 600;
 }
 

@@ -72,6 +72,7 @@ export class InterviewSetupComponent implements OnInit {
         [Validators.required, Validators.min(20), Validators.max(100)],
       ],
       assessmentLink: [""],
+      interviewLocation: ["", Validators.required], 
     });
 
     this.generateCalendar();
@@ -280,11 +281,18 @@ export class InterviewSetupComponent implements OnInit {
     this.typeDropdownOpen = !this.typeDropdownOpen;
   }
 
-  selectType(type: string) {
-    this.selectedType = type;
-    this.interviewForm.get("roundType")?.setValue(type);
-    this.typeDropdownOpen = false;
+// When selecting a round type
+selectType(type: string) {
+  this.selectedType = type;
+  this.interviewForm.get("roundType")?.setValue(type);
+  this.typeDropdownOpen = false;
+  
+  // Reset Interview Location field when type changes to Online
+  if (this.selectedType !== 'Offline') {
+    this.interviewForm.get("interviewLocation")?.reset();
   }
+}
+
 
   // Toggle Assessment Dropdown
   toggleAssessmentDropdown() {
