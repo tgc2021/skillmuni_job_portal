@@ -110,7 +110,6 @@
   padding: 20px 0;
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 .profile-card {
   background: white;
@@ -121,6 +120,7 @@
   box-sizing: border-box;
   overflow: hidden;
   min-height: 300px;
+  margin-bottom: 20px;
   height: auto;
 }
 
@@ -129,6 +129,9 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+.profile-field.half-width {
+  flex: 0 0 50%;
 }
 .profile-grid.top {
   background-color: #ecf0ff;
@@ -198,7 +201,6 @@ input.ng-touched.ng-invalid {
   border: 2px solid red;
 }
 
-
 /* --- Custom Dropdown --- */
 .custom-dropdown {
   position: relative;
@@ -209,7 +211,7 @@ input.ng-touched.ng-invalid {
 
 .custom-dropdown .selected-option {
   width: 100%;
-  height: 50px;  /* Same height as input */
+  height: 50px; /* Same height as input */
   padding: 14px 16px;
   display: flex;
   align-items: center;
@@ -376,7 +378,6 @@ input.ng-touched.ng-invalid {
 
 .assessment-row .profile-grid {
   display: flex;
-  gap: 20px;
   align-items: flex-start;
 }
 .assessment-left,
@@ -425,8 +426,6 @@ input.ng-touched.ng-invalid {
 .assessment-note {
   font-size: 12px;
   color: #2f2854;
-  margin-top: 8px;
-  display: block;
 }
 
 .invisible-label {
@@ -447,11 +446,11 @@ input.ng-touched.ng-invalid {
   color: #2f2854;
 }
 .radio-option input[type="radio"] {
-  accent-color: #ff8a3d;
+  accent-color: #ff7a00;
   width: 16px;
   height: 16px;
+  margin-top: 4px;
 }
-
 /* Calendar and Time Picker Styles */
 
 /* Calendar Header */
@@ -459,7 +458,6 @@ input.ng-touched.ng-invalid {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
   padding: 0 8px;
 }
 
@@ -490,20 +488,30 @@ input.ng-touched.ng-invalid {
   font-weight: bold;
 }
 
-/* Calendar Wrapper Styles */
+.split-radio-group {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row; /* 🔁 Change this line */
+  flex-wrap: wrap; /* Optional: wrap on small screens */
+  gap: 0; /* You can keep gap 0 or custom */
+}
 
+.split-radio-group .radio-option {
+  flex: 0 0 48%;
+}
+
+/* Calendar Wrapper Styles */
 
 .calendar-container {
   background: white;
   border-radius: 12px;
-  padding: 16px;
+  padding: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   width: 30%;
 }
 
-
 .month-year {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #2f3260;
   margin: 0;
@@ -550,18 +558,19 @@ input.ng-touched.ng-invalid {
   position: relative;
   z-index: 1;
   transition: all 0.2s ease;
-  
+
   &.past-date {
     color: #ccc;
     cursor: not-allowed;
     pointer-events: none;
   }
-  
+
   .day-number {
+    font-size: 12px;
     position: relative;
     z-index: 2;
   }
-  
+
   .day-indicator {
     position: absolute;
     bottom: 2px;
@@ -570,29 +579,29 @@ input.ng-touched.ng-invalid {
     font-size: 12px;
     color: #2f80ed;
   }
-  
+
   &.in-range {
     background-color: rgba(47, 128, 237, 0.1);
     border-radius: 0;
-    
+
     &:hover {
       background-color: rgba(47, 128, 237, 0.15);
     }
   }
-  
+
   &.range-start {
     background-color: #2f80ed;
     color: white;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
     margin-left: 2px;
-    
+
     .day-number {
       color: white;
     }
-    
+
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       right: -10px;
@@ -601,20 +610,20 @@ input.ng-touched.ng-invalid {
       background-color: rgba(47, 128, 237, 0.1);
     }
   }
-  
+
   &.range-end {
     background-color: #2f80ed;
     color: white;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
     margin-right: 2px;
-    
+
     .day-number {
       color: white;
     }
-    
+
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -10px;
@@ -623,15 +632,15 @@ input.ng-touched.ng-invalid {
       background-color: rgba(47, 128, 237, 0.1);
     }
   }
-  
+
   &:hover:not(.other-month) {
     background-color: rgba(47, 128, 237, 0.1);
   }
-  
+
   &.selected {
     background-color: #2f80ed;
     color: white;
-    
+
     .day-number {
       color: white;
     }
@@ -710,34 +719,43 @@ input.ng-touched.ng-invalid {
   font-weight: 600;
   color: #2f3260;
 }
+.info-note {
+  background-color: #eef2ff;
+  color: #2f3260;
+  font-size: 14px;
+  text-align: center;
+  padding: 16px;
+  border-radius: 12px;
+  margin: 12px 25px 0;
+  font-weight: 500;
+}
 
 /* Responsive Calendar */
 @media (max-width: 768px) {
   .calendar-container {
     padding: 12px;
   }
-  
+
   .calendar-day {
     height: 32px;
     font-size: 13px;
   }
-  
+
   .day-header {
     font-size: 11px;
     padding: 6px 2px;
   }
-  
+
   .month-year {
     font-size: 16px;
   }
-  
+
   .time-input {
     width: 50px;
     height: 36px;
     font-size: 13px;
   }
 }
-
 
 @media (max-width: 768px) {
   .assessment-create-box {
@@ -749,11 +767,11 @@ input.ng-touched.ng-invalid {
     flex-direction: column;
   }
 
-  .assessment-right, .assessment-left {
+  .assessment-right,
+  .assessment-left {
     padding: 16px !important;
   }
 }
-
 
 /* --- Responsive --- */
 @media (max-width: 768px) {

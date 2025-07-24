@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Online Scheduling Section -->
           <div class="profile-grid" *ngIf="selectedType === 'Online'">
             <div class="profile-field" style="flex: 1 1 100%">
@@ -62,13 +62,13 @@
                 <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
               </div>
 
-              <div class="radio-group">
-                <label class="radio-option">
+              <div class="radio-group split-radio-group">
+                <label class="radio-option left-radio">
                   <input type="radio" formControlName="schedulingType" value="calendar" />
                   <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
                 </label>
-
-                <label class="radio-option">
+              
+                <label class="radio-option right-radio">
                   <input type="radio" formControlName="schedulingType" value="manual" />
                   <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
                 </label>
@@ -92,18 +92,12 @@
                   <div class="calendar-grid">
                     <!-- Day Headers -->
                     <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
-                    
+
                     <!-- Calendar Days -->
-                    <div class="calendar-day" 
-                         *ngFor="let day of calendarDays" 
-                         [class.other-month]="day.otherMonth"
-                         [class.selected]="day.selected || day.isStart || day.isEnd"
-                         [class.in-range]="day.inRange"
-                         [class.range-start]="day.isStart"
-                         [class.range-end]="day.isEnd"
-                         [class.today]="day.isToday"
-                         [class.past-date]="isPastDate(day.fullDate)"
-                         (click)="selectDate(day)">
+                    <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="day.otherMonth"
+                      [class.selected]="day.selected || day.isStart || day.isEnd" [class.in-range]="day.inRange"
+                      [class.range-start]="day.isStart" [class.range-end]="day.isEnd" [class.today]="day.isToday"
+                      [class.past-date]="isPastDate(day.fullDate)" (click)="selectDate(day)">
                       <span class="day-number">{{ day.date }}</span>
                       <span class="day-indicator" *ngIf="day.isToday">•</span>
                     </div>
@@ -113,26 +107,33 @@
                   <div class="time-picker">
                     <label class="time-label">Interview Time (Hours : Mins)</label>
                     <div class="time-inputs">
-                      <input type="number" 
-                             class="time-input" 
-                             [(ngModel)]="selectedHours" 
-                             [ngModelOptions]="{standalone: true}"
-                             min="0" 
-                             max="23" 
-                             placeholder="00">
+                      <input type="number" class="time-input" [(ngModel)]="selectedHours"
+                        [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
                       <span class="time-separator">:</span>
-                      <input type="number" 
-                             class="time-input" 
-                             [(ngModel)]="selectedMinutes" 
-                             [ngModelOptions]="{standalone: true}"
-                             min="0" 
-                             max="59" 
-                             placeholder="00">
+                      <input type="number" class="time-input" [(ngModel)]="selectedMinutes"
+                        [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <!-- Step 4: Manual Scheduling Deadline and Info -->
+          <div class="profile-grid" *ngIf="schedulingTypeValue === 'manual'">
+            <div class="profile-field half-width">
+              <div class="label-row">
+                <label>4. Round <span class="highlight">Deadline</span></label>
+              </div>
+              <input type="date" formControlName="manualDeadline" placeholder="Select a Deadline from the Calendar" />
+              <small class="assessment-note">
+                <i>*This is the last date to conduct all interviews for this round.</i>
+              </small>
+            </div>
+          </div>
+
+          <!-- Info Text Block -->
+          <div class="info-note" *ngIf="schedulingTypeValue === 'manual'">
+            You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
           </div>
 
           <!-- Conditionally show Assessment fields -->
@@ -183,7 +184,7 @@
             </div>
 
             <div class="profile-grid">
-              <div class="profile-field">
+              <div class="profile-field half-width">
                 <div class="label-row">
                   <label>4. Assessment Link</label>
                 </div>
@@ -193,6 +194,7 @@
                 </small>
               </div>
             </div>
+            
 
             <!-- Dynamic fields: Deadline and Passing Score -->
             <div class="profile-grid" *ngIf="isAssessmentAdded">

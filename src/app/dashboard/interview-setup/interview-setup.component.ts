@@ -1,6 +1,6 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
 interface CalendarDay {
   date: number;
@@ -14,20 +14,20 @@ interface CalendarDay {
 }
 
 @Component({
-  selector: 'app-interview-setup',
-  templateUrl: './interview-setup.component.html',
-  styleUrls: ['./interview-setup.component.css']
+  selector: "app-interview-setup",
+  templateUrl: "./interview-setup.component.html",
+  styleUrls: ["./interview-setup.component.css"],
 })
 export class InterviewSetupComponent implements OnInit {
   interviewForm!: FormGroup;
-  roundTypes = ['Assessment', 'Online', 'Offline'];
-  selectedType = '';
+  roundTypes = ["Assessment", "Online", "Offline"];
+  selectedType = "";
   typeDropdownOpen = false;
   step = 1;
 
-  previousAssessments = ['Java Test', 'Soft Skills Round', 'Logical Test'];
+  previousAssessments = ["Java Test", "Soft Skills Round", "Logical Test"];
   assessmentDropdownOpen = false;
-  selectedAssessment = '';
+  selectedAssessment = "";
   isAssessmentAdded: boolean = false;
 
   // Calendar properties
@@ -38,10 +38,20 @@ export class InterviewSetupComponent implements OnInit {
   selectedHours: number = 0;
   selectedMinutes: number = 0;
   calendarDays: CalendarDay[] = [];
-  dayHeaders = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  dayHeaders = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -52,12 +62,16 @@ export class InterviewSetupComponent implements OnInit {
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
-      roundName: ['', Validators.required],
-      roundType: ['', Validators.required],
-      schedulingType: ['calendar'],
-      assessmentDeadline: [''],
-      minPassingScore: ['', [Validators.required, Validators.min(20), Validators.max(100)]],
-      assessmentLink: ['']
+      roundName: ["", Validators.required],
+      roundType: ["", Validators.required],
+      schedulingType: ["calendar"],
+      assessmentDeadline: [""],
+      manualDeadline: [""],
+      minPassingScore: [
+        "",
+        [Validators.required, Validators.min(20), Validators.max(100)],
+      ],
+      assessmentLink: [""],
     });
 
     this.generateCalendar();
@@ -65,14 +79,15 @@ export class InterviewSetupComponent implements OnInit {
     // If user returned from PreviewAssessmentComponent
     const navigation = window.history.state;
     if (navigation?.assessmentConfirmed) {
-      this.selectedType = 'Assessment';
-      this.interviewForm.get('roundType')?.setValue('Assessment');
-      this.selectedAssessment = navigation.assessmentTitle || 'Custom Assessment';
+      this.selectedType = "Assessment";
+      this.interviewForm.get("roundType")?.setValue("Assessment");
+      this.selectedAssessment =
+        navigation.assessmentTitle || "Custom Assessment";
       this.isAssessmentAdded = true;
       this.setAssessmentValidators(true);
     }
 
-    this.interviewForm.get('assessmentLink')?.valueChanges.subscribe(link => {
+    this.interviewForm.get("assessmentLink")?.valueChanges.subscribe((link) => {
       const trimmed = link?.trim();
       if (trimmed) {
         this.isAssessmentAdded = true;
@@ -103,7 +118,7 @@ export class InterviewSetupComponent implements OnInit {
         isStart: false,
         isEnd: false,
         isToday: false,
-        fullDate: prevDate
+        fullDate: prevDate,
       });
     }
 
@@ -113,7 +128,7 @@ export class InterviewSetupComponent implements OnInit {
       const isInRange = this.isDateInRange(currentDate);
       const isStart = this.isStartDate(currentDate);
       const isEnd = this.isEndDate(currentDate);
-      
+
       this.calendarDays.push({
         date: day,
         otherMonth: false,
@@ -122,7 +137,7 @@ export class InterviewSetupComponent implements OnInit {
         isStart: isStart,
         isEnd: isEnd,
         isToday: this.isSameDay(currentDate, today),
-        fullDate: new Date(currentDate)
+        fullDate: new Date(currentDate),
       });
     }
 
@@ -137,7 +152,7 @@ export class InterviewSetupComponent implements OnInit {
         isStart: false,
         isEnd: false,
         isToday: false,
-        fullDate: nextDate
+        fullDate: nextDate,
       });
     }
   }
@@ -151,14 +166,14 @@ export class InterviewSetupComponent implements OnInit {
 
   selectDate(day: CalendarDay) {
     if (day.otherMonth || this.isPastDate(day.fullDate)) return;
-    
+
     const clickedDate = day.fullDate;
-    
+
     // Reset selection if clicking the same date twice or if we're starting a new selection
     if (this.startDate && this.endDate) {
       this.startDate = clickedDate;
       this.endDate = null;
-    } 
+    }
     // Set start date if not set
     else if (!this.startDate) {
       this.startDate = clickedDate;
@@ -166,39 +181,42 @@ export class InterviewSetupComponent implements OnInit {
     // Set end date (must be after start date)
     else if (clickedDate > this.startDate) {
       this.endDate = clickedDate;
-    } 
+    }
     // If clicked date is before start date, make it the new start date
     else {
       this.startDate = clickedDate;
       this.endDate = null;
     }
-    
+
     this.updateCalendarDays();
   }
 
   // Close all dropdowns when clicking outside
-  @HostListener('document:click', ['$event'])
+  @HostListener("document:click", ["$event"])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.custom-dropdown')) {
+    if (!target.closest(".custom-dropdown")) {
       this.typeDropdownOpen = false;
       this.assessmentDropdownOpen = false;
     }
   }
-  
+
   updateCalendarDays() {
-    this.calendarDays.forEach(day => {
+    this.calendarDays.forEach((day) => {
       const currentDate = day.fullDate;
       day.selected = false;
       day.inRange = false;
       day.isStart = false;
       day.isEnd = false;
-      
-      if (this.startDate && !this.endDate && this.isSameDay(currentDate, this.startDate)) {
+
+      if (
+        this.startDate &&
+        !this.endDate &&
+        this.isSameDay(currentDate, this.startDate)
+      ) {
         day.selected = true;
         day.isStart = true;
-      } 
-      else if (this.startDate && this.endDate) {
+      } else if (this.startDate && this.endDate) {
         if (this.isSameDay(currentDate, this.startDate)) {
           day.isStart = true;
           day.inRange = true;
@@ -211,11 +229,13 @@ export class InterviewSetupComponent implements OnInit {
       }
     });
   }
-  
+
   isSameDay(date1: Date, date2: Date): boolean {
-    return date1.getFullYear() === date2.getFullYear() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getDate() === date2.getDate();
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   }
 
   isDateInRange(date: Date): boolean {
@@ -262,7 +282,7 @@ export class InterviewSetupComponent implements OnInit {
 
   selectType(type: string) {
     this.selectedType = type;
-    this.interviewForm.get('roundType')?.setValue(type);
+    this.interviewForm.get("roundType")?.setValue(type);
     this.typeDropdownOpen = false;
   }
 
@@ -280,12 +300,16 @@ export class InterviewSetupComponent implements OnInit {
 
   // Apply or clear validators for assessment fields
   private setAssessmentValidators(isRequired: boolean) {
-    const deadlineCtrl = this.interviewForm.get('assessmentDeadline');
-    const scoreCtrl = this.interviewForm.get('minPassingScore');
+    const deadlineCtrl = this.interviewForm.get("assessmentDeadline");
+    const scoreCtrl = this.interviewForm.get("minPassingScore");
 
     if (isRequired) {
       deadlineCtrl?.setValidators([Validators.required]);
-      scoreCtrl?.setValidators([Validators.required, Validators.min(20), Validators.max(100)]);
+      scoreCtrl?.setValidators([
+        Validators.required,
+        Validators.min(20),
+        Validators.max(100),
+      ]);
     } else {
       deadlineCtrl?.clearValidators();
       scoreCtrl?.clearValidators();
@@ -297,9 +321,16 @@ export class InterviewSetupComponent implements OnInit {
   // Form validation helper
   isFormValid(): boolean {
     if (!this.interviewForm.valid) return false;
-    if (!this.interviewForm.get('roundName')?.value || !this.selectedType) return false;
-    if (this.selectedType === 'Assessment' && !this.isAssessmentAdded) return false;
-    if (this.selectedType === 'Online' && this.schedulingTypeValue === 'calendar' && (!this.startDate || !this.endDate)) return false;
+    if (!this.interviewForm.get("roundName")?.value || !this.selectedType)
+      return false;
+    if (this.selectedType === "Assessment" && !this.isAssessmentAdded)
+      return false;
+    if (
+      this.selectedType === "Online" &&
+      this.schedulingTypeValue === "calendar" &&
+      (!this.startDate || !this.endDate)
+    )
+      return false;
     return true;
   }
 
@@ -308,9 +339,9 @@ export class InterviewSetupComponent implements OnInit {
 
   // Reset form to initial state
   private resetForm() {
-    this.interviewForm.reset({ schedulingType: 'calendar' });
-    this.selectedType = '';
-    this.selectedAssessment = '';
+    this.interviewForm.reset({ schedulingType: "calendar" });
+    this.selectedType = "";
+    this.selectedAssessment = "";
     this.isAssessmentAdded = false;
     this.startDate = null;
     this.endDate = null;
@@ -327,11 +358,15 @@ export class InterviewSetupComponent implements OnInit {
         roundType: this.selectedType,
         startDate: this.startDate,
         endDate: this.endDate,
-        selectedTime: `${this.selectedHours.toString().padStart(2, '0')}:${this.selectedMinutes.toString().padStart(2, '0')}`
+        selectedTime: `${this.selectedHours
+          .toString()
+          .padStart(2, "0")}:${this.selectedMinutes
+          .toString()
+          .padStart(2, "0")}`,
       };
-      
+
       this.rounds.push(roundData);
-      console.log('Added Round:', roundData);
+      console.log("Added Round:", roundData);
       this.resetForm();
     } else {
       this.interviewForm.markAllAsTouched();
@@ -344,27 +379,27 @@ export class InterviewSetupComponent implements OnInit {
       this.interviewForm.markAllAsTouched();
       return;
     }
-    
+
     // Add current form data if valid
     if (this.isFormValid()) {
       this.addRound();
     }
-    
+
     // Proceed with all rounds
-    console.log('All Rounds:', this.rounds);
+    console.log("All Rounds:", this.rounds);
     this.step = 2;
     // this.router.navigate(['/sort-rounds'], { state: { rounds: this.rounds } });
   }
 
   onBackClick() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(["/dashboard"]);
   }
 
   onCreateAssessment() {
-    this.router.navigate(['/dashboard/interview-setup/create-assessment']);
+    this.router.navigate(["/dashboard/interview-setup/create-assessment"]);
   }
 
   get schedulingTypeValue() {
-    return this.interviewForm.get('schedulingType')?.value;
+    return this.interviewForm.get("schedulingType")?.value;
   }
 }
