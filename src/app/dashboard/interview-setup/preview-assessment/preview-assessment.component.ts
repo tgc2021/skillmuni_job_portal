@@ -97,13 +97,17 @@ export class PreviewAssessmentComponent implements OnInit {
     this.router.navigate(['/dashboard/interview-setup/assessment-creation']);
   }
 
-  onSubmit() {
-    // Clear the stored assessment data
-    sessionStorage.removeItem('previewAssessmentData');
-    
-    // Navigate back to the interview setup page
-    this.router.navigate(['/dashboard/interview-setup']);
-  }
+onSubmit() {
+  sessionStorage.removeItem('previewAssessmentData');
+
+  this.router.navigate(['/dashboard/interview-setup'], {
+    state: {
+      assessmentConfirmed: true,
+      assessmentTitle: this.assessmentTitle // optional, to show the title
+    }
+  });
+}
+
 
   ngOnDestroy() {
     // Revoke object URLs to prevent memory leaks

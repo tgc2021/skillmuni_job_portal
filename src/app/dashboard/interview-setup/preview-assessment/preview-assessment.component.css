@@ -48,10 +48,10 @@
 }
 
 .title-container h2 {
-  font-size: 16px;
-  font-weight: 500;
-  color: #6b7280;
+font-size: 15px;
+  color: #34437a;
   margin: 0;
+  font-weight: 500;
 }
 
 .header-icon {
@@ -155,7 +155,7 @@
 }
 
 .option-image {
-  max-width: 120px;
+  max-width: 150px;
 }
 
 .option-text {
@@ -198,6 +198,7 @@
 .actions {
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
   gap: 20px;
 }
 

@@ -433,6 +433,312 @@ input.ng-touched.ng-invalid {
   visibility: hidden;
 }
 
+.radio-group {
+  display: flex;
+  gap: 30px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #2f2854;
+}
+.radio-option input[type="radio"] {
+  accent-color: #ff8a3d;
+  width: 16px;
+  height: 16px;
+}
+
+/* Calendar and Time Picker Styles */
+
+/* Calendar Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.calendar-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2f3260;
+  margin: 0;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #2f3260;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #f0f4ff;
+}
+
+.arrow-left,
+.arrow-right {
+  font-weight: bold;
+}
+
+/* Calendar Wrapper Styles */
+
+
+.calendar-container {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 30%;
+}
+
+
+.month-year {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2f3260;
+  margin: 0;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #2f3260;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-button:hover {
+  background-color: #f0f4ff;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 20px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: #2f3260;
+  padding: 8px 4px;
+  background-color: #f0f4ff;
+  border-radius: 4px;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s ease;
+  
+  &.past-date {
+    color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .day-number {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .day-indicator {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #2f80ed;
+  }
+  
+  &.in-range {
+    background-color: rgba(47, 128, 237, 0.1);
+    border-radius: 0;
+    
+    &:hover {
+      background-color: rgba(47, 128, 237, 0.15);
+    }
+  }
+  
+  &.range-start {
+    background-color: #2f80ed;
+    color: white;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    margin-left: 2px;
+    
+    .day-number {
+      color: white;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -10px;
+      width: 10px;
+      height: 100%;
+      background-color: rgba(47, 128, 237, 0.1);
+    }
+  }
+  
+  &.range-end {
+    background-color: #2f80ed;
+    color: white;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    margin-right: 2px;
+    
+    .day-number {
+      color: white;
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -10px;
+      width: 10px;
+      height: 100%;
+      background-color: rgba(47, 128, 237, 0.1);
+    }
+  }
+  
+  &:hover:not(.other-month) {
+    background-color: rgba(47, 128, 237, 0.1);
+  }
+  
+  &.selected {
+    background-color: #2f80ed;
+    color: white;
+    
+    .day-number {
+      color: white;
+    }
+  }
+}
+
+.calendar-day:hover {
+  background-color: #e7ecff;
+}
+
+.calendar-day.selected {
+  background-color: #ff8a3d;
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.today {
+  background-color: #ff8a3d;
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.today.selected {
+  background-color: #e67728;
+}
+
+.calendar-day.other-month {
+  color: #c0c7d6;
+  cursor: default;
+}
+
+.calendar-day.other-month:hover {
+  background-color: transparent;
+}
+
+/* Time Picker */
+.time-picker {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e6ff;
+}
+
+.time-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2f3260;
+  margin-bottom: 8px;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-input {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #2f2854;
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #2f3260;
+  background: white;
+}
+
+.time-input:focus {
+  border-color: #ff8a3d;
+  outline: none;
+}
+
+.time-separator {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2f3260;
+}
+
+/* Responsive Calendar */
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 12px;
+  }
+  
+  .calendar-day {
+    height: 32px;
+    font-size: 13px;
+  }
+  
+  .day-header {
+    font-size: 11px;
+    padding: 6px 2px;
+  }
+  
+  .month-year {
+    font-size: 16px;
+  }
+  
+  .time-input {
+    width: 50px;
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
+
 @media (max-width: 768px) {
   .assessment-create-box {
     flex-direction: row;
