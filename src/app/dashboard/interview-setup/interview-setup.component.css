@@ -728,6 +728,56 @@ input.ng-touched.ng-invalid {
   margin: 12px 25px 0;
   font-weight: 500;
 }
+.round-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  margin: 30px 0 15px;
+}
+
+/* Horizontal line should grow to fill space */
+.round-line {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #6F79A2;
+    opacity: 0.4;
+  margin-right: 12px;
+}
+
+/* Container for title and delete icon */
+.round-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-style: italic;
+  color: #2F2854;
+}
+
+/* Title */
+.round-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Delete Button */
+.delete-round-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #2f3260;
+  font-size: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.delete-round-btn:hover {
+  color: #e75665;
+  transform: scale(1.1);
+}
 
 /* Responsive Calendar */
 @media (max-width: 768px) {

@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
 
 interface CalendarDay {
@@ -13,6 +13,23 @@ interface CalendarDay {
   fullDate: Date;
 }
 
+interface Round {
+  id: number;
+  form: FormGroup;
+  selectedType: string;
+  typeDropdownOpen: boolean;
+  selectedAssessment: string;
+  assessmentDropdownOpen: boolean;
+  isAssessmentAdded: boolean;
+  currentMonth: number;
+  currentYear: number;
+  startDate: Date | null;
+  endDate: Date | null;
+  selectedHours: number;
+  selectedMinutes: number;
+  calendarDays: CalendarDay[];
+}
+
 @Component({
   selector: "app-interview-setup",
   templateUrl: "./interview-setup.component.html",
@@ -21,107 +38,137 @@ interface CalendarDay {
 export class InterviewSetupComponent implements OnInit {
   interviewForm!: FormGroup;
   roundTypes = ["Assessment", "Online", "Offline"];
-  selectedType = "";
-  typeDropdownOpen = false;
   step = 1;
+  roundCounter = 1;
+
+  // Array to store multiple rounds
+  rounds: Round[] = [];
 
   previousAssessments = ["Java Test", "Soft Skills Round", "Logical Test"];
-  assessmentDropdownOpen = false;
-  selectedAssessment = "";
-  isAssessmentAdded: boolean = false;
-
-  // Calendar properties
-  currentMonth: number;
-  currentYear: number;
-  startDate: Date | null = null;
-  endDate: Date | null = null;
-  selectedHours: number = 0;
-  selectedMinutes: number = 0;
-  calendarDays: CalendarDay[] = [];
+  
   dayHeaders = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    const today = new Date();
-    this.currentMonth = today.getMonth();
-    this.currentYear = today.getFullYear();
-  }
+  constructor(private fb: FormBuilder, private router: Router) {}
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
+      rounds: this.fb.array([])
+    });
+
+    // Add the first round
+    this.addNewRound();
+
+    // If user returned from PreviewAssessmentComponent
+    const navigation = window.history.state;
+    if (navigation?.assessmentConfirmed) {
+      const firstRound = this.rounds[0];
+      if (firstRound) {
+        firstRound.selectedType = "Assessment";
+        firstRound.form.get("roundType")?.setValue("Assessment");
+        firstRound.selectedAssessment = navigation.assessmentTitle || "Custom Assessment";
+        firstRound.isAssessmentAdded = true;
+        this.setAssessmentValidators(firstRound, true);
+      }
+    }
+  }
+
+  get roundsFormArray(): FormArray {
+    return this.interviewForm.get('rounds') as FormArray;
+  }
+
+  private createRoundForm(): FormGroup {
+    const form = this.fb.group({
       roundName: ["", [Validators.required, Validators.minLength(1)]],
       roundType: ["", Validators.required],
       schedulingType: ["calendar"],
       assessmentDeadline: [""],
       manualDeadline: [""],
-      minPassingScore: [
-        "",
-        [Validators.min(20), Validators.max(100)] // Required validator will be added dynamically
-      ],
+      minPassingScore: ["", [Validators.min(20), Validators.max(100)]],
       assessmentLink: [""],
-      interviewLocation: [""] // Required validator will be added dynamically for Offline type
+      interviewLocation: [""]
     });
 
-    // Subscribe to form value changes to update validation
-    this.interviewForm.get('roundType')?.valueChanges.subscribe(type => {
-      this.updateFormValidation(type);
-    });
-
-    // Subscribe to scheduling type changes
-    this.interviewForm.get('schedulingType')?.valueChanges.subscribe(() => {
-      this.updateFormValidation(this.selectedType);
-    });
-
-    this.generateCalendar();
-
-    // If user returned from PreviewAssessmentComponent
-    const navigation = window.history.state;
-    if (navigation?.assessmentConfirmed) {
-      this.selectedType = "Assessment";
-      this.interviewForm.get("roundType")?.setValue("Assessment");
-      this.selectedAssessment =
-        navigation.assessmentTitle || "Custom Assessment";
-      this.isAssessmentAdded = true;
-      this.setAssessmentValidators(true);
-    }
-
-    this.interviewForm.get("assessmentLink")?.valueChanges.subscribe((link) => {
-      const trimmed = link?.trim();
-      if (trimmed) {
-        this.isAssessmentAdded = true;
-        this.setAssessmentValidators(true);
-      } else {
-        this.isAssessmentAdded = false;
-        this.setAssessmentValidators(false);
+    // Subscribe to form value changes
+    form.get('roundType')?.valueChanges.subscribe(type => {
+      const roundIndex = this.rounds.findIndex(r => r.form === form);
+      if (roundIndex !== -1 && type !== null) {
+        this.updateFormValidation(this.rounds[roundIndex], type);
       }
     });
+
+    form.get('schedulingType')?.valueChanges.subscribe(() => {
+      const roundIndex = this.rounds.findIndex(r => r.form === form);
+      if (roundIndex !== -1) {
+        this.updateFormValidation(this.rounds[roundIndex], this.rounds[roundIndex].selectedType);
+      }
+    });
+
+    form.get("assessmentLink")?.valueChanges.subscribe((link) => {
+      const roundIndex = this.rounds.findIndex(r => r.form === form);
+      if (roundIndex !== -1) {
+        const round = this.rounds[roundIndex];
+        const trimmed = link?.trim();
+        if (trimmed) {
+          round.isAssessmentAdded = true;
+          this.setAssessmentValidators(round, true);
+        } else {
+          round.isAssessmentAdded = false;
+          this.setAssessmentValidators(round, false);
+        }
+      }
+    });
+
+    return form;
+  }
+
+  addNewRound() {
+    const today = new Date();
+    const newRound: Round = {
+      id: this.roundCounter++,
+      form: this.createRoundForm(),
+      selectedType: "",
+      typeDropdownOpen: false,
+      selectedAssessment: "",
+      assessmentDropdownOpen: false,
+      isAssessmentAdded: false,
+      currentMonth: today.getMonth(),
+      currentYear: today.getFullYear(),
+      startDate: null,
+      endDate: null,
+      selectedHours: 0,
+      selectedMinutes: 0,
+      calendarDays: []
+    };
+
+    this.generateCalendar(newRound);
+    this.rounds.push(newRound);
+    this.roundsFormArray.push(newRound.form);
+  }
+
+  removeRound(roundId: number) {
+    const index = this.rounds.findIndex(r => r.id === roundId);
+    if (index !== -1 && this.rounds.length > 1) {
+      this.rounds.splice(index, 1);
+      this.roundsFormArray.removeAt(index);
+    }
   }
 
   // Calendar methods
-  generateCalendar() {
-    this.calendarDays = [];
-    const firstDay = new Date(this.currentYear, this.currentMonth, 1);
-    const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+  generateCalendar(round: Round) {
+    round.calendarDays = [];
+    const firstDay = new Date(round.currentYear, round.currentMonth, 1);
+    const lastDay = new Date(round.currentYear, round.currentMonth + 1, 0);
     const today = new Date();
 
     // Add days from previous month
     const firstDayWeekday = firstDay.getDay();
     for (let i = firstDayWeekday - 1; i >= 0; i--) {
-      const prevDate = new Date(this.currentYear, this.currentMonth, -i);
-      this.calendarDays.push({
+      const prevDate = new Date(round.currentYear, round.currentMonth, -i);
+      round.calendarDays.push({
         date: prevDate.getDate(),
         otherMonth: true,
         selected: false,
@@ -135,12 +182,12 @@ export class InterviewSetupComponent implements OnInit {
 
     // Add days of current month
     for (let day = 1; day <= lastDay.getDate(); day++) {
-      const currentDate = new Date(this.currentYear, this.currentMonth, day);
-      const isInRange = this.isDateInRange(currentDate);
-      const isStart = this.isStartDate(currentDate);
-      const isEnd = this.isEndDate(currentDate);
+      const currentDate = new Date(round.currentYear, round.currentMonth, day);
+      const isInRange = this.isDateInRange(round, currentDate);
+      const isStart = this.isStartDate(round, currentDate);
+      const isEnd = this.isEndDate(round, currentDate);
 
-      this.calendarDays.push({
+      round.calendarDays.push({
         date: day,
         otherMonth: false,
         selected: isStart || isEnd,
@@ -152,10 +199,10 @@ export class InterviewSetupComponent implements OnInit {
       });
     }
 
-    const remainingCells = 42 - this.calendarDays.length;
+    const remainingCells = 42 - round.calendarDays.length;
     for (let day = 1; day <= remainingCells; day++) {
-      const nextDate = new Date(this.currentYear, this.currentMonth + 1, day);
-      this.calendarDays.push({
+      const nextDate = new Date(round.currentYear, round.currentMonth + 1, day);
+      round.calendarDays.push({
         date: day,
         otherMonth: true,
         selected: false,
@@ -168,73 +215,51 @@ export class InterviewSetupComponent implements OnInit {
     }
   }
 
-  // Check if a date is in the past (excluding today)
   isPastDate(date: Date): boolean {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date < today;
   }
 
-  selectDate(day: CalendarDay) {
+  selectDate(round: Round, day: CalendarDay) {
     if (day.otherMonth || this.isPastDate(day.fullDate)) return;
 
     const clickedDate = day.fullDate;
 
-    // Reset selection if clicking the same date twice or if we're starting a new selection
-    if (this.startDate && this.endDate) {
-      this.startDate = clickedDate;
-      this.endDate = null;
-    }
-    // Set start date if not set
-    else if (!this.startDate) {
-      this.startDate = clickedDate;
-    }
-    // Set end date (must be after start date)
-    else if (clickedDate > this.startDate) {
-      this.endDate = clickedDate;
-    }
-    // If clicked date is before start date, make it the new start date
-    else {
-      this.startDate = clickedDate;
-      this.endDate = null;
+    if (round.startDate && round.endDate) {
+      round.startDate = clickedDate;
+      round.endDate = null;
+    } else if (!round.startDate) {
+      round.startDate = clickedDate;
+    } else if (clickedDate > round.startDate) {
+      round.endDate = clickedDate;
+    } else {
+      round.startDate = clickedDate;
+      round.endDate = null;
     }
 
-    this.updateCalendarDays();
+    this.updateCalendarDays(round);
   }
 
-  // Close all dropdowns when clicking outside
-  @HostListener("document:click", ["$event"])
-  onClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest(".custom-dropdown")) {
-      this.typeDropdownOpen = false;
-      this.assessmentDropdownOpen = false;
-    }
-  }
-
-  updateCalendarDays() {
-    this.calendarDays.forEach((day) => {
+  updateCalendarDays(round: Round) {
+    round.calendarDays.forEach((day) => {
       const currentDate = day.fullDate;
       day.selected = false;
       day.inRange = false;
       day.isStart = false;
       day.isEnd = false;
 
-      if (
-        this.startDate &&
-        !this.endDate &&
-        this.isSameDay(currentDate, this.startDate)
-      ) {
+      if (round.startDate && !round.endDate && this.isSameDay(currentDate, round.startDate)) {
         day.selected = true;
         day.isStart = true;
-      } else if (this.startDate && this.endDate) {
-        if (this.isSameDay(currentDate, this.startDate)) {
+      } else if (round.startDate && round.endDate) {
+        if (this.isSameDay(currentDate, round.startDate)) {
           day.isStart = true;
           day.inRange = true;
-        } else if (this.isSameDay(currentDate, this.endDate)) {
+        } else if (this.isSameDay(currentDate, round.endDate)) {
           day.isEnd = true;
           day.inRange = true;
-        } else if (currentDate > this.startDate && currentDate < this.endDate) {
+        } else if (currentDate > round.startDate && currentDate < round.endDate) {
           day.inRange = true;
         }
       }
@@ -249,54 +274,115 @@ export class InterviewSetupComponent implements OnInit {
     );
   }
 
-  isDateInRange(date: Date): boolean {
-    if (!this.startDate || !this.endDate) return false;
-    return date > this.startDate && date < this.endDate;
+  isDateInRange(round: Round, date: Date): boolean {
+    if (!round.startDate || !round.endDate) return false;
+    return date > round.startDate && date < round.endDate;
   }
 
-  isStartDate(date: Date): boolean {
-    return this.startDate ? this.isSameDay(date, this.startDate) : false;
+  isStartDate(round: Round, date: Date): boolean {
+    return round.startDate ? this.isSameDay(date, round.startDate) : false;
   }
 
-  isEndDate(date: Date): boolean {
-    return this.endDate ? this.isSameDay(date, this.endDate) : false;
+  isEndDate(round: Round, date: Date): boolean {
+    return round.endDate ? this.isSameDay(date, round.endDate) : false;
   }
 
-  previousMonth() {
-    if (this.currentMonth === 0) {
-      this.currentMonth = 11;
-      this.currentYear--;
+  previousMonth(round: Round) {
+    if (round.currentMonth === 0) {
+      round.currentMonth = 11;
+      round.currentYear--;
     } else {
-      this.currentMonth--;
+      round.currentMonth--;
     }
-    this.generateCalendar();
+    this.generateCalendar(round);
   }
 
-  nextMonth() {
-    if (this.currentMonth === 11) {
-      this.currentMonth = 0;
-      this.currentYear++;
+  nextMonth(round: Round) {
+    if (round.currentMonth === 11) {
+      round.currentMonth = 0;
+      round.currentYear++;
     } else {
-      this.currentMonth++;
+      round.currentMonth++;
     }
-    this.generateCalendar();
+    this.generateCalendar(round);
   }
 
   getMonthName(monthIndex: number): string {
     return this.monthNames[monthIndex];
   }
 
-  // Toggle Round Type Dropdown
-  toggleTypeDropdown() {
-    this.typeDropdownOpen = !this.typeDropdownOpen;
+  // Close all dropdowns when clicking outside
+  @HostListener("document:click", ["$event"])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest(".custom-dropdown")) {
+      this.rounds.forEach(round => {
+        round.typeDropdownOpen = false;
+        round.assessmentDropdownOpen = false;
+      });
+    }
   }
 
-  // Update form validation based on selected type
-  private updateFormValidation(type: string) {
-    const assessmentLinkControl = this.interviewForm.get('assessmentLink');
-    const assessmentDeadlineControl = this.interviewForm.get('assessmentDeadline');
-    const minPassingScoreControl = this.interviewForm.get('minPassingScore');
-    const interviewLocationControl = this.interviewForm.get('interviewLocation');
+  toggleTypeDropdown(round: Round) {
+    round.typeDropdownOpen = !round.typeDropdownOpen;
+    // Close other dropdowns
+    this.rounds.forEach(r => {
+      if (r !== round) {
+        r.typeDropdownOpen = false;
+        r.assessmentDropdownOpen = false;
+      }
+    });
+  }
+
+  selectType(round: Round, type: string) {
+    round.selectedType = type;
+    round.form.get("roundType")?.setValue(type);
+    round.typeDropdownOpen = false;
+    
+    // Reset fields that might be conditionally required
+    if (type !== 'Assessment') {
+      round.form.get("assessmentLink")?.reset();
+      round.form.get("assessmentDeadline")?.reset();
+      round.form.get("minPassingScore")?.reset();
+      round.isAssessmentAdded = false;
+    }
+    
+    if (type !== 'Offline') {
+      round.form.get("interviewLocation")?.reset();
+    }
+    
+    if (type !== 'Online') {
+      round.startDate = null;
+      round.endDate = null;
+    }
+    
+    round.form.updateValueAndValidity();
+  }
+
+  toggleAssessmentDropdown(round: Round) {
+    round.assessmentDropdownOpen = !round.assessmentDropdownOpen;
+    // Close other dropdowns
+    this.rounds.forEach(r => {
+      if (r !== round) {
+        r.typeDropdownOpen = false;
+        r.assessmentDropdownOpen = false;
+      }
+    });
+  }
+
+  selectAssessment(round: Round, assessment: string) {
+    round.selectedAssessment = assessment;
+    round.isAssessmentAdded = true;
+    round.assessmentDropdownOpen = false;
+    this.setAssessmentValidators(round, true);
+  }
+
+  private updateFormValidation(round: Round, type: string) {
+    const form = round.form;
+    const assessmentLinkControl = form.get('assessmentLink');
+    const assessmentDeadlineControl = form.get('assessmentDeadline');
+    const minPassingScoreControl = form.get('minPassingScore');
+    const interviewLocationControl = form.get('interviewLocation');
 
     // Reset all validators first
     assessmentLinkControl?.clearValidators();
@@ -305,8 +391,7 @@ export class InterviewSetupComponent implements OnInit {
     interviewLocationControl?.clearValidators();
 
     if (type === 'Assessment') {
-      // Only add required validators if not using a previous assessment
-      if (!this.isAssessmentAdded) {
+      if (!round.isAssessmentAdded) {
         assessmentLinkControl?.setValidators([Validators.required]);
         assessmentDeadlineControl?.setValidators([Validators.required]);
         minPassingScoreControl?.setValidators([
@@ -326,52 +411,9 @@ export class InterviewSetupComponent implements OnInit {
     interviewLocationControl?.updateValueAndValidity();
   }
 
-  selectType(type: string) {
-    this.selectedType = type;
-    this.interviewForm.get("roundType")?.setValue(type);
-    this.typeDropdownOpen = false;
-    
-    // Reset fields that might be conditionally required
-    if (type !== 'Assessment') {
-      this.interviewForm.get("assessmentLink")?.reset();
-      this.interviewForm.get("assessmentDeadline")?.reset();
-      this.interviewForm.get("minPassingScore")?.reset();
-      this.isAssessmentAdded = false;
-    }
-    
-    if (type !== 'Offline') {
-      this.interviewForm.get("interviewLocation")?.reset();
-    }
-    
-    // Reset scheduling related fields
-    if (type !== 'Online') {
-      this.startDate = null;
-      this.endDate = null;
-    }
-    
-    // Update form validation
-    this.interviewForm.updateValueAndValidity();
-  }
-  
-  
-
-
-  // Toggle Assessment Dropdown
-  toggleAssessmentDropdown() {
-    this.assessmentDropdownOpen = !this.assessmentDropdownOpen;
-  }
-
-  selectAssessment(a: string) {
-    this.selectedAssessment = a;
-    this.isAssessmentAdded = true;
-    this.assessmentDropdownOpen = false;
-    this.setAssessmentValidators(true);
-  }
-
-  // Apply or clear validators for assessment fields
-  private setAssessmentValidators(isRequired: boolean) {
-    const deadlineCtrl = this.interviewForm.get("assessmentDeadline");
-    const scoreCtrl = this.interviewForm.get("minPassingScore");
+  private setAssessmentValidators(round: Round, isRequired: boolean) {
+    const deadlineCtrl = round.form.get("assessmentDeadline");
+    const scoreCtrl = round.form.get("minPassingScore");
 
     if (isRequired) {
       deadlineCtrl?.setValidators([Validators.required]);
@@ -386,115 +428,81 @@ export class InterviewSetupComponent implements OnInit {
     }
 
     deadlineCtrl?.updateValueAndValidity();
+    scoreCtrl?.updateValueAndValidity();
   }
 
-  // Form validation helper
-// Form validation helper
-isFormValid(): boolean {
-  // 1. Check basic required fields
-  if (!this.interviewForm.get("roundName")?.value || !this.selectedType) {
-    return false;
-  }
-
-  // 2. Check validation based on round type
-  if (this.selectedType === "Assessment") {
-    // For Assessment type, either:
-    // - A previous assessment is selected (isAssessmentAdded = true)
-    // OR
-    // - Assessment link is provided and all assessment fields are valid
-    const hasAssessmentLink = !!this.interviewForm.get("assessmentLink")?.value?.trim();
-    const isAssessmentValid = hasAssessmentLink && 
-                            this.interviewForm.get("assessmentDeadline")?.valid &&
-                            this.interviewForm.get("minPassingScore")?.valid;
-    
-    if (!this.isAssessmentAdded && !isAssessmentValid) {
+  isRoundValid(round: Round): boolean {
+    if (!round.form.get("roundName")?.value || !round.selectedType) {
       return false;
     }
-  } 
-  else if (this.selectedType === "Online") {
-    // For Online type:
-    // - If calendar scheduling: require start and end dates
-    // - If manual scheduling: require manual deadline
-    if (this.schedulingTypeValue === "calendar") {
-      if (!this.startDate || !this.endDate) return false;
-    } else {
-      const manualDeadline = this.interviewForm.get("manualDeadline")?.value;
-      if (!manualDeadline) return false;
-    }
-  } 
-  else if (this.selectedType === "Offline") {
-    // For Offline type:
-    // - Always require interview location
-    // - If manual scheduling: require manual deadline
-    const location = this.interviewForm.get("interviewLocation")?.value?.trim();
-    if (!location) return false;
 
-    if (this.schedulingTypeValue === "manual") {
-      const manualDeadline = this.interviewForm.get("manualDeadline")?.value;
-      if (!manualDeadline) return false;
+    if (round.selectedType === "Assessment") {
+      const hasAssessmentLink = !!round.form.get("assessmentLink")?.value?.trim();
+      const isAssessmentValid = hasAssessmentLink && 
+                              round.form.get("assessmentDeadline")?.valid &&
+                              round.form.get("minPassingScore")?.valid;
+      
+      if (!round.isAssessmentAdded && !isAssessmentValid) {
+        return false;
+      }
+    } else if (round.selectedType === "Online") {
+      const schedulingType = round.form.get("schedulingType")?.value;
+      if (schedulingType === "calendar") {
+        if (!round.startDate || !round.endDate) return false;
+      } else {
+        const manualDeadline = round.form.get("manualDeadline")?.value;
+        if (!manualDeadline) return false;
+      }
+    } else if (round.selectedType === "Offline") {
+      const location = round.form.get("interviewLocation")?.value?.trim();
+      if (!location) return false;
+
+      const schedulingType = round.form.get("schedulingType")?.value;
+      if (schedulingType === "manual") {
+        const manualDeadline = round.form.get("manualDeadline")?.value;
+        if (!manualDeadline) return false;
+      }
     }
+
+    return true;
   }
 
-  return true;
-}
-
-
-
-  // Array to store all rounds
-  rounds: any[] = [];
-
-  // Reset form to initial state
-  private resetForm() {
-    this.interviewForm.reset({ schedulingType: "calendar" });
-    this.selectedType = "";
-    this.selectedAssessment = "";
-    this.isAssessmentAdded = false;
-    this.startDate = null;
-    this.endDate = null;
-    this.selectedHours = 0;
-    this.selectedMinutes = 0;
-    this.generateCalendar();
+  isFormValid(): boolean {
+    return this.rounds.every(round => this.isRoundValid(round));
   }
 
-  // Add another round
   addRound() {
-    if (this.isFormValid()) {
-      const roundData = {
-        ...this.interviewForm.value,
-        roundType: this.selectedType,
-        startDate: this.startDate,
-        endDate: this.endDate,
-        selectedTime: `${this.selectedHours
-          .toString()
-          .padStart(2, "0")}:${this.selectedMinutes
-          .toString()
-          .padStart(2, "0")}`,
-      };
+    // Mark all current rounds as touched to show validation errors
+    this.rounds.forEach(round => {
+      round.form.markAllAsTouched();
+    });
 
-      this.rounds.push(roundData);
-      console.log("Added Round:", roundData);
-      this.resetForm();
-    } else {
-      this.interviewForm.markAllAsTouched();
+    if (this.isFormValid()) {
+      this.addNewRound();
     }
   }
 
-  // Navigate to sort step with all rounds
   goToSortStep() {
-    if (this.rounds.length === 0 && !this.isFormValid()) {
-      this.interviewForm.markAllAsTouched();
+    // Mark all rounds as touched to show validation errors
+    this.rounds.forEach(round => {
+      round.form.markAllAsTouched();
+    });
+
+    if (!this.isFormValid()) {
       return;
     }
 
-    // Add current form data if valid
-    if (this.isFormValid()) {
-      this.addRound();
-    }
+    // Collect all round data
+    const allRoundsData = this.rounds.map(round => ({
+      ...round.form.value,
+      roundType: round.selectedType,
+      startDate: round.startDate,
+      endDate: round.endDate,
+      selectedTime: `${round.selectedHours.toString().padStart(2, "0")}:${round.selectedMinutes.toString().padStart(2, "0")}`,
+    }));
 
-    // Proceed with all rounds
-    console.log("All Rounds:", this.rounds);
+    console.log("All Rounds:", allRoundsData);
     this.step = 2;
-    // this.router.navigate(['/sort-rounds'], { state: { rounds: this.rounds } });
   }
 
   onBackClick() {
@@ -505,7 +513,12 @@ isFormValid(): boolean {
     this.router.navigate(["/dashboard/interview-setup/create-assessment"]);
   }
 
-  get schedulingTypeValue() {
-    return this.interviewForm.get("schedulingType")?.value;
+  getSchedulingTypeValue(round: Round) {
+    return round.form.get("schedulingType")?.value;
+  }
+
+  // TrackBy function for ngFor optimization
+  trackByRoundId(index: number, round: Round): number {
+    return round.id;
   }
 }

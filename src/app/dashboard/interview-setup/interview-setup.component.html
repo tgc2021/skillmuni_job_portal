@@ -28,294 +28,325 @@
   <div class="profile-card-wrapper">
     <div class="profile-card">
       <form [formGroup]="interviewForm">
-        <div class="profile-row row-alt">
-          <div class="profile-grid top">
-            <div class="profile-field">
-              <div class="label-row">
-                <label>1. Interview Round <span class="highlight">Name</span></label>
-              </div>
-              <input formControlName="roundName"
-                placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
-            </div>
-            <div class="profile-field">
-              <div class="label-row">
-                <label>2. Interview Round <span class="highlight">Type</span></label>
-              </div>
-              <div class="custom-dropdown">
-                <div class="selected-option" (click)="toggleTypeDropdown()">
-                  {{ selectedType || 'Select Type from the drop-down below.' }}
-                  <span class="material-icons">keyboard_arrow_down</span>
-                </div>
-                <ul class="options-list" *ngIf="typeDropdownOpen">
-                  <li *ngFor="let type of roundTypes" (click)="selectType(type)">
-                    {{ type }}
-                  </li>
-                </ul>
-              </div>
+        
+        <!-- Loop through all rounds -->
+        <div *ngFor="let round of rounds; let i = index; trackBy: trackByRoundId" class="round-container">
+          
+          <!-- Round Header with Delete Button (only show for 2nd round onwards) -->
+          <div class="round-header" *ngIf="rounds.length > 1">
+            <div class="round-line"></div>
+            <div class="round-meta">
+              <h3 class="round-title">Next Round</h3>
+              <button type="button" class="delete-round-btn" (click)="removeRound(round.id)">
+                <span class="material-icons">delete</span>
+              </button>
             </div>
           </div>
-
-          <!-- Online Scheduling Section -->
-          <div class="profile-grid" *ngIf="selectedType === 'Online'">
-            <div class="profile-field" style="flex: 1 1 100%">
-              <div class="label-row">
-                <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
-              </div>
-
-              <div class="radio-group split-radio-group">
-                <label class="radio-option left-radio">
-                  <input type="radio" formControlName="schedulingType" value="calendar" />
-                  <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
-                </label>
-
-                <label class="radio-option right-radio">
-                  <input type="radio" formControlName="schedulingType" value="manual" />
-                  <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
-                </label>
-              </div>
-
-              <!-- Calendar and Time Picker -->
-              <div *ngIf="schedulingTypeValue === 'calendar'" class="calendar-time-wrapper">
-                <div class="calendar-container">
-                  <!-- Calendar Header -->
-                  <div class="calendar-header">
-                    <button type="button" class="nav-button" (click)="previousMonth()">
-                      <span>&lt;</span>
-                    </button>
-                    <h3 class="month-year">{{ getMonthName(currentMonth) }} {{ currentYear }}</h3>
-                    <button type="button" class="nav-button" (click)="nextMonth()">
-                      <span>&gt;</span>
-                    </button>
-                  </div>
-
-                  <!-- Calendar Grid -->
-                  <div class="calendar-grid">
-                    <!-- Day Headers -->
-                    <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
-
-                    <!-- Calendar Days -->
-                    <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="day.otherMonth"
-                      [class.selected]="day.selected || day.isStart || day.isEnd" [class.in-range]="day.inRange"
-                      [class.range-start]="day.isStart" [class.range-end]="day.isEnd" [class.today]="day.isToday"
-                      [class.past-date]="isPastDate(day.fullDate)" (click)="selectDate(day)">
-                      <span class="day-number">{{ day.date }}</span>
-                      <span class="day-indicator" *ngIf="day.isToday">•</span>
-                    </div>
-                  </div>
-
-                  <!-- Time Picker -->
-                  <div class="time-picker">
-                    <label class="time-label">Interview Time (Hours : Mins)</label>
-                    <div class="time-inputs">
-                      <input type="number" class="time-input" [(ngModel)]="selectedHours"
-                        [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
-                      <span class="time-separator">:</span>
-                      <input type="number" class="time-input" [(ngModel)]="selectedMinutes"
-                        [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Offline Scheduling Section -->
-          <div class="profile-grid" *ngIf="selectedType === 'Offline'">
-            <div class="profile-field" style="flex: 1 1 100%">
-              <div class="label-row">
-                <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
-              </div>
-
-              <div class="radio-group split-radio-group">
-                <label class="radio-option left-radio">
-                  <input type="radio" formControlName="schedulingType" value="calendar" />
-                  <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
-                </label>
-
-                <label class="radio-option right-radio">
-                  <input type="radio" formControlName="schedulingType" value="manual" />
-                  <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
-                </label>
-              </div>
-
-              <!-- Calendar and Time Picker -->
-              <div *ngIf="schedulingTypeValue === 'calendar'" class="calendar-time-wrapper">
-                <div class="calendar-container">
-                  <!-- Calendar Header -->
-                  <div class="calendar-header">
-                    <button type="button" class="nav-button" (click)="previousMonth()">
-                      <span>&lt;</span>
-                    </button>
-                    <h3 class="month-year">{{ getMonthName(currentMonth) }} {{ currentYear }}</h3>
-                    <button type="button" class="nav-button" (click)="nextMonth()">
-                      <span>&gt;</span>
-                    </button>
-                  </div>
-
-                  <!-- Calendar Grid -->
-                  <div class="calendar-grid">
-                    <!-- Day Headers -->
-                    <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
-
-                    <!-- Calendar Days -->
-                    <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="day.otherMonth"
-                      [class.selected]="day.selected || day.isStart || day.isEnd" [class.in-range]="day.inRange"
-                      [class.range-start]="day.isStart" [class.range-end]="day.isEnd" [class.today]="day.isToday"
-                      [class.past-date]="isPastDate(day.fullDate)" (click)="selectDate(day)">
-                      <span class="day-number">{{ day.date }}</span>
-                      <span class="day-indicator" *ngIf="day.isToday">•</span>
-                    </div>
-                  </div>
-
-                  <!-- Time Picker -->
-                  <div class="time-picker">
-                    <label class="time-label">Interview Time (Hours : Mins)</label>
-                    <div class="time-inputs">
-                      <input type="number" class="time-input" [(ngModel)]="selectedHours"
-                        [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
-                      <span class="time-separator">:</span>
-                      <input type="number" class="time-input" [(ngModel)]="selectedMinutes"
-                        [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Manual Scheduling Deadline (only for manual scheduling and not for Assessment) -->
-          <div class="profile-grid" *ngIf="schedulingTypeValue === 'manual' && selectedType !== 'Assessment'">
-            <div class="profile-field half-width">
-              <div class="label-row">
-                <label>4. Round <span class="highlight">Deadline</span></label>
-              </div>
-              <input type="date" formControlName="manualDeadline" placeholder="Select a Deadline from the Calendar" />
-              <small class="assessment-note">
-                <i>*This is the last date to conduct all interviews for this round.</i>
-              </small>
-            </div>
-
-            <!-- Interview Location Field (only for Offline) -->
-            <div class="profile-field half-width" *ngIf="selectedType === 'Offline'">
-              <div class="label-row">
-                <label>5. Interview <span class="highlight">Location</span></label>
-              </div>
-              <input type="text" formControlName="interviewLocation"
-                placeholder="Type in the Location for the Walk-in interview...." />
-            </div>
-          </div>
-
-          <!-- Info Text Block (not shown for Assessment type) -->
-          <div class="info-note" *ngIf="schedulingTypeValue === 'manual' && selectedType !== 'Assessment'">
-            You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
-          </div>
-
-
-          <!-- Conditionally show Assessment fields -->
-          <div class="profile-row assessment-row" *ngIf="selectedType === 'Assessment'">
-            <div class="profile-grid">
-              <div class="profile-field assessment-left">
+          
+          
+          <div class="profile-row row-alt" [formGroup]="round.form">
+            <div class="profile-grid top">
+              <div class="profile-field">
                 <div class="label-row">
-                  <label>3. Add <span class="highlight">Assessment</span></label>
+                  <label>1. Interview Round <span class="highlight">Name</span></label>
                 </div>
-                <div class="assessment-create-box">
-                  <span class="create-text">
-                    <ng-container *ngIf="isAssessmentAdded; else create">
-                      <span class="highlight">Assessment Added</span>
-                    </ng-container>
-                    <ng-template #create>
-                      Click here to <span class="highlight">Create</span> Assessment
-                    </ng-template>
-                  </span>
-
-                  <div class="create-icon" (click)="onCreateAssessment()">
-                    <ng-container *ngIf="isAssessmentAdded; else plusIcon">
-                      ✔️
-                    </ng-container>
-                    <ng-template #plusIcon>+</ng-template>
-                  </div>
-                </div>
+                <input formControlName="roundName"
+                  placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
               </div>
-
-              <div class="profile-field assessment-right">
-                <div class="label-row invisible-label">
-                  <label>&nbsp;</label>
+              <div class="profile-field">
+                <div class="label-row">
+                  <label>2. Interview Round <span class="highlight">Type</span></label>
                 </div>
                 <div class="custom-dropdown">
-                  <div class="selected-option" (click)="toggleAssessmentDropdown()">
-                    <span class="assessment-text">
-                      {{ selectedAssessment || 'Choose a ' }}
-                      <span class="highlight">previously created assessment</span>
-                    </span>
+                  <div class="selected-option" (click)="toggleTypeDropdown(round)">
+                    {{ round.selectedType || 'Select Type from the drop-down below.' }}
                     <span class="material-icons">keyboard_arrow_down</span>
                   </div>
-                  <ul class="options-list" *ngIf="assessmentDropdownOpen">
-                    <li *ngFor="let a of previousAssessments" (click)="selectAssessment(a)">
-                      {{ a }}
+                  <ul class="options-list" *ngIf="round.typeDropdownOpen">
+                    <li *ngFor="let type of roundTypes" (click)="selectType(round, type)">
+                      {{ type }}
                     </li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            <div class="profile-grid">
-              <div class="profile-field half-width">
+            <!-- Online Scheduling Section -->
+            <div class="profile-grid" *ngIf="round.selectedType === 'Online'">
+              <div class="profile-field" style="flex: 1 1 100%">
                 <div class="label-row">
-                  <label>4. Assessment Link</label>
+                  <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
                 </div>
-                <input type="text" formControlName="assessmentLink" placeholder="Paste Assessment Link here..." />
-                <small class="assessment-note">
-                  <i> *Using your own assessment? Add the link — candidates will be sent there.</i>
-                </small>
+
+                <div class="radio-group split-radio-group">
+                  <label class="radio-option left-radio">
+                    <input type="radio" formControlName="schedulingType" value="calendar" />
+                    <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
+                  </label>
+
+                  <label class="radio-option right-radio">
+                    <input type="radio" formControlName="schedulingType" value="manual" />
+                    <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
+                  </label>
+                </div>
+
+                <!-- Calendar and Time Picker -->
+                <div *ngIf="getSchedulingTypeValue(round) === 'calendar'" class="calendar-time-wrapper">
+                  <div class="calendar-container">
+                    <!-- Calendar Header -->
+                    <div class="calendar-header">
+                      <button type="button" class="nav-button" (click)="previousMonth(round)">
+                        <span>&lt;</span>
+                      </button>
+                      <h3 class="month-year">{{ getMonthName(round.currentMonth) }} {{ round.currentYear }}</h3>
+                      <button type="button" class="nav-button" (click)="nextMonth(round)">
+                        <span>&gt;</span>
+                      </button>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div class="calendar-grid">
+                      <!-- Day Headers -->
+                      <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
+
+                      <!-- Calendar Days -->
+                      <div class="calendar-day" *ngFor="let day of round.calendarDays" 
+                        [class.other-month]="day.otherMonth"
+                        [class.selected]="day.selected || day.isStart || day.isEnd" 
+                        [class.in-range]="day.inRange"
+                        [class.range-start]="day.isStart" 
+                        [class.range-end]="day.isEnd" 
+                        [class.today]="day.isToday"
+                        [class.past-date]="isPastDate(day.fullDate)" 
+                        (click)="selectDate(round, day)">
+                        <span class="day-number">{{ day.date }}</span>
+                        <span class="day-indicator" *ngIf="day.isToday">•</span>
+                      </div>
+                    </div>
+
+                    <!-- Time Picker -->
+                    <div class="time-picker">
+                      <label class="time-label">Interview Time (Hours : Mins)</label>
+                      <div class="time-inputs">
+                        <input type="number" class="time-input" [(ngModel)]="round.selectedHours"
+                          [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
+                        <span class="time-separator">:</span>
+                        <input type="number" class="time-input" [(ngModel)]="round.selectedMinutes"
+                          [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-
-            <!-- Dynamic fields: Deadline and Passing Score -->
-            <div class="profile-grid" *ngIf="isAssessmentAdded">
-              <div class="profile-field">
+            <!-- Offline Scheduling Section -->
+            <div class="profile-grid" *ngIf="round.selectedType === 'Offline'">
+              <div class="profile-field" style="flex: 1 1 100%">
                 <div class="label-row">
-                  <label>5. Assessment <span class="highlight">Deadline</span></label>
-                  <div class="error-text"
-                    *ngIf="interviewForm.get('assessmentDeadline')?.invalid && interviewForm.get('assessmentDeadline')?.touched">
-                    Assessment Deadline is required
+                  <label>3. How would you like to <span class="highlight">schedule this round?</span></label>
+                </div>
+
+                <div class="radio-group split-radio-group">
+                  <label class="radio-option left-radio">
+                    <input type="radio" formControlName="schedulingType" value="calendar" />
+                    <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
+                  </label>
+
+                  <label class="radio-option right-radio">
+                    <input type="radio" formControlName="schedulingType" value="manual" />
+                    <span><span class="highlight">Schedule interviews</span> manually for each candidate later.</span>
+                  </label>
+                </div>
+
+                <!-- Calendar and Time Picker -->
+                <div *ngIf="getSchedulingTypeValue(round) === 'calendar'" class="calendar-time-wrapper">
+                  <div class="calendar-container">
+                    <!-- Calendar Header -->
+                    <div class="calendar-header">
+                      <button type="button" class="nav-button" (click)="previousMonth(round)">
+                        <span>&lt;</span>
+                      </button>
+                      <h3 class="month-year">{{ getMonthName(round.currentMonth) }} {{ round.currentYear }}</h3>
+                      <button type="button" class="nav-button" (click)="nextMonth(round)">
+                        <span>&gt;</span>
+                      </button>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div class="calendar-grid">
+                      <!-- Day Headers -->
+                      <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
+
+                      <!-- Calendar Days -->
+                      <div class="calendar-day" *ngFor="let day of round.calendarDays" 
+                        [class.other-month]="day.otherMonth"
+                        [class.selected]="day.selected || day.isStart || day.isEnd" 
+                        [class.in-range]="day.inRange"
+                        [class.range-start]="day.isStart" 
+                        [class.range-end]="day.isEnd" 
+                        [class.today]="day.isToday"
+                        [class.past-date]="isPastDate(day.fullDate)" 
+                        (click)="selectDate(round, day)">
+                        <span class="day-number">{{ day.date }}</span>
+                        <span class="day-indicator" *ngIf="day.isToday">•</span>
+                      </div>
+                    </div>
+
+                    <!-- Time Picker -->
+                    <div class="time-picker">
+                      <label class="time-label">Interview Time (Hours : Mins)</label>
+                      <div class="time-inputs">
+                        <input type="number" class="time-input" [(ngModel)]="round.selectedHours"
+                          [ngModelOptions]="{standalone: true}" min="0" max="23" placeholder="00">
+                        <span class="time-separator">:</span>
+                        <input type="number" class="time-input" [(ngModel)]="round.selectedMinutes"
+                          [ngModelOptions]="{standalone: true}" min="0" max="59" placeholder="00">
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <input type="date" formControlName="assessmentDeadline"
-                  [class.ng-touched]="interviewForm.get('assessmentDeadline')?.touched"
-                  [class.ng-invalid]="interviewForm.get('assessmentDeadline')?.invalid" />
+              </div>
+            </div>
+
+            <!-- Manual Scheduling Deadline (only for manual scheduling and not for Assessment) -->
+            <div class="profile-grid" *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
+              <div class="profile-field half-width">
+                <div class="label-row">
+                  <label>4. Round <span class="highlight">Deadline</span></label>
+                </div>
+                <input type="date" formControlName="manualDeadline" placeholder="Select a Deadline from the Calendar" />
                 <small class="assessment-note">
-                  <i> *Candidates must complete the assessment before this date to be considered for the next round.</i>
+                  <i>*This is the last date to conduct all interviews for this round.</i>
                 </small>
               </div>
-              <div class="profile-field">
+
+              <!-- Interview Location Field (only for Offline) -->
+              <div class="profile-field half-width" *ngIf="round.selectedType === 'Offline'">
                 <div class="label-row">
-                  <label>6. Minimum Passing <span class="highlight">Score (%)</span></label>
-                  <div class="error-text"
-                    *ngIf="interviewForm.get('minPassingScore')?.invalid && interviewForm.get('minPassingScore')?.touched">
-                    Minimum Passing Score must be between 20 and 100
+                  <label>5. Interview <span class="highlight">Location</span></label>
+                </div>
+                <input type="text" formControlName="interviewLocation"
+                  placeholder="Type in the Location for the Walk-in interview...." />
+              </div>
+            </div>
+
+            <!-- Info Text Block (not shown for Assessment type) -->
+            <div class="info-note" *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
+              You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
+            </div>
+
+            <!-- Conditionally show Assessment fields -->
+            <div class="profile-row assessment-row" *ngIf="round.selectedType === 'Assessment'">
+              <div class="profile-grid">
+                <div class="profile-field assessment-left">
+                  <div class="label-row">
+                    <label>3. Add <span class="highlight">Assessment</span></label>
+                  </div>
+                  <div class="assessment-create-box">
+                    <span class="create-text">
+                      <ng-container *ngIf="round.isAssessmentAdded; else create">
+                        <span class="highlight">Assessment Added</span>
+                      </ng-container>
+                      <ng-template #create>
+                        Click here to <span class="highlight">Create</span> Assessment
+                      </ng-template>
+                    </span>
+
+                    <div class="create-icon" (click)="onCreateAssessment()">
+                      <ng-container *ngIf="round.isAssessmentAdded; else plusIcon">
+                        ✔️
+                      </ng-container>
+                      <ng-template #plusIcon>+</ng-template>
+                    </div>
                   </div>
                 </div>
-                <input type="number" formControlName="minPassingScore"
-                  placeholder="Set minimum score required (between 20 and 100)"
-                  [class.ng-touched]="interviewForm.get('minPassingScore')?.touched"
-                  [class.ng-invalid]="interviewForm.get('minPassingScore')?.invalid" />
-                <small class="assessment-note">
-                  <i> *This is the minimum score candidates need to qualify for the next round.</i>
-                </small>
+
+                <div class="profile-field assessment-right">
+                  <div class="label-row invisible-label">
+                    <label>&nbsp;</label>
+                  </div>
+                  <div class="custom-dropdown">
+                    <div class="selected-option" (click)="toggleAssessmentDropdown(round)">
+                      <span class="assessment-text">
+                        {{ round.selectedAssessment || 'Choose a ' }}
+                        <span class="highlight">previously created assessment</span>
+                      </span>
+                      <span class="material-icons">keyboard_arrow_down</span>
+                    </div>
+                    <ul class="options-list" *ngIf="round.assessmentDropdownOpen">
+                      <li *ngFor="let a of previousAssessments" (click)="selectAssessment(round, a)">
+                        {{ a }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="profile-grid">
+                <div class="profile-field half-width">
+                  <div class="label-row">
+                    <label>4. Assessment Link</label>
+                  </div>
+                  <input type="text" formControlName="assessmentLink" placeholder="Paste Assessment Link here..." />
+                  <small class="assessment-note">
+                    <i> *Using your own assessment? Add the link — candidates will be sent there.</i>
+                  </small>
+                </div>
+              </div>
+
+              <!-- Dynamic fields: Deadline and Passing Score -->
+              <div class="profile-grid" *ngIf="round.isAssessmentAdded">
+                <div class="profile-field">
+                  <div class="label-row">
+                    <label>5. Assessment <span class="highlight">Deadline</span></label>
+                    <div class="error-text"
+                      *ngIf="round.form.get('assessmentDeadline')?.invalid && round.form.get('assessmentDeadline')?.touched">
+                      Assessment Deadline is required
+                    </div>
+                  </div>
+                  <input type="date" formControlName="assessmentDeadline"
+                    [class.ng-touched]="round.form.get('assessmentDeadline')?.touched"
+                    [class.ng-invalid]="round.form.get('assessmentDeadline')?.invalid" />
+                  <small class="assessment-note">
+                    <i> *Candidates must complete the assessment before this date to be considered for the next round.</i>
+                  </small>
+                </div>
+                <div class="profile-field">
+                  <div class="label-row">
+                    <label>6. Minimum Passing <span class="highlight">Score (%)</span></label>
+                    <div class="error-text"
+                      *ngIf="round.form.get('minPassingScore')?.invalid && round.form.get('minPassingScore')?.touched">
+                      Minimum Passing Score must be between 20 and 100
+                    </div>
+                  </div>
+                  <input type="number" formControlName="minPassingScore"
+                    placeholder="Set minimum score required (between 20 and 100)"
+                    [class.ng-touched]="round.form.get('minPassingScore')?.touched"
+                    [class.ng-invalid]="round.form.get('minPassingScore')?.invalid" />
+                  <small class="assessment-note">
+                    <i> *This is the minimum score candidates need to qualify for the next round.</i>
+                  </small>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
+          <!-- Error message for round name -->
+          <div *ngIf="round.form.get('roundName')?.invalid && round.form.get('roundName')?.touched">
+            <p class="error-message">Round Name is required</p>
+          </div>
+        </div>
+        
         <!-- Add More Button -->
         <div class="save-button-container">
-          <button class="save-button draft" type="button" (click)="addRound()" [disabled]="!isFormValid()"
+          <button class="save-button draft" type="button" (click)="addRound()" 
             [style.opacity]="isFormValid() ? 1 : 0.5">
             <span class="check-icon">+</span> Add more
           </button>
 
-          <button class="save-button" type="button" (click)="goToSortStep()" [disabled]="!isFormValid()"
+          <button class="save-button" type="button" (click)="goToSortStep()" 
+            [disabled]="!isFormValid()"
             [style.opacity]="isFormValid() ? 1 : 0.5">
             Good to Go <span class="submit-icon">&#10132;</span>
           </button>
@@ -324,9 +355,4 @@
       </form>
     </div>
   </div>
-</div>
-
-<!-- Error message for round name -->
-<div *ngIf="interviewForm.get('roundName')?.invalid && interviewForm.get('roundName')?.touched">
-  <p class="error-message">Round Name is required</p>
 </div>
