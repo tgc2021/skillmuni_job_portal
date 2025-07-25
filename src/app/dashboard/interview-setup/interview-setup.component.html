@@ -18,14 +18,17 @@
       <div class="label">Set-up Rounds</div>
     </div>
     <div class="step-line"></div>
-    <div class="step" [class.active]="step === 2" (click)="step = 2">
+    <div class="step" 
+         [class.active]="step === 2" 
+         [class.disabled]="!hasAtLeastOneValidRound()" 
+         (click)="navigateToSortIfValid()">
       <div class="circle">2</div>
       <div class="label">Sort Rounds</div>
     </div>
   </div>
 
   <!-- Round Form -->
-  <div class="profile-card-wrapper">
+  <div class="profile-card-wrapper" *ngIf="step === 1">
     <div class="profile-card">
       <form [formGroup]="interviewForm">
         
@@ -33,7 +36,7 @@
         <div *ngFor="let round of rounds; let i = index; trackBy: trackByRoundId" class="round-container">
           
           <!-- Round Header with Delete Button (only show for 2nd round onwards) -->
-          <div class="round-header" *ngIf="rounds.length > 1">
+          <div class="round-header" *ngIf="rounds.length > 1 && i > 0">
             <div class="round-line"></div>
             <div class="round-meta">
               <h3 class="round-title">Next Round</h3>
@@ -49,9 +52,14 @@
               <div class="profile-field">
                 <div class="label-row">
                   <label>1. Interview Round <span class="highlight">Name</span></label>
+                  <div class="error-text" *ngIf="round.form.get('roundName')?.invalid && round.form.get('roundName')?.touched">
+                    Round Name is required
+                  </div>
                 </div>
                 <input formControlName="roundName"
-                  placeholder="Type in a Name of this Interview Round...e.g., HR Round" />
+                  placeholder="Type in a Name of this Interview Round...e.g., HR Round"
+                  [class.ng-touched]="round.form.get('roundName')?.touched"
+                  [class.ng-invalid]="round.form.get('roundName')?.invalid" />
               </div>
               <div class="profile-field">
                 <div class="label-row">
@@ -332,10 +340,7 @@
             </div>
           </div>
 
-          <!-- Error message for round name -->
-          <div *ngIf="round.form.get('roundName')?.invalid && round.form.get('roundName')?.touched">
-            <p class="error-message">Round Name is required</p>
-          </div>
+
         </div>
         
         <!-- Add More Button -->
@@ -346,13 +351,42 @@
           </button>
 
           <button class="save-button" type="button" (click)="goToSortStep()" 
-            [disabled]="!isFormValid()"
-            [style.opacity]="isFormValid() ? 1 : 0.5">
+            [disabled]="!canGoToSort()"
+            [style.opacity]="canGoToSort() ? 1 : 0.5"
+            [title]="!hasAtLeastOneValidRound() ? 'Please set up at least one round' : !isFormValid() ? 'Please complete all required fields' : ''">
             Good to Go <span class="submit-icon">&#10132;</span>
           </button>
         </div>
 
       </form>
+    </div>
+  </div>
+
+  <!-- Sort Rounds UI -->
+  <div class="sort-rounds-wrapper" *ngIf="step === 2">
+    <div class="sort-rounds-card">
+      <h2 class="sort-title">Sort Interview Rounds</h2>
+      <p class="sort-subtitle">Drag and drop to reorder the interview rounds</p>
+      
+      <div class="rounds-list" cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="round-item" *ngFor="let round of rounds; let i = index" cdkDrag>
+          <div class="round-drag-handle" cdkDragHandle>
+            <span class="material-icons">drag_handle</span>
+          </div>
+          <div class="round-details">
+            <h3 class="round-name">{{ round.form.get('roundName')?.value || 'Untitled Round' }}</h3>
+            <span class="round-type">{{ round.selectedType }}</span>
+          </div>
+          <div class="round-order">
+            <span class="order-number">{{ i + 1 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-actions">
+        <button class="back-button" (click)="step = 1">Back</button>
+        <button class="save-button" (click)="saveSortOrder()">Save Order</button>
+      </div>
     </div>
   </div>
 </div>

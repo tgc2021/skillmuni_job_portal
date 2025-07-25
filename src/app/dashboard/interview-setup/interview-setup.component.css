@@ -27,6 +27,22 @@
   z-index: 1;
 }
 
+.title-container.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding: 0 15px;
+  min-width: 100px;
+}
+
+.step.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .header h1 {
   font-size: 20px;
   color: #34437a;
@@ -820,6 +836,151 @@ input.ng-touched.ng-invalid {
   .assessment-left {
     padding: 16px !important;
   }
+}
+
+/* --- Sort Rounds UI --- */
+.sort-rounds-wrapper {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.sort-rounds-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sort-title {
+  color: #2f3260;
+  font-size: 20px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.sort-subtitle {
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.rounds-list {
+  margin-bottom: 30px;
+}
+
+.round-item {
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.round-item:last-child {
+  margin-bottom: 0;
+}
+.round-drag-handle {
+  margin-right: 15px;
+  cursor: move;
+  color: #6b7280;
+}
+
+.round-details {
+  flex: 1;
+}
+
+.round-name {
+  margin: 0 0 5px 0;
+  color: #2f3260;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.round-type {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #4f46e5;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.round-order {
+  width: 28px;
+  height: 28px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sort-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.sort-actions .back-button {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-actions .back-button:hover {
+  background: #e5e7eb;
+}
+
+.sort-actions .save-button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-actions .save-button:hover {
+  background: #4338ca;
+}
+
+/* Drag and drop styles */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: white;
+  opacity: 0.9;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.5;
+  background: #e5e7eb;
+  border: 2px dashed #9ca3af;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.rounds-list.cdk-drop-list-dragging .round-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* --- Responsive --- */

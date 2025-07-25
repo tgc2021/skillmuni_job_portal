@@ -1,6 +1,7 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 
 interface CalendarDay {
   date: number;
@@ -31,9 +32,9 @@ interface Round {
 }
 
 @Component({
-  selector: "app-interview-setup",
-  templateUrl: "./interview-setup.component.html",
-  styleUrls: ["./interview-setup.component.css"],
+  selector: 'app-interview-setup',
+  templateUrl: './interview-setup.component.html',
+  styleUrls: ['./interview-setup.component.css']
 })
 export class InterviewSetupComponent implements OnInit {
   interviewForm!: FormGroup;
@@ -52,7 +53,9 @@ export class InterviewSetupComponent implements OnInit {
     "July", "August", "September", "October", "November", "December",
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router) {
+    // Empty constructor
+  }
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
@@ -155,6 +158,85 @@ export class InterviewSetupComponent implements OnInit {
       this.rounds.splice(index, 1);
       this.roundsFormArray.removeAt(index);
     }
+  }
+
+  // Handle drag and drop reordering
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
+  }
+
+  /**
+   * Checks if there is at least one valid round set up
+   */
+  hasAtLeastOneValidRound(): boolean {
+    return this.rounds.length > 0 && this.rounds.some(round => this.isRoundValid(round));
+  }
+
+  /**
+   * Checks if the user can proceed to the sort step
+   */
+  canGoToSort(): boolean {
+    return this.hasAtLeastOneValidRound() && this.isFormValid();
+  }
+
+  /**
+   * Navigates to the sort step if validation passes
+   */
+  navigateToSortIfValid(): void {
+    if (this.canGoToSort()) {
+      this.step = 2;
+    } else if (!this.hasAtLeastOneValidRound()) {
+      alert('Please set up at least one round before sorting.');
+    } else if (!this.isFormValid()) {
+      // Mark all forms as touched to show validation errors
+      this.rounds.forEach(round => round.form.markAllAsTouched());
+      alert('Please complete all required fields before proceeding.');
+    }
+  }
+
+  /**
+   * Saves the sort order of the interview rounds
+   * Updates each round with its new order and saves to the backend
+   */
+  saveSortOrder() {
+    // Update each round with its new order
+    const updatedRounds = this.rounds.map((round, index) => {
+      const roundData = {
+        id: round.id,
+        name: round.form.get('roundName')?.value,
+        type: round.selectedType,
+        order: index + 1,
+        // Include any other necessary round data
+        ...round.form.value
+      };
+      
+      // Update the round's order in the form
+      round.form.patchValue({
+        order: index + 1
+      });
+      
+      return roundData;
+    });
+
+    // Log the updated order (replace with actual API call)
+    console.log('Saving rounds order:', updatedRounds);
+    
+    // Here you would typically make an API call to save the order
+    // Example:
+    // this.yourService.updateRoundsOrder(updatedRounds).subscribe({
+    //   next: (response) => {
+    //     console.log('Rounds order saved successfully', response);
+    //     this.router.navigate(['/dashboard']); // Or next step
+    //   },
+    //   error: (error) => {
+    //     console.error('Error saving rounds order:', error);
+    //     // Handle error (show error message to user)
+    //   }
+    // });
+    
+    // For now, show success message and navigate back to dashboard
+    alert('Interview rounds order saved successfully!');
+    this.router.navigate(['/dashboard']);
   }
 
   // Calendar methods
