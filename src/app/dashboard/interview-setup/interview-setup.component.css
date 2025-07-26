@@ -989,7 +989,6 @@ input.ng-touched.ng-invalid {
 
 .reset-button:hover {
   background-color: #f0f4ff;
-  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(52, 67, 122, 0.2);
 }
 
@@ -998,45 +997,6 @@ input.ng-touched.ng-invalid {
   font-weight: bold;
 }
 
-.finalize-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-}
-
-.finalize-button:hover:not(.disabled) {
-  background: #e68900;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
-}
-
-.finalize-button.disabled {
-  background: #c0c7d6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.arrow-icon {
-  font-size: 18px;
-  font-weight: bold;
-  transition: transform 0.2s ease;
-}
-
-.finalize-button:hover:not(.disabled) .arrow-icon {
-  transform: translateX(4px);
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -1069,11 +1029,6 @@ input.ng-touched.ng-invalid {
     gap: 15px;
   }
 
-  .reset-button,
-  .finalize-button {
-    width: 100%;
-    min-width: auto;
-  }
 }
 
 /* Drag and drop styles */

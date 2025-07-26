@@ -356,8 +356,7 @@
     </div>
   </div>
 
-  <!-- Sort Rounds UI -->
-  <!-- Replace the existing Sort Rounds UI section with this -->
+
 
   <!-- Sort Rounds UI -->
   <div class="sort-rounds-wrapper" *ngIf="step === 2">
@@ -396,10 +395,10 @@
           <span class="reset-icon">↻</span>
           Reset Order
         </button>
-        <button type="button" class="finalize-button" [disabled]="!canFinalize()" [class.disabled]="!canFinalize()"
+        <button type="button" class="save-button" [disabled]="!canFinalize()" [class.disabled]="!canFinalize()"
           (click)="finalizeSetup()">
           Finalize Setup
-          <span class="arrow-icon">→</span>
+          <span class="submit-icon">&#10132;</span>
         </button>
       </div>
     </div>
