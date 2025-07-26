@@ -363,30 +363,57 @@
   </div>
 
   <!-- Sort Rounds UI -->
-  <div class="sort-rounds-wrapper" *ngIf="step === 2">
-    <div class="sort-rounds-card">
-      <h2 class="sort-title">Sort Interview Rounds</h2>
-      <p class="sort-subtitle">Drag and drop to reorder the interview rounds</p>
-      
-      <div class="rounds-list" cdkDropList (cdkDropListDropped)="drop($event)">
-        <div class="round-item" *ngFor="let round of rounds; let i = index" cdkDrag>
-          <div class="round-drag-handle" cdkDragHandle>
-            <span class="material-icons">drag_handle</span>
-          </div>
-          <div class="round-details">
-            <h3 class="round-name">{{ round.form.get('roundName')?.value || 'Untitled Round' }}</h3>
-            <span class="round-type">{{ round.selectedType }}</span>
-          </div>
-          <div class="round-order">
-            <span class="order-number">{{ i + 1 }}</span>
+  <!-- Replace the existing Sort Rounds UI section with this -->
+
+<!-- Sort Rounds UI -->
+<div class="sort-rounds-wrapper" *ngIf="step === 2">
+  <div class="sort-rounds-card">
+    <div class="sort-header">
+      <div class="sort-column-header">Interview Round Name</div>
+      <div class="sort-column-header">Sort Order</div>
+    </div>
+    
+    <div class="sort-rows">
+      <div class="sort-row" *ngFor="let round of rounds; let i = index">
+        <div class="round-name-display">
+          {{ round.form.get('roundName')?.value || 'Untitled Round' }}
+        </div>
+        <div class="sort-order-dropdown">
+          <div class="custom-dropdown">
+            <div class="selected-option" (click)="toggleSortDropdown(i)">
+              <span [class.placeholder]="!round.selectedOrder">
+                {{ round.selectedOrder || 'Select Order' }}
+              </span>
+              <span class="material-icons">keyboard_arrow_down</span>
+            </div>
+            <ul class="options-list" *ngIf="round.sortDropdownOpen">
+              <li *ngFor="let order of getAvailableOrders(i)" 
+                  (click)="selectSortOrder(i, order)"
+                  [class.disabled]="isOrderTaken(order, i)">
+                {{ order }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="sort-actions">
-        <button class="back-button" (click)="step = 1">Back</button>
-        <button class="save-button" (click)="saveSortOrder()">Save Order</button>
-      </div>
+    <div class="sort-actions">
+      <button type="button" 
+              class="reset-button" 
+              (click)="resetSortOrder()">
+        <span class="reset-icon">↻</span>
+        Reset Order
+      </button>
+      <button type="button" 
+              class="finalize-button" 
+              [disabled]="!canFinalize()"
+              [class.disabled]="!canFinalize()"
+              (click)="finalizeSetup()">
+        Finalize Setup
+        <span class="arrow-icon">→</span>
+      </button>
     </div>
   </div>
+</div>
 </div>

@@ -29,6 +29,9 @@ interface Round {
   selectedHours: number;
   selectedMinutes: number;
   calendarDays: CalendarDay[];
+  // New properties for sorting
+  selectedOrder: number | null;
+  sortDropdownOpen: boolean;
 }
 
 @Component({
@@ -144,7 +147,10 @@ export class InterviewSetupComponent implements OnInit {
       endDate: null,
       selectedHours: 0,
       selectedMinutes: 0,
-      calendarDays: []
+      calendarDays: [],
+      // Initialize new sorting properties
+      selectedOrder: null,
+      sortDropdownOpen: false
     };
 
     this.generateCalendar(newRound);
@@ -157,12 +163,131 @@ export class InterviewSetupComponent implements OnInit {
     if (index !== -1 && this.rounds.length > 1) {
       this.rounds.splice(index, 1);
       this.roundsFormArray.removeAt(index);
+      // Reset sort orders when rounds are removed
+      this.resetSortOrder();
     }
   }
 
-  // Handle drag and drop reordering
+  // Handle drag and drop reordering (keeping for backward compatibility)
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.rounds, event.previousIndex, event.currentIndex);
+    // Reset sort orders when drag and drop is used
+    this.resetSortOrder();
+  }
+
+  /**
+   * Toggle sort dropdown for a specific round
+   */
+  toggleSortDropdown(roundIndex: number) {
+    // Close all other dropdowns
+    this.rounds.forEach((round, index) => {
+      if (index !== roundIndex) {
+        round.sortDropdownOpen = false;
+        round.typeDropdownOpen = false;
+        round.assessmentDropdownOpen = false;
+      }
+    });
+    
+    // Toggle the clicked dropdown
+    this.rounds[roundIndex].sortDropdownOpen = !this.rounds[roundIndex].sortDropdownOpen;
+  }
+
+  /**
+   * Get available order numbers for dropdown
+   */
+  getAvailableOrders(currentRoundIndex: number): number[] {
+    const totalRounds = this.rounds.length;
+    const orders: number[] = [];
+    
+    for (let i = 1; i <= totalRounds; i++) {
+      orders.push(i);
+    }
+    
+    return orders;
+  }
+
+  /**
+   * Check if an order number is already taken by another round
+   */
+  isOrderTaken(order: number, currentRoundIndex: number): boolean {
+    return this.rounds.some((round, index) => 
+      index !== currentRoundIndex && round.selectedOrder === order
+    );
+  }
+
+  /**
+   * Select sort order for a round
+   */
+  selectSortOrder(roundIndex: number, order: number) {
+    // Don't allow selection if order is already taken
+    if (this.isOrderTaken(order, roundIndex)) {
+      return;
+    }
+    
+    this.rounds[roundIndex].selectedOrder = order;
+    this.rounds[roundIndex].sortDropdownOpen = false;
+  }
+
+  /**
+   * Reset all sort orders
+   */
+  resetSortOrder() {
+    this.rounds.forEach(round => {
+      round.selectedOrder = null;
+      round.sortDropdownOpen = false;
+    });
+  }
+
+  /**
+   * Check if all rounds have been assigned an order
+   */
+  canFinalize(): boolean {
+    return this.rounds.every(round => round.selectedOrder !== null);
+  }
+
+  /**
+   * Finalize the setup with the selected order
+   */
+  finalizeSetup() {
+    if (!this.canFinalize()) {
+      alert('Please assign an order to all interview rounds before finalizing.');
+      return;
+    }
+
+    // Sort rounds according to selected order
+    const sortedRounds = [...this.rounds].sort((a, b) => {
+      return (a.selectedOrder || 0) - (b.selectedOrder || 0);
+    });
+
+    // Create final data structure
+    const finalRoundsData = sortedRounds.map((round, index) => ({
+      id: round.id,
+      name: round.form.get('roundName')?.value,
+      type: round.selectedType,
+      order: round.selectedOrder,
+      actualOrder: index + 1, // This will be 1, 2, 3... based on sort
+      formData: round.form.value,
+      startDate: round.startDate,
+      endDate: round.endDate,
+      selectedTime: `${round.selectedHours.toString().padStart(2, "0")}:${round.selectedMinutes.toString().padStart(2, "0")}`
+    }));
+
+    console.log('Finalized Interview Rounds:', finalRoundsData);
+    
+    // Here you would typically save to backend
+    // this.interviewService.saveInterviewRounds(finalRoundsData).subscribe({
+    //   next: (response) => {
+    //     console.log('Interview rounds saved successfully', response);
+    //     this.router.navigate(['/dashboard']);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error saving interview rounds:', error);
+    //   }
+    // });
+
+    // For now, show success message and navigate
+    alert('Interview rounds have been finalized successfully!');
+    this.router.navigate(['/dashboard']);
   }
 
   /**
@@ -195,48 +320,11 @@ export class InterviewSetupComponent implements OnInit {
   }
 
   /**
-   * Saves the sort order of the interview rounds
-   * Updates each round with its new order and saves to the backend
+   * Saves the sort order of the interview rounds (legacy method)
    */
   saveSortOrder() {
-    // Update each round with its new order
-    const updatedRounds = this.rounds.map((round, index) => {
-      const roundData = {
-        id: round.id,
-        name: round.form.get('roundName')?.value,
-        type: round.selectedType,
-        order: index + 1,
-        // Include any other necessary round data
-        ...round.form.value
-      };
-      
-      // Update the round's order in the form
-      round.form.patchValue({
-        order: index + 1
-      });
-      
-      return roundData;
-    });
-
-    // Log the updated order (replace with actual API call)
-    console.log('Saving rounds order:', updatedRounds);
-    
-    // Here you would typically make an API call to save the order
-    // Example:
-    // this.yourService.updateRoundsOrder(updatedRounds).subscribe({
-    //   next: (response) => {
-    //     console.log('Rounds order saved successfully', response);
-    //     this.router.navigate(['/dashboard']); // Or next step
-    //   },
-    //   error: (error) => {
-    //     console.error('Error saving rounds order:', error);
-    //     // Handle error (show error message to user)
-    //   }
-    // });
-    
-    // For now, show success message and navigate back to dashboard
-    alert('Interview rounds order saved successfully!');
-    this.router.navigate(['/dashboard']);
+    // This method is replaced by finalizeSetup() but keeping for backward compatibility
+    this.finalizeSetup();
   }
 
   // Calendar methods
@@ -401,6 +489,7 @@ export class InterviewSetupComponent implements OnInit {
       this.rounds.forEach(round => {
         round.typeDropdownOpen = false;
         round.assessmentDropdownOpen = false;
+        round.sortDropdownOpen = false;
       });
     }
   }
@@ -412,6 +501,7 @@ export class InterviewSetupComponent implements OnInit {
       if (r !== round) {
         r.typeDropdownOpen = false;
         r.assessmentDropdownOpen = false;
+        r.sortDropdownOpen = false;
       }
     });
   }
@@ -448,6 +538,7 @@ export class InterviewSetupComponent implements OnInit {
       if (r !== round) {
         r.typeDropdownOpen = false;
         r.assessmentDropdownOpen = false;
+        r.sortDropdownOpen = false;
       }
     });
   }
