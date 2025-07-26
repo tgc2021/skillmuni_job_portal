@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild } from "@angular/core";
+import { Component, OnInit, HostListener } from "@angular/core";
 import { FormBuilder, FormGroup, Validators, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
@@ -66,8 +66,30 @@ export class InterviewSetupComponent implements OnInit {
     "December",
   ];
 
+
+  showExitPopup = false;
+  showCompletePopup = false;
+  hasUnsavedChanges = false;
+  private preventNavigation = false;
+
   constructor(private fb: FormBuilder, private router: Router) {
-    // Empty constructor
+    // Store the current URL to prevent navigation
+    const currentUrl = window.location.href;
+    history.pushState({ preventNavigation: true }, '', currentUrl);
+    
+    // Listen for popstate events
+    window.addEventListener('popstate', (event) => {
+      if (this.step === 2 || this.step === 1) {
+        // Prevent the default back navigation
+        event.preventDefault();
+        
+        // Show the exit popup
+        this.showExitPopup = true;
+        
+        // Push the state back to prevent navigation
+        history.pushState({ preventNavigation: true }, '', currentUrl);
+      }
+    });
   }
 
   ngOnInit() {
@@ -91,6 +113,51 @@ export class InterviewSetupComponent implements OnInit {
         this.setAssessmentValidators(firstRound, true);
       }
     }
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    if (this.hasUnsavedChanges || this.step === 2) {
+      $event.returnValue = true;
+    }
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    if (this.step === 2 || this.step === 1) {
+      event.preventDefault();
+      this.showExitPopup = true;
+      // Push the state back to prevent navigation
+      history.pushState({ preventNavigation: true }, '', window.location.href);
+    }
+  }
+
+  onBackClick(): void {
+    if (this.step === 2 || this.step === 1) {
+      // Show exit warning when on either step 1 or 2
+      this.showExitPopup = true;
+    } else if (this.hasUnsavedChanges) {
+      this.showExitPopup = true;
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
+
+
+  completeSetup(): void {
+    this.hasUnsavedChanges = false;
+    this.showCompletePopup = true;
+  }
+
+  redirectToDashboard(): void {
+    this.showCompletePopup = false;
+    this.router.navigate(['/dashboard']);
+  }
+
+  // Call this when form changes
+  markChanges(): void {
+    this.hasUnsavedChanges = true;
   }
 
   get roundsFormArray(): FormArray {
@@ -307,9 +374,8 @@ export class InterviewSetupComponent implements OnInit {
     //   }
     // });
 
-    // For now, show success message and navigate
-    alert("Interview rounds have been finalized successfully!");
-    this.router.navigate(["/dashboard"]);
+    // Show the setup complete popup
+    this.completeSetup();
   }
 
   /**
@@ -335,6 +401,8 @@ export class InterviewSetupComponent implements OnInit {
   navigateToSortIfValid(): void {
     if (this.canGoToSort()) {
       this.step = 2;
+      // Push a new state when going to sort step
+      history.pushState(null, '');
     } else if (!this.hasAtLeastOneValidRound()) {
       alert("Please set up at least one round before sorting.");
     } else if (!this.isFormValid()) {
@@ -716,9 +784,6 @@ export class InterviewSetupComponent implements OnInit {
     this.step = 2;
   }
 
-  onBackClick() {
-    this.router.navigate(["/dashboard"]);
-  }
 
   onCreateAssessment() {
     this.router.navigate(["/dashboard/interview-setup/create-assessment"]);

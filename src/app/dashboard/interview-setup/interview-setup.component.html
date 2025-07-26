@@ -404,3 +404,35 @@
     </div>
   </div>
 </div>
+
+<!-- Exit Warning Popup -->
+<div class="success-popup-overlay" *ngIf="showExitPopup">
+  <div class="success-popup">
+    <div class="success-popup-header">Exit Interview Setup?</div>
+    <div class="success-popup-body">
+      <img src="assets/icons/job-incomplete.png" alt="Warning Icon" />
+      <p>You haven’t completed the setup yet. <br>
+        If you go back now, your progress won’t be saved and you’ll have to start over.</p>
+      <div class="dialog-buttons">
+        <button class="exit-btn" (click)="redirectToDashboard()">Exit Anyway</button>
+        <button class="dashboard-btn" (click)="showExitPopup = false">Stay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Setup Complete Popup -->
+<div class="success-popup-overlay" *ngIf="showCompletePopup">
+  <div class="success-popup">
+    <div class="success-popup-header">Setup Complete!</div>
+    <div class="success-popup-body">
+      <img src="assets/icons/job-complete.png" alt="Success Icon" />
+      <p>Your interview rounds are saved. <br>
+        You can manage candidates from your dashboard or post a new job</p>
+      <div class="dialog-buttons">
+        <button class="exit-btn">Post a Job</button>
+        <button  class="dashboard-btn" (click)="redirectToDashboard()">Dashboard</button>
+      </div>
+    </div>
+  </div>
+</div>
