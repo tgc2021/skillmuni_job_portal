@@ -18,10 +18,8 @@
       <div class="label">Set-up Rounds</div>
     </div>
     <div class="step-line"></div>
-    <div class="step" 
-         [class.active]="step === 2" 
-         [class.disabled]="!hasAtLeastOneValidRound()" 
-         (click)="navigateToSortIfValid()">
+    <div class="step" [class.active]="step === 2" [class.disabled]="!hasAtLeastOneValidRound()"
+      (click)="navigateToSortIfValid()">
       <div class="circle">2</div>
       <div class="label">Sort Rounds</div>
     </div>
@@ -31,10 +29,10 @@
   <div class="profile-card-wrapper" *ngIf="step === 1">
     <div class="profile-card">
       <form [formGroup]="interviewForm">
-        
+
         <!-- Loop through all rounds -->
         <div *ngFor="let round of rounds; let i = index; trackBy: trackByRoundId" class="round-container">
-          
+
           <!-- Round Header with Delete Button (only show for 2nd round onwards) -->
           <div class="round-header" *ngIf="rounds.length > 1 && i > 0">
             <div class="round-line"></div>
@@ -45,19 +43,19 @@
               </button>
             </div>
           </div>
-          
-          
+
+
           <div class="profile-row row-alt" [formGroup]="round.form">
             <div class="profile-grid top">
               <div class="profile-field">
                 <div class="label-row">
                   <label>1. Interview Round <span class="highlight">Name</span></label>
-                  <div class="error-text" *ngIf="round.form.get('roundName')?.invalid && round.form.get('roundName')?.touched">
+                  <div class="error-text"
+                    *ngIf="round.form.get('roundName')?.invalid && round.form.get('roundName')?.touched">
                     Round Name is required
                   </div>
                 </div>
-                <input formControlName="roundName"
-                  placeholder="Type in a Name of this Interview Round...e.g., HR Round"
+                <input formControlName="roundName" placeholder="Type in a Name of this Interview Round...e.g., HR Round"
                   [class.ng-touched]="round.form.get('roundName')?.touched"
                   [class.ng-invalid]="round.form.get('roundName')?.invalid" />
               </div>
@@ -89,7 +87,8 @@
                 <div class="radio-group split-radio-group">
                   <label class="radio-option left-radio">
                     <input type="radio" formControlName="schedulingType" value="calendar" />
-                    <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
+                    <span><span class="highlight">Publish calendar</span> for candidates to book slots
+                      themselves.</span>
                   </label>
 
                   <label class="radio-option right-radio">
@@ -118,14 +117,10 @@
                       <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
 
                       <!-- Calendar Days -->
-                      <div class="calendar-day" *ngFor="let day of round.calendarDays" 
-                        [class.other-month]="day.otherMonth"
-                        [class.selected]="day.selected || day.isStart || day.isEnd" 
-                        [class.in-range]="day.inRange"
-                        [class.range-start]="day.isStart" 
-                        [class.range-end]="day.isEnd" 
-                        [class.today]="day.isToday"
-                        [class.past-date]="isPastDate(day.fullDate)" 
+                      <div class="calendar-day" *ngFor="let day of round.calendarDays"
+                        [class.other-month]="day.otherMonth" [class.selected]="day.selected || day.isStart || day.isEnd"
+                        [class.in-range]="day.inRange" [class.range-start]="day.isStart" [class.range-end]="day.isEnd"
+                        [class.today]="day.isToday" [class.past-date]="isPastDate(day.fullDate)"
                         (click)="selectDate(round, day)">
                         <span class="day-number">{{ day.date }}</span>
                         <span class="day-indicator" *ngIf="day.isToday">•</span>
@@ -158,7 +153,8 @@
                 <div class="radio-group split-radio-group">
                   <label class="radio-option left-radio">
                     <input type="radio" formControlName="schedulingType" value="calendar" />
-                    <span><span class="highlight">Publish calendar</span> for candidates to book slots themselves.</span>
+                    <span><span class="highlight">Publish calendar</span> for candidates to book slots
+                      themselves.</span>
                   </label>
 
                   <label class="radio-option right-radio">
@@ -187,14 +183,10 @@
                       <div class="day-header" *ngFor="let day of dayHeaders">{{ day }}</div>
 
                       <!-- Calendar Days -->
-                      <div class="calendar-day" *ngFor="let day of round.calendarDays" 
-                        [class.other-month]="day.otherMonth"
-                        [class.selected]="day.selected || day.isStart || day.isEnd" 
-                        [class.in-range]="day.inRange"
-                        [class.range-start]="day.isStart" 
-                        [class.range-end]="day.isEnd" 
-                        [class.today]="day.isToday"
-                        [class.past-date]="isPastDate(day.fullDate)" 
+                      <div class="calendar-day" *ngFor="let day of round.calendarDays"
+                        [class.other-month]="day.otherMonth" [class.selected]="day.selected || day.isStart || day.isEnd"
+                        [class.in-range]="day.inRange" [class.range-start]="day.isStart" [class.range-end]="day.isEnd"
+                        [class.today]="day.isToday" [class.past-date]="isPastDate(day.fullDate)"
                         (click)="selectDate(round, day)">
                         <span class="day-number">{{ day.date }}</span>
                         <span class="day-indicator" *ngIf="day.isToday">•</span>
@@ -218,7 +210,8 @@
             </div>
 
             <!-- Manual Scheduling Deadline (only for manual scheduling and not for Assessment) -->
-            <div class="profile-grid" *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
+            <div class="profile-grid"
+              *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
               <div class="profile-field half-width">
                 <div class="label-row">
                   <label>4. Round <span class="highlight">Deadline</span></label>
@@ -240,7 +233,8 @@
             </div>
 
             <!-- Info Text Block (not shown for Assessment type) -->
-            <div class="info-note" *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
+            <div class="info-note"
+              *ngIf="getSchedulingTypeValue(round) === 'manual' && round.selectedType !== 'Assessment'">
               You can manually schedule after the applicants apply by clicking on view candidates from the Dashboard.
             </div>
 
@@ -317,7 +311,8 @@
                     [class.ng-touched]="round.form.get('assessmentDeadline')?.touched"
                     [class.ng-invalid]="round.form.get('assessmentDeadline')?.invalid" />
                   <small class="assessment-note">
-                    <i> *Candidates must complete the assessment before this date to be considered for the next round.</i>
+                    <i> *Candidates must complete the assessment before this date to be considered for the next
+                      round.</i>
                   </small>
                 </div>
                 <div class="profile-field">
@@ -342,16 +337,15 @@
 
 
         </div>
-        
+
         <!-- Add More Button -->
         <div class="save-button-container">
-          <button class="save-button draft" type="button" (click)="addRound()" 
+          <button class="save-button draft" type="button" (click)="addRound()"
             [style.opacity]="isFormValid() ? 1 : 0.5">
             <span class="check-icon">+</span> Add more
           </button>
 
-          <button class="save-button" type="button" (click)="goToSortStep()" 
-            [disabled]="!canGoToSort()"
+          <button class="save-button" type="button" (click)="goToSortStep()" [disabled]="!canGoToSort()"
             [style.opacity]="canGoToSort() ? 1 : 0.5"
             [title]="!hasAtLeastOneValidRound() ? 'Please set up at least one round' : !isFormValid() ? 'Please complete all required fields' : ''">
             Good to Go <span class="submit-icon">&#10132;</span>
@@ -365,55 +359,49 @@
   <!-- Sort Rounds UI -->
   <!-- Replace the existing Sort Rounds UI section with this -->
 
-<!-- Sort Rounds UI -->
-<div class="sort-rounds-wrapper" *ngIf="step === 2">
-  <div class="sort-rounds-card">
-    <div class="sort-header">
-      <div class="sort-column-header">Interview Round Name</div>
-      <div class="sort-column-header">Sort Order</div>
-    </div>
-    
-    <div class="sort-rows">
-      <div class="sort-row" *ngFor="let round of rounds; let i = index">
-        <div class="round-name-display">
-          {{ round.form.get('roundName')?.value || 'Untitled Round' }}
-        </div>
-        <div class="sort-order-dropdown">
-          <div class="custom-dropdown">
-            <div class="selected-option" (click)="toggleSortDropdown(i)">
-              <span [class.placeholder]="!round.selectedOrder">
-                {{ round.selectedOrder || 'Select Order' }}
-              </span>
-              <span class="material-icons">keyboard_arrow_down</span>
-            </div>
-            <ul class="options-list" *ngIf="round.sortDropdownOpen">
-              <li *ngFor="let order of getAvailableOrders(i)" 
-                  (click)="selectSortOrder(i, order)"
+  <!-- Sort Rounds UI -->
+  <div class="sort-rounds-wrapper" *ngIf="step === 2">
+    <div class="sort-rounds-card">
+      <div class="sort-header">
+        <div class="sort-column-header">Interview Round Name</div>
+        <div class="sort-column-header">Sort Order</div>
+      </div>
+
+      <div class="sort-rows">
+        <div class="sort-row" *ngFor="let round of rounds; let i = index">
+          <div class="round-name-display">
+            {{ round.form.get('roundName')?.value || 'Untitled Round' }}
+          </div>
+          <div class="sort-order-dropdown">
+            <div class="custom-dropdown">
+              <div class="selected-option" (click)="toggleSortDropdown(i)">
+                <span [class.placeholder]="!round.selectedOrder">
+                  {{ round.selectedOrder || 'Select Order' }}
+                </span>
+                <span class="material-icons">keyboard_arrow_down</span>
+              </div>
+              <ul class="options-list" *ngIf="round.sortDropdownOpen">
+                <li *ngFor="let order of getAvailableOrders(i)" (click)="selectSortOrder(i, order)"
                   [class.disabled]="isOrderTaken(order, i)">
-                {{ order }}
-              </li>
-            </ul>
+                  {{ order }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="sort-actions">
-      <button type="button" 
-              class="reset-button" 
-              (click)="resetSortOrder()">
-        <span class="reset-icon">↻</span>
-        Reset Order
-      </button>
-      <button type="button" 
-              class="finalize-button" 
-              [disabled]="!canFinalize()"
-              [class.disabled]="!canFinalize()"
-              (click)="finalizeSetup()">
-        Finalize Setup
-        <span class="arrow-icon">→</span>
-      </button>
+      <div class="sort-actions">
+        <button type="button" class="reset-button" (click)="resetSortOrder()">
+          <span class="reset-icon">↻</span>
+          Reset Order
+        </button>
+        <button type="button" class="finalize-button" [disabled]="!canFinalize()" [class.disabled]="!canFinalize()"
+          (click)="finalizeSetup()">
+          Finalize Setup
+          <span class="arrow-icon">→</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </div>

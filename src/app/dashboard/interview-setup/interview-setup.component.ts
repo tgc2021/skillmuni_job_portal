@@ -35,9 +35,9 @@ interface Round {
 }
 
 @Component({
-  selector: 'app-interview-setup',
-  templateUrl: './interview-setup.component.html',
-  styleUrls: ['./interview-setup.component.css']
+  selector: "app-interview-setup",
+  templateUrl: "./interview-setup.component.html",
+  styleUrls: ["./interview-setup.component.css"],
 })
 export class InterviewSetupComponent implements OnInit {
   interviewForm!: FormGroup;
@@ -49,11 +49,21 @@ export class InterviewSetupComponent implements OnInit {
   rounds: Round[] = [];
 
   previousAssessments = ["Java Test", "Soft Skills Round", "Logical Test"];
-  
+
   dayHeaders = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -62,7 +72,7 @@ export class InterviewSetupComponent implements OnInit {
 
   ngOnInit() {
     this.interviewForm = this.fb.group({
-      rounds: this.fb.array([])
+      rounds: this.fb.array([]),
     });
 
     // Add the first round
@@ -75,7 +85,8 @@ export class InterviewSetupComponent implements OnInit {
       if (firstRound) {
         firstRound.selectedType = "Assessment";
         firstRound.form.get("roundType")?.setValue("Assessment");
-        firstRound.selectedAssessment = navigation.assessmentTitle || "Custom Assessment";
+        firstRound.selectedAssessment =
+          navigation.assessmentTitle || "Custom Assessment";
         firstRound.isAssessmentAdded = true;
         this.setAssessmentValidators(firstRound, true);
       }
@@ -83,7 +94,7 @@ export class InterviewSetupComponent implements OnInit {
   }
 
   get roundsFormArray(): FormArray {
-    return this.interviewForm.get('rounds') as FormArray;
+    return this.interviewForm.get("rounds") as FormArray;
   }
 
   private createRoundForm(): FormGroup {
@@ -95,26 +106,29 @@ export class InterviewSetupComponent implements OnInit {
       manualDeadline: [""],
       minPassingScore: ["", [Validators.min(20), Validators.max(100)]],
       assessmentLink: [""],
-      interviewLocation: [""]
+      interviewLocation: [""],
     });
 
     // Subscribe to form value changes
-    form.get('roundType')?.valueChanges.subscribe(type => {
-      const roundIndex = this.rounds.findIndex(r => r.form === form);
+    form.get("roundType")?.valueChanges.subscribe((type) => {
+      const roundIndex = this.rounds.findIndex((r) => r.form === form);
       if (roundIndex !== -1 && type !== null) {
         this.updateFormValidation(this.rounds[roundIndex], type);
       }
     });
 
-    form.get('schedulingType')?.valueChanges.subscribe(() => {
-      const roundIndex = this.rounds.findIndex(r => r.form === form);
+    form.get("schedulingType")?.valueChanges.subscribe(() => {
+      const roundIndex = this.rounds.findIndex((r) => r.form === form);
       if (roundIndex !== -1) {
-        this.updateFormValidation(this.rounds[roundIndex], this.rounds[roundIndex].selectedType);
+        this.updateFormValidation(
+          this.rounds[roundIndex],
+          this.rounds[roundIndex].selectedType
+        );
       }
     });
 
     form.get("assessmentLink")?.valueChanges.subscribe((link) => {
-      const roundIndex = this.rounds.findIndex(r => r.form === form);
+      const roundIndex = this.rounds.findIndex((r) => r.form === form);
       if (roundIndex !== -1) {
         const round = this.rounds[roundIndex];
         const trimmed = link?.trim();
@@ -150,7 +164,7 @@ export class InterviewSetupComponent implements OnInit {
       calendarDays: [],
       // Initialize new sorting properties
       selectedOrder: null,
-      sortDropdownOpen: false
+      sortDropdownOpen: false,
     };
 
     this.generateCalendar(newRound);
@@ -159,7 +173,7 @@ export class InterviewSetupComponent implements OnInit {
   }
 
   removeRound(roundId: number) {
-    const index = this.rounds.findIndex(r => r.id === roundId);
+    const index = this.rounds.findIndex((r) => r.id === roundId);
     if (index !== -1 && this.rounds.length > 1) {
       this.rounds.splice(index, 1);
       this.roundsFormArray.removeAt(index);
@@ -187,9 +201,10 @@ export class InterviewSetupComponent implements OnInit {
         round.assessmentDropdownOpen = false;
       }
     });
-    
+
     // Toggle the clicked dropdown
-    this.rounds[roundIndex].sortDropdownOpen = !this.rounds[roundIndex].sortDropdownOpen;
+    this.rounds[roundIndex].sortDropdownOpen =
+      !this.rounds[roundIndex].sortDropdownOpen;
   }
 
   /**
@@ -198,11 +213,11 @@ export class InterviewSetupComponent implements OnInit {
   getAvailableOrders(currentRoundIndex: number): number[] {
     const totalRounds = this.rounds.length;
     const orders: number[] = [];
-    
+
     for (let i = 1; i <= totalRounds; i++) {
       orders.push(i);
     }
-    
+
     return orders;
   }
 
@@ -210,8 +225,9 @@ export class InterviewSetupComponent implements OnInit {
    * Check if an order number is already taken by another round
    */
   isOrderTaken(order: number, currentRoundIndex: number): boolean {
-    return this.rounds.some((round, index) => 
-      index !== currentRoundIndex && round.selectedOrder === order
+    return this.rounds.some(
+      (round, index) =>
+        index !== currentRoundIndex && round.selectedOrder === order
     );
   }
 
@@ -223,7 +239,7 @@ export class InterviewSetupComponent implements OnInit {
     if (this.isOrderTaken(order, roundIndex)) {
       return;
     }
-    
+
     this.rounds[roundIndex].selectedOrder = order;
     this.rounds[roundIndex].sortDropdownOpen = false;
   }
@@ -232,7 +248,7 @@ export class InterviewSetupComponent implements OnInit {
    * Reset all sort orders
    */
   resetSortOrder() {
-    this.rounds.forEach(round => {
+    this.rounds.forEach((round) => {
       round.selectedOrder = null;
       round.sortDropdownOpen = false;
     });
@@ -242,7 +258,7 @@ export class InterviewSetupComponent implements OnInit {
    * Check if all rounds have been assigned an order
    */
   canFinalize(): boolean {
-    return this.rounds.every(round => round.selectedOrder !== null);
+    return this.rounds.every((round) => round.selectedOrder !== null);
   }
 
   /**
@@ -250,7 +266,9 @@ export class InterviewSetupComponent implements OnInit {
    */
   finalizeSetup() {
     if (!this.canFinalize()) {
-      alert('Please assign an order to all interview rounds before finalizing.');
+      alert(
+        "Please assign an order to all interview rounds before finalizing."
+      );
       return;
     }
 
@@ -262,18 +280,22 @@ export class InterviewSetupComponent implements OnInit {
     // Create final data structure
     const finalRoundsData = sortedRounds.map((round, index) => ({
       id: round.id,
-      name: round.form.get('roundName')?.value,
+      name: round.form.get("roundName")?.value,
       type: round.selectedType,
       order: round.selectedOrder,
       actualOrder: index + 1, // This will be 1, 2, 3... based on sort
       formData: round.form.value,
       startDate: round.startDate,
       endDate: round.endDate,
-      selectedTime: `${round.selectedHours.toString().padStart(2, "0")}:${round.selectedMinutes.toString().padStart(2, "0")}`
+      selectedTime: `${round.selectedHours
+        .toString()
+        .padStart(2, "0")}:${round.selectedMinutes
+        .toString()
+        .padStart(2, "0")}`,
     }));
 
-    console.log('Finalized Interview Rounds:', finalRoundsData);
-    
+    console.log("Finalized Interview Rounds:", finalRoundsData);
+
     // Here you would typically save to backend
     // this.interviewService.saveInterviewRounds(finalRoundsData).subscribe({
     //   next: (response) => {
@@ -286,15 +308,18 @@ export class InterviewSetupComponent implements OnInit {
     // });
 
     // For now, show success message and navigate
-    alert('Interview rounds have been finalized successfully!');
-    this.router.navigate(['/dashboard']);
+    alert("Interview rounds have been finalized successfully!");
+    this.router.navigate(["/dashboard"]);
   }
 
   /**
    * Checks if there is at least one valid round set up
    */
   hasAtLeastOneValidRound(): boolean {
-    return this.rounds.length > 0 && this.rounds.some(round => this.isRoundValid(round));
+    return (
+      this.rounds.length > 0 &&
+      this.rounds.some((round) => this.isRoundValid(round))
+    );
   }
 
   /**
@@ -311,11 +336,11 @@ export class InterviewSetupComponent implements OnInit {
     if (this.canGoToSort()) {
       this.step = 2;
     } else if (!this.hasAtLeastOneValidRound()) {
-      alert('Please set up at least one round before sorting.');
+      alert("Please set up at least one round before sorting.");
     } else if (!this.isFormValid()) {
       // Mark all forms as touched to show validation errors
-      this.rounds.forEach(round => round.form.markAllAsTouched());
-      alert('Please complete all required fields before proceeding.');
+      this.rounds.forEach((round) => round.form.markAllAsTouched());
+      alert("Please complete all required fields before proceeding.");
     }
   }
 
@@ -419,7 +444,11 @@ export class InterviewSetupComponent implements OnInit {
       day.isStart = false;
       day.isEnd = false;
 
-      if (round.startDate && !round.endDate && this.isSameDay(currentDate, round.startDate)) {
+      if (
+        round.startDate &&
+        !round.endDate &&
+        this.isSameDay(currentDate, round.startDate)
+      ) {
         day.selected = true;
         day.isStart = true;
       } else if (round.startDate && round.endDate) {
@@ -429,7 +458,10 @@ export class InterviewSetupComponent implements OnInit {
         } else if (this.isSameDay(currentDate, round.endDate)) {
           day.isEnd = true;
           day.inRange = true;
-        } else if (currentDate > round.startDate && currentDate < round.endDate) {
+        } else if (
+          currentDate > round.startDate &&
+          currentDate < round.endDate
+        ) {
           day.inRange = true;
         }
       }
@@ -486,7 +518,7 @@ export class InterviewSetupComponent implements OnInit {
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (!target.closest(".custom-dropdown")) {
-      this.rounds.forEach(round => {
+      this.rounds.forEach((round) => {
         round.typeDropdownOpen = false;
         round.assessmentDropdownOpen = false;
         round.sortDropdownOpen = false;
@@ -497,7 +529,7 @@ export class InterviewSetupComponent implements OnInit {
   toggleTypeDropdown(round: Round) {
     round.typeDropdownOpen = !round.typeDropdownOpen;
     // Close other dropdowns
-    this.rounds.forEach(r => {
+    this.rounds.forEach((r) => {
       if (r !== round) {
         r.typeDropdownOpen = false;
         r.assessmentDropdownOpen = false;
@@ -510,31 +542,31 @@ export class InterviewSetupComponent implements OnInit {
     round.selectedType = type;
     round.form.get("roundType")?.setValue(type);
     round.typeDropdownOpen = false;
-    
+
     // Reset fields that might be conditionally required
-    if (type !== 'Assessment') {
+    if (type !== "Assessment") {
       round.form.get("assessmentLink")?.reset();
       round.form.get("assessmentDeadline")?.reset();
       round.form.get("minPassingScore")?.reset();
       round.isAssessmentAdded = false;
     }
-    
-    if (type !== 'Offline') {
+
+    if (type !== "Offline") {
       round.form.get("interviewLocation")?.reset();
     }
-    
-    if (type !== 'Online') {
+
+    if (type !== "Online") {
       round.startDate = null;
       round.endDate = null;
     }
-    
+
     round.form.updateValueAndValidity();
   }
 
   toggleAssessmentDropdown(round: Round) {
     round.assessmentDropdownOpen = !round.assessmentDropdownOpen;
     // Close other dropdowns
-    this.rounds.forEach(r => {
+    this.rounds.forEach((r) => {
       if (r !== round) {
         r.typeDropdownOpen = false;
         r.assessmentDropdownOpen = false;
@@ -552,10 +584,10 @@ export class InterviewSetupComponent implements OnInit {
 
   private updateFormValidation(round: Round, type: string) {
     const form = round.form;
-    const assessmentLinkControl = form.get('assessmentLink');
-    const assessmentDeadlineControl = form.get('assessmentDeadline');
-    const minPassingScoreControl = form.get('minPassingScore');
-    const interviewLocationControl = form.get('interviewLocation');
+    const assessmentLinkControl = form.get("assessmentLink");
+    const assessmentDeadlineControl = form.get("assessmentDeadline");
+    const minPassingScoreControl = form.get("minPassingScore");
+    const interviewLocationControl = form.get("interviewLocation");
 
     // Reset all validators first
     assessmentLinkControl?.clearValidators();
@@ -563,17 +595,17 @@ export class InterviewSetupComponent implements OnInit {
     minPassingScoreControl?.clearValidators();
     interviewLocationControl?.clearValidators();
 
-    if (type === 'Assessment') {
+    if (type === "Assessment") {
       if (!round.isAssessmentAdded) {
         assessmentLinkControl?.setValidators([Validators.required]);
         assessmentDeadlineControl?.setValidators([Validators.required]);
         minPassingScoreControl?.setValidators([
           Validators.required,
           Validators.min(20),
-          Validators.max(100)
+          Validators.max(100),
         ]);
       }
-    } else if (type === 'Offline') {
+    } else if (type === "Offline") {
       interviewLocationControl?.setValidators([Validators.required]);
     }
 
@@ -610,11 +642,14 @@ export class InterviewSetupComponent implements OnInit {
     }
 
     if (round.selectedType === "Assessment") {
-      const hasAssessmentLink = !!round.form.get("assessmentLink")?.value?.trim();
-      const isAssessmentValid = hasAssessmentLink && 
-                              round.form.get("assessmentDeadline")?.valid &&
-                              round.form.get("minPassingScore")?.valid;
-      
+      const hasAssessmentLink = !!round.form
+        .get("assessmentLink")
+        ?.value?.trim();
+      const isAssessmentValid =
+        hasAssessmentLink &&
+        round.form.get("assessmentDeadline")?.valid &&
+        round.form.get("minPassingScore")?.valid;
+
       if (!round.isAssessmentAdded && !isAssessmentValid) {
         return false;
       }
@@ -641,12 +676,12 @@ export class InterviewSetupComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.rounds.every(round => this.isRoundValid(round));
+    return this.rounds.every((round) => this.isRoundValid(round));
   }
 
   addRound() {
     // Mark all current rounds as touched to show validation errors
-    this.rounds.forEach(round => {
+    this.rounds.forEach((round) => {
       round.form.markAllAsTouched();
     });
 
@@ -657,7 +692,7 @@ export class InterviewSetupComponent implements OnInit {
 
   goToSortStep() {
     // Mark all rounds as touched to show validation errors
-    this.rounds.forEach(round => {
+    this.rounds.forEach((round) => {
       round.form.markAllAsTouched();
     });
 
@@ -666,12 +701,16 @@ export class InterviewSetupComponent implements OnInit {
     }
 
     // Collect all round data
-    const allRoundsData = this.rounds.map(round => ({
+    const allRoundsData = this.rounds.map((round) => ({
       ...round.form.value,
       roundType: round.selectedType,
       startDate: round.startDate,
       endDate: round.endDate,
-      selectedTime: `${round.selectedHours.toString().padStart(2, "0")}:${round.selectedMinutes.toString().padStart(2, "0")}`,
+      selectedTime: `${round.selectedHours
+        .toString()
+        .padStart(2, "0")}:${round.selectedMinutes
+        .toString()
+        .padStart(2, "0")}`,
     }));
 
     console.log("All Rounds:", allRoundsData);
