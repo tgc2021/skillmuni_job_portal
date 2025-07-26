@@ -134,7 +134,8 @@
   box-shadow: 0 4px 12px rgba(55, 57, 65, 0.1);
   width: 80%;
   box-sizing: border-box;
-  overflow: visible; /* Changed from hidden to visible to allow dropdowns to overflow */
+  overflow-x: hidden;
+  overflow-y: visible;
   min-height: 300px;
   margin-bottom: 30px;
   height: auto;
@@ -296,10 +297,15 @@ input.ng-touched.ng-invalid {
 .save-button-container {
   display: flex;
   justify-content: center;
-  gap: 20px; /* Adjust the gap between the buttons */
+  gap: 20px;
   background-color: #ffffff;
-  padding: 16px;
+  padding: 20px;
   border-radius: 12px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 .save-button {
   display: flex;
@@ -315,9 +321,12 @@ input.ng-touched.ng-invalid {
   outline: none;
   border: 2px solid white;
   border-radius: 30px;
-  padding: 5px 10px;
+  padding: 12px 24px;
   font-weight: 600;
   gap: 8px;
+  min-width: 150px;
+  height: 50px;
+  flex-shrink: 0;
 }
 .save-button:hover {
   background: #e68900;
@@ -344,7 +353,7 @@ input.ng-touched.ng-invalid {
   transform: translateX(10px) scale(1.08);
 }
 
-/* --- Add More Button --- */
+/* --- Add More Button */
 .save-button.draft {
   background: #ffffff;
   color: #34437a;
@@ -352,6 +361,11 @@ input.ng-touched.ng-invalid {
   font-size: 14px;
   font-weight: 600;
   border-radius: 10px;
+  min-width: 150px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .save-button.draft .check-icon {
   font-size: 18px;
@@ -532,9 +546,11 @@ input.ng-touched.ng-invalid {
 .calendar-container {
   background: white;
   border-radius: 12px;
-  padding: 5px;
+  padding: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 30%;
+  width: 100%;
+  max-width: 400px;
+  margin: 15px 0;
 }
 
 .month-year {
@@ -850,7 +866,19 @@ input.ng-touched.ng-invalid {
 }
 
 /* --- Sort Rounds UI --- */
-.sort-rounds-wrapper {
+.calendar-time-wrapper {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.sort-rounds-wrapper{
+  background: transparent;
   padding: 20px 0;
   display: flex;
   justify-content: center;

@@ -662,11 +662,10 @@ export class InterviewSetupComponent implements OnInit {
         if (!manualDeadline) return false;
       }
     } else if (round.selectedType === "Offline") {
-      const location = round.form.get("interviewLocation")?.value?.trim();
-      if (!location) return false;
-
       const schedulingType = round.form.get("schedulingType")?.value;
-      if (schedulingType === "manual") {
+      if (schedulingType === "calendar") {
+        if (!round.startDate || !round.endDate) return false;
+      } else {
         const manualDeadline = round.form.get("manualDeadline")?.value;
         if (!manualDeadline) return false;
       }
