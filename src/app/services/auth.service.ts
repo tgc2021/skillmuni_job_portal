@@ -21,7 +21,7 @@ export interface SignInResponse {
 })
 export class AuthService {
   private apiUrl =
-    "http://www.skillmuni.co.in/Jobportal_web_api/api/UserAuth/signin";
+    "https://www.skillmuni.in/Jobportal_web_api/api/UserAuth/signin";
 
   constructor(private http: HttpClient) {}
 

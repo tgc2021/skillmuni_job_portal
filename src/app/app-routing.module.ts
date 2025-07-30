@@ -16,6 +16,7 @@ import { InterviewSetupComponent } from './dashboard/interview-setup/interview-s
 import { CreateAssessmentComponent } from './dashboard/interview-setup/create-assessment/create-assessment.component';
 import { AssessmentCreationComponent } from './dashboard/interview-setup/assessment-creation/assessment-creation.component';
 import { PreviewAssessmentComponent } from './dashboard/interview-setup/preview-assessment/preview-assessment.component';
+import { ManageCandidatesComponent } from './dashboard/manage-candidates/manage-candidates.component';
 
 const routes: Routes = [
   { 
@@ -51,6 +52,12 @@ const routes: Routes = [
     component: CreateAssessmentComponent,
     canActivate: [AuthGuard],
     data: { title: 'Create Assessment' }
+  },
+  { 
+    path: 'dashboard/manage-candidates/:jobId', 
+    component: ManageCandidatesComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Manage Candidates' }
   },
   { 
     path: 'dashboard/interview-setup/assessment-creation', 

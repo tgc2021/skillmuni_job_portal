@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export interface JobPosting {
+  id: string;
   title: string;
   datePosted: string;
   status: string;
@@ -21,6 +22,7 @@ export interface SavedJob {
 export class ApiService {
   private jobList: JobPosting[] = [
     {
+      id: '1',
       title: 'Software Engineer',
       datePosted: '2025-06-01',
       status: 'Open',
@@ -30,6 +32,7 @@ export class ApiService {
       applied: 120
     },
     {
+      id: '2',
       title: 'UI/UX Designer',
       datePosted: '2025-06-03',
       status: 'Pause',
@@ -39,6 +42,7 @@ export class ApiService {
       applied: 85
     },
     {
+      id: '3',
       title: 'Digital Marketer',
       datePosted: '2025-06-05',
       status: 'Close',
@@ -48,67 +52,74 @@ export class ApiService {
       applied: 95
     },
     {
+      id: '4',
       title: 'Product Manager',
       datePosted: '2025-06-07',
       status: 'Open',
       statusClass: 'status-open',
       expiry: '2025-07-07',
-      rounds: '3',
-      applied: 60
+      rounds: '4',
+      applied: 110
     },
     {
-      title: 'DevOps Engineer',
+      id: '5',
+      title: 'Data Scientist',
       datePosted: '2025-06-09',
       status: 'Pause',
       statusClass: 'status-paused',
       expiry: '2025-07-09',
-      rounds: '2',
-      applied: 73
+      rounds: '3',
+      applied: 78
     },
     {
-      title: 'QA Tester',
+      id: '6',
+      title: 'DevOps Engineer',
       datePosted: '2025-06-11',
       status: 'Open',
       statusClass: 'status-open',
       expiry: '2025-07-11',
       rounds: '2',
-      applied: 55
+      applied: 92
     },
     {
-      title: 'Data Analyst',
+      id: '7',
+      title: 'Frontend Developer',
       datePosted: '2025-06-13',
       status: 'Close',
       statusClass: 'status-closed',
       expiry: '2025-07-13',
-      rounds: '2',
-      applied: 112
+      rounds: '3',
+      applied: 105
     },
     {
+      id: '8',
       title: 'Backend Developer',
       datePosted: '2025-06-15',
       status: 'Open',
       statusClass: 'status-open',
       expiry: '2025-07-15',
       rounds: '3',
-      applied: 134
+      applied: 88
     },
     {
-      title: 'Frontend Developer',
+      id: '9',
+      title: 'Full Stack Developer',
       datePosted: '2025-06-17',
       status: 'Pause',
       statusClass: 'status-paused',
       expiry: '2025-07-17',
-      rounds: '2',
-      applied: 89
+      rounds: '4',
+      applied: 115
     },
     {
-      title: 'Content Strategist',
+      id: '10',
+      title: 'QA Engineer',
       datePosted: '2025-06-19',
-      status: 'Close',
-      statusClass: 'status-closed',
+      status: 'Open',
+      statusClass: 'status-open',
       expiry: '2025-07-19',
-      rounds: '1',
-      applied: 44
+      rounds: '2',
+      applied: 65
     }
   ];
 

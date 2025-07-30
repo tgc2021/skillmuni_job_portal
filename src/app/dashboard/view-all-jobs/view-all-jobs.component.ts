@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService, JobPosting, SavedJob } from '../../services/api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
@@ -32,7 +32,12 @@ export class ViewAllJobsComponent {
     this.dropdownOpenIndex = null;
   }
 
-  constructor(private apiService: ApiService, private route: ActivatedRoute, private location: Location) {
+  constructor(
+    private apiService: ApiService, 
+    private route: ActivatedRoute, 
+    private router: Router,
+    private location: Location
+  ) {
     this.route.queryParams.subscribe(params => {
       this.viewType = params['type'] === 'saved' ? 'saved' : 'all';
       if (this.viewType === 'all') {
@@ -45,5 +50,9 @@ export class ViewAllJobsComponent {
 
   onBackClick() {
     this.location.back();
+  }
+
+  navigateToManageCandidates(jobId: string): void {
+    this.router.navigate(['/dashboard/manage-candidates', jobId]);
   }
 }

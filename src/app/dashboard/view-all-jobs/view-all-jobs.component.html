@@ -47,7 +47,7 @@
         <span>{{ job.rounds }}</span>
         <span>{{ job.applied }}</span>
         <span>
-          <button class="view-btn">View &gt;</button>
+          <button class="view-btn" (click)="navigateToManageCandidates(job.id)">View &gt;</button>
         </span>
         <span class="edit-actions">
           <img src="assets/icons/edit-icon.png" alt="Edit" />

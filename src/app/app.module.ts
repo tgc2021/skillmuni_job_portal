@@ -21,6 +21,7 @@ import { InterviewSetupComponent } from './dashboard/interview-setup/interview-s
 import { CreateAssessmentComponent } from './dashboard/interview-setup/create-assessment/create-assessment.component';
 import { AssessmentCreationComponent } from './dashboard/interview-setup/assessment-creation/assessment-creation.component';
 import { PreviewAssessmentComponent } from './dashboard/interview-setup/preview-assessment/preview-assessment.component';
+import { ManageCandidatesComponent } from './dashboard/manage-candidates/manage-candidates.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import { PreviewAssessmentComponent } from './dashboard/interview-setup/preview-
     InterviewSetupComponent,
     CreateAssessmentComponent,
     AssessmentCreationComponent,
-    PreviewAssessmentComponent
+    PreviewAssessmentComponent,
+    ManageCandidatesComponent
   ],
   imports: [
     BrowserModule,

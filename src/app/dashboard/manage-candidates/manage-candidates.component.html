@@ -1,0 +1,96 @@
+<app-header></app-header>
+
+<div class="manage-candidates-wrapper">
+  <!-- Page Header -->
+  <div class="header">
+    <img src="assets/icons/back-arrow.png" alt="Back Icon" (click)="onBackClick()" class="back-button" />
+    <div class="title-container">
+      <h1>Manage Candidates</h1>
+      <img src="assets/icons/long-arrow.png" alt="Arrow" class="long-arrow" />
+      <h2>Track and shortlist</h2>
+    </div>
+    <img src="assets/icons/candidates-header-icon.png" alt="Candidates Icon" class="header-icon" />
+  </div>
+
+
+
+  <!-- Candidates Section -->
+  <div class="candidates-section">
+
+     <!-- Interview Rounds Tabs -->
+    <div class="interview-rounds-tabs">
+      <div class="tab" 
+           [class.active]="activeTab === 'applied'"
+           (click)="setActiveTab('applied')">
+        Applied ({{ candidatesCounts.applied }})
+      </div>
+      <div class="tab" 
+           [class.active]="activeTab === 'round1'"
+           (click)="setActiveTab('round1')">
+        Round 1 ({{ candidatesCounts.round1 }})
+      </div>
+      <div class="tab" 
+           [class.active]="activeTab === 'round2'"
+           (click)="setActiveTab('round2')">
+        Round 2 ({{ candidatesCounts.round2 }})
+      </div>
+      <div class="tab" 
+           [class.active]="activeTab === 'round3'"
+           (click)="setActiveTab('round3')">
+        Round 3 ({{ candidatesCounts.round3 }})
+      </div>
+    </div>
+
+    <!-- Candidates Table -->
+    <div class="candidates-table" *ngIf="filteredCandidates.length > 0">
+      <div class="candidates-table-header">
+        <span>No.</span>
+        <span>Candidate Name</span>
+        <span>Applied Date</span>
+        <span>Resume</span>
+        <span>Credits</span>
+        <span>Proficiency Level</span>
+        <span>Eligibility</span>
+        <span>Select</span>
+      </div>
+
+      <div class="candidates-table-row" *ngFor="let candidate of filteredCandidates; let i = index">
+        <span>{{ i + 1 }}.</span>
+        <span class="candidate-name">{{ candidate.name }}</span>
+        <span>{{ candidate.appliedDate }}</span>
+        <span class="material-icons">download</span>
+        <span>{{ candidate.credits }}</span>
+        <span class="proficiency-level" [ngClass]="getProficiencyClass(candidate.proficiencyLevel)">
+          {{ candidate.proficiencyLevel }}
+        </span>
+        <span class="eligibility" [ngClass]="getEligibilityClass(candidate.eligibility)">
+          {{ candidate.eligibility }}
+        </span>
+       
+          <div class="checkbox-container">
+            <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
+              class="candidate-checkbox" />
+            <label [for]="'candidate-' + i" class="checkbox-label">
+              <span class="checkmark">✓</span>
+            </label>
+          </div>
+      </div>
+    </div>
+
+    <!-- Move to Next Round Button -->
+    <div class="move-round-container" *ngIf="hasSelectedCandidates() && activeTab !== 'round3'">
+      <button class="move-round-btn" (click)="moveToNextRound()">
+        Move to {{ getNextRoundText() }}
+        <img src="assets/icons/arrow-right.png" alt="Arrow" class="arrow-icon" />
+      </button>
+    </div>
+
+    <!-- Empty States -->
+    <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
+      <p>No candidates have applied for this job yet.</p>
+    </div>
+    <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab !== 'applied'">
+      <p>No candidates in {{ getTabDisplayName(activeTab) }} yet.</p>
+    </div>
+  </div>
+</div>

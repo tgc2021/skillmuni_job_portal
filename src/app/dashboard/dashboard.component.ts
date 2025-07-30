@@ -10,19 +10,25 @@ import { ApiService, JobPosting, SavedJob } from '../services/api.service';
 export class DashboardComponent {
   jobList: JobPosting[] = [];
   savedJobs: SavedJob[] = [];
+  viewMode: 'all' | 'saved' = 'all';
+  dropdownOpenIndex: number | null = null;
+  sortDropdownOpen = false;
+  selectedSortOption: string = 'Newest First';
+  
+  statusOptions = [
+    { label: 'Open', class: 'status-open' },
+    { label: 'Pause', class: 'status-paused' },
+    { label: 'Close', class: 'status-closed' }
+  ];
 
-  constructor(private router: Router, private apiService: ApiService) {
-    this.jobList = this.apiService.getJobList();
-    this.savedJobs = this.apiService.getSavedJobs();
-  }
-
-  navigateToAllJobs() {
-    this.router.navigate(['/dashboard/view-all-jobs'], { queryParams: { type: this.viewMode } });
-  }
-
-  navigateToPostJob() {
-    this.router.navigate(['/dashboard/post-job']);
-  }
+  sortOptions: string[] = [
+    'Newest First',
+    'Oldest First',
+    'Open Jobs',
+    'Paused Jobs',
+    'Closed Jobs',
+    'Expired Jobs'
+  ];
 
   infoCards = [
     {
@@ -47,14 +53,30 @@ export class DashboardComponent {
     },
   ];
 
-  dropdownOpenIndex: number | null = null;
+  constructor(private router: Router, private apiService: ApiService) {
+    this.jobList = this.apiService.getJobList();
+    this.savedJobs = this.apiService.getSavedJobs();
+  }
 
-  statusOptions = [
-    { label: 'Open', class: 'status-open' },
-    { label: 'Pause', class: 'status-paused' },
-    { label: 'Close', class: 'status-closed' }
-  ];
+  // Navigation methods
+  navigateToAllJobs(): void {
+    this.router.navigate(['/dashboard/view-all-jobs'], { queryParams: { type: this.viewMode } });
+  }
 
+  navigateToPostJob(): void {
+    this.router.navigate(['/dashboard/post-job']);
+  }
+
+  navigateToManageCandidates(jobId: string): void {
+    this.router.navigate(['/dashboard/manage-candidates', jobId]);
+  }
+
+  // View mode methods
+  setViewMode(mode: 'all' | 'saved'): void {
+    this.viewMode = mode;
+  }
+
+  // Status dropdown methods
   toggleDropdown(index: number): void {
     this.dropdownOpenIndex = this.dropdownOpenIndex === index ? null : index;
   }
@@ -67,35 +89,17 @@ export class DashboardComponent {
     this.dropdownOpenIndex = null;
   }
 
-  sortDropdownOpen = false;
-
-  sortOptions: string[] = [
-    'Newest First',
-    'Oldest First',
-    'Open Jobs',
-    'Paused Jobs',
-    'Closed Jobs',
-    'Expired Jobs'
-  ];
-
-  selectedSortOption: string = 'Newest First';
-
-  toggleSortDropdown() {
+  // Sort dropdown methods
+  toggleSortDropdown(): void {
     this.sortDropdownOpen = !this.sortDropdownOpen;
   }
 
-  selectSortOption(option: string) {
+  selectSortOption(option: string): void {
     this.selectedSortOption = option;
     this.sortDropdownOpen = false;
   }
 
-  closeSortDropdown() {
+  closeSortDropdown(): void {
     this.sortDropdownOpen = false;
-  }
-
-  viewMode: 'all' | 'saved' = 'all';
-
-  setViewMode(mode: 'all' | 'saved') {
-    this.viewMode = mode;
   }
 }
