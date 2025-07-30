@@ -86,6 +86,39 @@
       </button>
     </div>
 
+    <!-- Confirm Move Popup -->
+    <div class="success-popup-overlay" *ngIf="showConfirmMovePopup">
+      <div class="success-popup">
+        <div class="success-popup-header">Confirm Move to {{ getNextRoundText() }}</div>
+        <div class="success-popup-body">
+          <img src="assets/icons/select-candidate.png" alt="Confirm Icon" />
+          <p>
+            You're moving <b>{{ selectedCount }}</b> candidate{{ selectedCount === 1 ? '' : 's' }} to {{ getNextRoundText() }}.<br>
+            They’ll be notified that they’ve advanced. The others will get a message letting them know they haven’t moved forward.
+          </p>
+          <div class="dialog-buttons">
+            <button class="exit-btn" (click)="closeConfirmMovePopup()">Cancel</button>
+            <button class="dashboard-btn" (click)="confirmMoveToNextRound()">Send & Notify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Candidates Selected Popup -->
+    <div class="success-popup-overlay" *ngIf="showNoCandidatesPopup">
+      <div class="success-popup">
+        <div class="success-popup-header">No Candidates Selected Yet</div>
+        <div class="success-popup-body">
+          <img src="assets/icons/not-select-candidate.png" alt="Warning Icon" />
+          <p>You haven’t moved any candidates to the next round yet.<br>
+          To begin, select candidates from this round that you'd like to move forward.</p>
+          <div class="dialog-buttons">
+            <button class="exit-btn" (click)="closeNoCandidatesPopup()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Empty States -->
     <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
       <p>No candidates have applied for this job yet.</p>

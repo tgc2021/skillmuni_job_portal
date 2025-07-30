@@ -23,6 +23,9 @@ export class ManageCandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
   activeTab: 'applied' | 'round1' | 'round2' | 'round3' = 'applied';
 
+  showConfirmMovePopup = false;
+  showNoCandidatesPopup = false;
+
   // Sample candidates data
   private sampleCandidates: Candidate[] = [
     {
@@ -114,8 +117,13 @@ export class ManageCandidatesComponent implements OnInit {
     this.activeTab = tab;
   }
 
+
   get filteredCandidates(): Candidate[] {
     return this.candidates.filter(candidate => candidate.currentRound === this.activeTab);
+  }
+
+  get selectedCount(): number {
+    return this.filteredCandidates.filter(c => c.selected).length;
   }
 
   get candidatesCounts() {
@@ -150,16 +158,31 @@ export class ManageCandidatesComponent implements OnInit {
 
   moveToNextRound(): void {
     const selectedCandidates = this.filteredCandidates.filter(c => c.selected);
-    if (selectedCandidates.length === 0) return;
+    if (selectedCandidates.length === 0) {
+      this.showNoCandidatesPopup = true;
+      return;
+    }
+    this.showConfirmMovePopup = true;
+  }
+
+  confirmMoveToNextRound(): void {
+    const selectedCandidates = this.filteredCandidates.filter(c => c.selected);
     const nextRound = this.getNextRound();
     if (!nextRound) return;
-    // Move selected candidates to next round
     selectedCandidates.forEach(candidate => {
       candidate.currentRound = nextRound;
-      candidate.selected = false; // Reset selection
+      candidate.selected = false;
     });
-    // Switch to the next round tab
     this.activeTab = nextRound;
+    this.showConfirmMovePopup = false;
+  }
+
+  closeConfirmMovePopup(): void {
+    this.showConfirmMovePopup = false;
+  }
+
+  closeNoCandidatesPopup(): void {
+    this.showNoCandidatesPopup = false;
   }
 
   private getNextRound(): 'round1' | 'round2' | 'round3' | null {
