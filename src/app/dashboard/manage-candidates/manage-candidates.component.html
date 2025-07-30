@@ -79,9 +79,9 @@
 
     <!-- Move to Next Round Button -->
     <div class="move-round-container" *ngIf="hasSelectedCandidates() && activeTab !== 'round3'">
-      <button class="move-round-btn" (click)="moveToNextRound()">
-        Move to {{ getNextRoundText() }}
-        <img src="assets/icons/arrow-right.png" alt="Arrow" class="arrow-icon" />
+      <button class="save-button" type="button"(click)="moveToNextRound()">
+        On to the Next
+        <span class="submit-icon">&#10132;</span>
       </button>
     </div>
 
