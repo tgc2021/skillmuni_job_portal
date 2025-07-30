@@ -90,7 +90,6 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: 100px; /* Add padding to prevent content from being hidden behind the button */
 }
 
 .section-header {
@@ -132,41 +131,56 @@
 
 /* Interview Rounds Tabs */
 .interview-rounds-tabs {
+  background: linear-gradient(to bottom, #ffffff, #f1f5ff);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 15px 20px;
+  border: 1px solid #dcdff4;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tabs {
   display: flex;
-  background-color: #f0f4ff;
-  border-radius: 30px;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto 15px;  background: white;
+  border-radius: 10px;
+  border: 1px solid #34437a;
   padding: 8px;
-  margin-bottom: 25px;
-  gap: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e0e6f5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
 .tab {
   flex: 1;
   text-align: center;
-  padding: 14px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #7986a3;
-  cursor: pointer;
-  border-radius: 22px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
   position: relative;
+  font-size: 14px;
+  color: #677193;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  margin: 0 4px;
 }
 
 .tab.active {
-  background-color: #f58634;
-  color: white;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(245, 134, 52, 0.3);
+  color: #34437a;
 }
 
-.tab:hover:not(.active) {
-  background-color: rgba(245, 134, 52, 0.08);
-  color: #f58634;
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 20%;
+  width: 60%;
+  height: 5px;
+  background-color: #f58634;
+  border-radius: 8px;
 }
+
 
 /* Candidates Table */
 .candidates-table {
@@ -175,7 +189,7 @@
   overflow: hidden;
   flex: 1;
   overflow-y: auto;
-  max-height: calc(100vh - 300px); /* Increased height by reducing the subtracted value */
+  max-height: calc(100vh - 280px); /* Increased height by reducing the subtracted value */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   position: relative;
