@@ -127,9 +127,7 @@ export class ManageCandidatesComponent implements OnInit {
     };
   }
 
-  hasSelectedCandidates(): boolean {
-    return this.filteredCandidates.some(candidate => candidate.selected);
-  }
+
 
   getNextRoundText(): string {
     switch (this.activeTab) {
