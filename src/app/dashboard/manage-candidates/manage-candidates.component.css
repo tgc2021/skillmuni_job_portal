@@ -211,16 +211,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: linear-gradient(to right, #fff4e6, #ffe9d6);
-  border-radius: 10px;
-  border: 1px solid #f58634;
+  margin-bottom: 15px;
 }
 
 .round-info-left h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   color: #2f3260;
   font-weight: 600;
 }
@@ -315,12 +311,10 @@
 
 /* Assessment Round Grid */
 .candidates-table-header.assessment-grid {
-  grid-template-columns: 60px 1fr 140px 120px 100px 80px;
-}
+grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 
 .candidates-table-row.assessment-grid {
-  grid-template-columns: 60px 1fr 140px 120px 100px 80px;
-}
+grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 
 /* Interview Round Grid */
 .candidates-table-header.interview-grid {
@@ -341,7 +335,7 @@
   border-radius: 10px;
   border: 1px solid #34437a;
   align-items: center;
-  min-height: 60px;
+  min-height: 50px;
   transition: all 0.3s ease;
   gap: 10px;
 }
@@ -361,13 +355,8 @@
 }
 
 /* Column-specific styling */
-.row-number {
-  font-weight: 600;
-  color: #666;
-  text-align: center;
-}
-
 .candidate-name {
+  font-size: 14px;
   color: #34437a;
   font-weight: 600;
   text-decoration: underline;
@@ -383,35 +372,27 @@
 }
 
 .applied-date, .conducted-date {
-  font-size: 13px;
-  color: #666;
-  text-align: center;
+  font-size: 14px;
+  color: #34437a;
 }
 
 .resume-cell {
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .resume-download {
   cursor: pointer;
-  color: #666;
   transition: color 0.3s ease;
   font-size: 18px;
+  color: #2f3260;
 }
 
-.resume-download:hover {
-  color: #34437a;
-}
 
 .credits {
-  text-align: center;
-  font-weight: 500;
+  color: #2f3260
 }
 
 .assessment-score {
-  text-align: center;
   font-weight: 600;
   color: #34437a;
 }
@@ -455,7 +436,7 @@
 
 .status-cell {
   font-size: 12px;
-  color: #666;
+  color: #34437a;
 }
 
 /* Key Actions for Interview Rounds */
@@ -575,7 +556,6 @@
 .checkbox-container {
   position: relative;
   display: flex;
-  justify-content: center;
 }
 
 .candidate-checkbox {
