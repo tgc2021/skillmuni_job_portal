@@ -70,8 +70,8 @@
        
           <div class="checkbox-container">
             <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
-              class="candidate-checkbox" />
-            <label [for]="'candidate-' + i" class="checkbox-label">
+              class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
+            <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
               <span class="checkmark">✓</span>
             </label>
           </div>
@@ -104,6 +104,7 @@
       </div>
     </div>
 
+
     <!-- No Candidates Selected Popup -->
     <div class="success-popup-overlay" *ngIf="showNoCandidatesPopup">
       <div class="success-popup">
@@ -114,6 +115,24 @@
           To begin, select candidates from this round that you'd like to move forward.</p>
           <div class="dialog-buttons">
             <button class="exit-btn" (click)="closeNoCandidatesPopup()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- After Confirm Move Popup -->
+    <div class="success-popup-overlay" *ngIf="showAfterConfirmMovePopup">
+      <div class="success-popup">
+        <div class="success-popup-header">Round {{ getCurrentRoundNumber() }} Started!</div>
+        <div class="success-popup-body">
+          <img src="assets/icons/select-candidate.png" alt="Success Icon" />
+          <p>
+            You've moved candidates to Round {{ getCurrentRoundNumber() }}.<br>
+            Would you like to keep accepting new applications, or pause the job for now?
+          </p>
+          <div class="dialog-buttons">
+            <button class="exit-btn" (click)="keepAcceptingApplications()">Keep Accepting</button>
+            <button class="dashboard-btn" (click)="pauseApplications()">Pause Applications</button>
           </div>
         </div>
       </div>

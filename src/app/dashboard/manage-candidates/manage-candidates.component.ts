@@ -1,4 +1,7 @@
 
+
+
+
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -25,6 +28,38 @@ export class ManageCandidatesComponent implements OnInit {
 
   showConfirmMovePopup = false;
   showNoCandidatesPopup = false;
+  showAfterConfirmMovePopup = false;
+
+  // Returns true if the candidate should have their checkbox locked (already reviewed)
+  isCandidateLocked(candidate: Candidate): boolean {
+    // If candidate is not in the current round, or if they have already been reviewed in this round
+    // Candidates in the current round and not selected are not locked
+    // Candidates in previous rounds or not selected in previous move are locked
+    if (candidate.currentRound !== this.activeTab) {
+      return true;
+    }
+    // Optionally, you can add more logic if you want to lock candidates who were not selected in the last move
+    return false;
+  }
+
+  getCurrentRoundNumber(): number {
+    // Map tab keys to round numbers
+    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
+    const currentIndex = tabOrder.indexOf(this.activeTab);
+    // 'applied' is not a round, so for 'applied' return 0, for 'round1' return 1, etc.
+    return currentIndex > 0 ? currentIndex : 1;
+  }
+
+  getNextRoundNumber(): number {
+    // Map tab keys to round numbers
+    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
+    const currentIndex = tabOrder.indexOf(this.activeTab);
+    // If already at last round, return last round number
+    if (currentIndex === -1 || currentIndex >= tabOrder.length - 1) {
+      return tabOrder.length - 1; // round3 is 3
+    }
+    return currentIndex + 1; // e.g., applied (0) -> 1, round1 (1) -> 2
+  }
 
   // Sample candidates data
   private sampleCandidates: Candidate[] = [
@@ -175,6 +210,18 @@ export class ManageCandidatesComponent implements OnInit {
     });
     this.activeTab = nextRound;
     this.showConfirmMovePopup = false;
+    setTimeout(() => {
+      this.showAfterConfirmMovePopup = true;
+    }, 0);
+  }
+  pauseApplications(): void {
+    // TODO: Add logic to pause applications (e.g., update job status)
+    this.showAfterConfirmMovePopup = false;
+  }
+
+  keepAcceptingApplications(): void {
+    // TODO: Add logic to keep accepting applications (e.g., update job status)
+    this.showAfterConfirmMovePopup = false;
   }
 
   closeConfirmMovePopup(): void {
