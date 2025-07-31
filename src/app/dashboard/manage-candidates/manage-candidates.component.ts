@@ -1,4 +1,5 @@
 
+
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -47,6 +48,22 @@ interface RoundConfig {
 export class ManageCandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
   activeTab: 'applied' | 'round1' | 'round2' | 'round3' = 'applied';
+
+  // Get dynamic move button text based on active tab
+  getMoveButtonText(): string {
+    switch (this.activeTab) {
+      case 'applied':
+        return 'Move to Round 1';
+      case 'round1':
+        return 'Move to Round 2';
+      case 'round2':
+        return 'Move to Final Round';
+      case 'round3':
+        return 'Offer Job';
+      default:
+        return 'On to the next';
+    }
+  }
 
   getRowClass(candidate: Candidate): any {
     const result: any = {};
@@ -385,6 +402,106 @@ export class ManageCandidatesComponent implements OnInit {
         proficiencyLevel: 'Advanced',
         eligibility: 'Eligible',
         selected: true,
+        currentRound: 'applied'
+      },
+      {
+        id: '8',
+        name: 'Priya Singh',
+        appliedDate: '29/6/2025',
+        credits: 400,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '9',
+        name: 'Rahul Mehra',
+        appliedDate: '29/6/2025',
+        credits: 350,
+        proficiencyLevel: 'Beginner',
+        eligibility: 'Not Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '10',
+        name: 'Emily Chen',
+        appliedDate: '30/6/2025',
+        credits: 420,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '11',
+        name: 'Mohammed Ali',
+        appliedDate: '30/6/2025',
+        credits: 390,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '12',
+        name: 'Sara Müller',
+        appliedDate: '1/7/2025',
+        credits: 410,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '13',
+        name: 'Lucas Rossi',
+        appliedDate: '1/7/2025',
+        credits: 370,
+        proficiencyLevel: 'Beginner',
+        eligibility: 'Not Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '14',
+        name: 'Ava Brown',
+        appliedDate: '2/7/2025',
+        credits: 430,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '15',
+        name: 'David Kim',
+        appliedDate: '2/7/2025',
+        credits: 410,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '16',
+        name: 'Fatima Zahra',
+        appliedDate: '3/7/2025',
+        credits: 390,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'applied'
+      },
+      {
+        id: '17',
+        name: 'John Smith',
+        appliedDate: '3/7/2025',
+        credits: 380,
+        proficiencyLevel: 'Beginner',
+        eligibility: 'Not Eligible',
+        selected: false,
         currentRound: 'applied'
       },
       // Assessment round (Round 1)

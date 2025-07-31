@@ -181,14 +181,14 @@
         </div>
       </div>
 
-      <!-- Move to Next Round Button -->
-      <div class="move-round-container" *ngIf="activeTab !== 'round3'">
+      <!-- Move to Next/Offer Job Button (always visible, label is dynamic) -->
+      <div class="move-round-container">
         <button class="save-button" 
                 type="button" 
                 (click)="moveToNextRound()"
                 [disabled]="isMoveButtonDisabled"
                 [class.disabled]="isMoveButtonDisabled">
-          On to the Next
+          {{ getMoveButtonText() }}
           <span class="submit-icon">&#10132;</span>
         </button>
       </div>
