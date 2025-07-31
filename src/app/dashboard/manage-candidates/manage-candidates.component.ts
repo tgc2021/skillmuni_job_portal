@@ -1,5 +1,5 @@
 
-
+// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -48,6 +48,14 @@ interface RoundConfig {
 export class ManageCandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
   activeTab: 'applied' | 'round1' | 'round2' | 'round3' = 'applied';
+
+  // Approve candidate for next round (show Pass - View in Result column)
+  approveCandidate(candidate: Candidate): void {
+    candidate.interviewResult = 'Pass';
+    if (this.showCandidateEvaluation && candidate.id in this.showCandidateEvaluation) {
+      this.showCandidateEvaluation[candidate.id] = false;
+    }
+  }
 
   // Get dynamic move button text based on active tab
   getMoveButtonText(): string {
@@ -181,6 +189,7 @@ export class ManageCandidatesComponent implements OnInit {
     return this.selectedCount === 0;
   }
 
+
   // Returns true if the candidate should have their checkbox locked
   isCandidateLocked(candidate: Candidate): boolean {
     if (candidate.currentRound !== this.activeTab) {
@@ -290,12 +299,7 @@ export class ManageCandidatesComponent implements OnInit {
     this.showCandidateEvaluation[candidate.id] = false;
   }
 
-  // Schedule interview
-  scheduleInterview(candidate: Candidate): void {
-    candidate.interviewScheduled = true;
-    candidate.interviewStatus = 'Scheduled';
-    candidate.interviewDateTime = '25/7/2025 - 10:30 am';
-  }
+
 
   moveToNextRound(): void {
     if (this.isMoveButtonDisabled) {
@@ -579,4 +583,54 @@ export class ManageCandidatesComponent implements OnInit {
     
     console.log('Candidates loaded in loadCandidates():', this.candidates.length);
   }
+
+
+  // Add interview details (for the Add button)
+addInterviewDetails(candidate: Candidate): void {
+  // This could open a modal or navigate to a detailed form
+  console.log('Adding interview details for:', candidate.name);
+  // You can implement your logic here - perhaps opening a dialog
+  // or navigating to a detailed interview scheduling page
+}
+
+// View candidate result (for Pass/Fail - View buttons)
+viewCandidateResult(candidate: Candidate): void {
+  console.log('Viewing result for:', candidate.name, 'Result:', candidate.interviewResult);
+  // This could open a modal showing detailed feedback and rating
+  // You can implement your logic here to show the evaluation details
+}
+
+// Schedule interview (updated to match the design)
+scheduleInterview(candidate: Candidate): void {
+  candidate.interviewScheduled = true;
+  candidate.interviewStatus = 'Scheduled';
+  // Set a sample datetime - you'd normally open a date picker
+  candidate.interviewDateTime = '25/7/2025 - 10:30 am';
+  console.log('Interview scheduled for:', candidate.name);
+}
+
+
+// Method to handle View button click for interview results
+viewInterviewResult(candidate: Candidate): void {
+  // This would typically open a modal or navigate to result details page
+  console.log('Viewing interview result for:', candidate.name);
+  console.log('Result:', candidate.interviewResult);
+  console.log('Rating:', candidate.rating);
+  console.log('Feedback:', candidate.feedback);
+  // You can implement the logic to view full interview results here
+}
+
+// Publish calendar for the current interview round
+publishCalendar(): void {
+  if (this.isInterviewRound && this.currentRoundConfig) {
+    this.currentRoundConfig.calendarPublished = true;
+  }
+}
+
+// Returns true if there are any passed candidates in the current interview round
+get hasPassedCandidates(): boolean {
+  return this.filteredCandidates.some(c => c.interviewResult === 'Pass');
+}
+
+// ...existing code...
 }

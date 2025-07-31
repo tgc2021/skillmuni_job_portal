@@ -1,3 +1,59 @@
+/* Add Button - styled to match modern action/view buttons */
+.result-action-btn.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  background: white;
+  border: none;
+color: #34437a;  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  min-height: 36px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+}
+
+.result-action-btn.add-btn:hover {
+  background: #e3f0fd;
+  color: #1565c0;
+}
+/* Pass/Fail text color for View buttons (only the Pass/Fail word) */
+.result-action-btn.view-btn.pass span.button-label {
+  color: #4caf50 !important;
+}
+.result-action-btn.view-btn.fail span.button-label {
+  color: #f44336 !important;
+}
+/* Result Action View Button - styled to match Schedule Interview */
+.result-action-btn.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  background: white;
+  border: none;
+  color: #34437a;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+}
+
+.result-action-btn.view-btn:hover {
+  background: #f5f7ff;
+  border-color: #2a3561;
+  color: #34437a;
+}
 /* Enhanced CSS for Dynamic Candidates Table */
 
 .success-popup-overlay {
@@ -318,11 +374,11 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 
 /* Interview Round Grid */
 .candidates-table-header.interview-grid {
-  grid-template-columns: 60px 200px 2fr 140px 140px 80px;
+  grid-template-columns: 60px 280px 2fr 140px 160px 80px;
 }
 
 .candidates-table-row.interview-grid {
-  grid-template-columns: 60px 200px 2fr 140px 140px 80px;
+  grid-template-columns: 60px 280px 2fr 140px 160px 80px;
 }
 
 .candidates-table-row {
@@ -440,23 +496,42 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 }
 
 /* Key Actions for Interview Rounds */
+/* Key Actions for Interview Rounds */
 .key-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   width: 100%;
 }
 
 .action-btn {
-  background: transparent;
-  border: 1px solid #34437a;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  background: white;
+  border: none;
   color: #34437a;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: left;
+  min-height: 36px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+}
+
+.action-btn:hover {
+  background: #f5f7ff;
+  border-color: #2a3561;
+}
+
+.schedule-btn {
+  background: white;
+  color: #34437a;
 }
 
 .schedule-btn:hover {
@@ -464,10 +539,90 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   color: white;
 }
 
+.approve-btn {
+  background: white;
+  color: #34437a;
+}
+
 .approve-btn:hover {
   background: #4caf50;
   color: white;
   border-color: #4caf50;
+}
+
+/* Add Button - appears in Status column for scheduled interviews */
+
+/* Result View Buttons - Pass/Fail with View */
+.result-with-view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  min-height: 24px;
+}
+
+.result-with-view.pass {
+  background: #e8f5e8;
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.result-with-view.pass:hover {
+  background: #4caf50;
+  color: white;
+}
+
+.result-with-view.fail {
+  background: #ffebee;
+  color: #f44336;
+  border-color: #f44336;
+}
+
+.result-with-view.fail:hover {
+  background: #f44336;
+  color: white;
+}
+
+/* Calendar Published Button */
+.calendar-published-btn, .publish-calendar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #34437a;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  min-height: 40px;
+}
+
+.calendar-published-btn:hover, .publish-calendar-btn:hover {
+  background: #2a3561;
+}
+
+/* Status cell styling for scheduled dates */
+.status-scheduled {
+  font-size: 12px;
+  color: #34437a;
+  font-weight: 500;
+}
+
+/* Material Icons styling */
+.material-icons {
+  font-size: 18px;
+  vertical-align: middle;
 }
 
 /* Evaluation Form */

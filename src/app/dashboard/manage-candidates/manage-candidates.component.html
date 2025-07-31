@@ -49,11 +49,13 @@
             <button *ngIf="currentRoundConfig.calendarPublished" 
                     class="calendar-published-btn" 
                     (click)="toggleCalendarInfo()">
-              <span class="calendar-icon">📅</span>
+              <span class="material-icons calendar-icon">event</span>
               Calendar Published
             </button>
             <button *ngIf="!currentRoundConfig.calendarPublished" 
-                    class="publish-calendar-btn">
+                    class="publish-calendar-btn"
+                    (click)="publishCalendar()">
+              <span class="material-icons calendar-icon">event</span>
               Publish Calendar
             </button>
             
@@ -124,11 +126,13 @@
               <span class="candidate-name">{{ candidate.name }}</span>
               <div class="key-actions">
                 <button class="action-btn schedule-btn" (click)="scheduleInterview(candidate)">
-                  📅 Schedule Interview >
+                  <span class="material-icons" style="font-size: 16px;">calendar_today</span>
+                  Schedule Interview >
                 </button>
                 <button class="action-btn approve-btn" *ngIf="!showCandidateEvaluation[candidate.id]" 
-                        (click)="toggleCandidateEvaluation(candidate.id)">
-                  ✓ Approve for next round
+                        (click)="approveCandidate(candidate)">
+                  <span class="material-icons" style="font-size: 16px;">check_circle</span>
+                  Approve for next round
                 </button>
                 <!-- Evaluation Form -->
                 <div class="evaluation-form" *ngIf="showCandidateEvaluation[candidate.id]">
@@ -160,19 +164,36 @@
                 </div>
               </div>
               <span class="status-cell">{{ candidate.interviewStatus || 'Not Scheduled' }}</span>
-              <span class="result-cell" [ngClass]="getResultClass(candidate.interviewResult || '')">
-                <span *ngIf="candidate.interviewResult === 'Pass'" class="result-with-view">
-                  ✓ Pass - View
-                </span>
-                <span *ngIf="candidate.interviewResult === 'Fail'" class="result-with-view">
-                  ✗ Fail - View
-                </span>
-                <span *ngIf="!candidate.interviewResult">--</span>
+              <span class="result-cell">
+                <!-- Add Button for candidates without results -->
+                <button *ngIf="!candidate.interviewResult && !showCandidateEvaluation[candidate.id]" 
+                        class="result-action-btn add-btn"
+                        (click)="toggleCandidateEvaluation(candidate.id)">
+                  <span class="material-icons" style="font-size: 14px;">add</span>
+                  Add
+                </button>
+                <!-- View Button for candidates with Pass results -->
+                <button *ngIf="candidate.interviewResult === 'Pass'" 
+                        class="result-action-btn view-btn pass"
+                        (click)="viewCandidateResult(candidate)">
+                  <span class="material-icons" style="font-size: 14px;">check_circle</span>
+                  <span class="button-label">Pass</span> - View
+                </button>
+                <!-- View Button for candidates with Fail results -->
+                <button *ngIf="candidate.interviewResult === 'Fail'" 
+                        class="result-action-btn view-btn fail"
+                        (click)="viewCandidateResult(candidate)">
+                  <span class="material-icons" style="font-size: 14px;">cancel</span>
+                  <span class="button-label">Fail</span> - View
+                </button>
               </span>
               <div class="checkbox-container">
                 <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
                   class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
-                <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
+                <label [for]="'candidate-' + i" 
+                       class="checkbox-label" 
+                       [class.locked]="isCandidateLocked(candidate)"
+                       [class.passed]="candidate.interviewResult === 'Pass'">
                   <span class="checkmark">✓</span>
                 </label>
               </div>
@@ -187,7 +208,8 @@
                 type="button" 
                 (click)="moveToNextRound()"
                 [disabled]="isMoveButtonDisabled"
-                [class.disabled]="isMoveButtonDisabled">
+                [class.disabled]="isMoveButtonDisabled"
+                [class.interview-disabled]="isInterviewRound && !hasPassedCandidates">
           {{ getMoveButtonText() }}
           <span class="submit-icon">&#10132;</span>
         </button>
