@@ -1,7 +1,4 @@
 
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -15,6 +12,31 @@ interface Candidate {
   eligibility: 'Eligible' | 'Not Eligible';
   selected: boolean;
   currentRound: 'applied' | 'round1' | 'round2' | 'round3';
+  
+  // Assessment specific fields
+  assessmentScore?: number;
+  assessmentResult?: 'Pass' | 'Fail';
+  conductedOn?: string;
+  
+  // Interview specific fields
+  interviewScheduled?: boolean;
+  interviewDateTime?: string;
+  interviewStatus?: 'Not Scheduled' | 'Scheduled' | 'Conducted';
+  interviewResult?: 'Pass' | 'Fail';
+  rating?: number;
+  feedback?: string;
+}
+
+interface RoundConfig {
+  name: string;
+  deadline: string;
+  status: 'Ongoing' | 'Passed';
+  type: 'applied' | 'assessment' | 'interview';
+  minScore?: number;
+  calendarPublished?: boolean;
+  startDate?: string;
+  endDate?: string;
+  interviewDuration?: string;
 }
 
 @Component({
@@ -26,114 +48,54 @@ export class ManageCandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
   activeTab: 'applied' | 'round1' | 'round2' | 'round3' = 'applied';
 
+  getRowClass(candidate: Candidate): any {
+    const result: any = {};
+    result[this.gridLayoutClass] = true;
+    if (this.isCandidateLocked(candidate)) {
+      result['row-locked'] = true;
+    }
+    return result;
+  }
+
   showConfirmMovePopup = false;
   showNoCandidatesPopup = false;
   showAfterConfirmMovePopup = false;
+  showCalendarInfo = false;
+  showCandidateEvaluation: { [key: string]: boolean } = {};
 
-  // Returns true if the candidate should have their checkbox locked (already reviewed)
-  isCandidateLocked(candidate: Candidate): boolean {
-    // If candidate is not in the current round, or if they have already been reviewed in this round
-    // Candidates in the current round and not selected are not locked
-    // Candidates in previous rounds or not selected in previous move are locked
-    if (candidate.currentRound !== this.activeTab) {
-      return true;
+  // Round configurations
+  roundConfigs: { [key: string]: RoundConfig } = {
+    applied: {
+      name: 'Applied',
+      deadline: '',
+      status: 'Ongoing',
+      type: 'applied'
+    },
+    round1: {
+      name: 'Round 1',
+      deadline: '12/7/25',
+      status: 'Ongoing',
+      type: 'assessment',
+      minScore: 80
+    },
+    round2: {
+      name: 'Round 2',
+      deadline: '28/7/25',
+      status: 'Ongoing',
+      type: 'interview',
+      calendarPublished: true,
+      startDate: '20/7/25',
+      endDate: '28/7/25',
+      interviewDuration: '00:30'
+    },
+    round3: {
+      name: 'Round 3',
+      deadline: '5/8/25',
+      status: 'Ongoing',
+      type: 'interview',
+      calendarPublished: false
     }
-    // Optionally, you can add more logic if you want to lock candidates who were not selected in the last move
-    return false;
-  }
-
-  getCurrentRoundNumber(): number {
-    // Map tab keys to round numbers
-    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
-    const currentIndex = tabOrder.indexOf(this.activeTab);
-    // 'applied' is not a round, so for 'applied' return 0, for 'round1' return 1, etc.
-    return currentIndex > 0 ? currentIndex : 1;
-  }
-
-  getNextRoundNumber(): number {
-    // Map tab keys to round numbers
-    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
-    const currentIndex = tabOrder.indexOf(this.activeTab);
-    // If already at last round, return last round number
-    if (currentIndex === -1 || currentIndex >= tabOrder.length - 1) {
-      return tabOrder.length - 1; // round3 is 3
-    }
-    return currentIndex + 1; // e.g., applied (0) -> 1, round1 (1) -> 2
-  }
-
-  // Sample candidates data
-  private sampleCandidates: Candidate[] = [
-    {
-      id: '1',
-      name: 'Sonia Shaikh',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Advanced',
-      eligibility: 'Eligible',
-      selected: true,
-      currentRound: 'applied'
-    },
-    {
-      id: '2',
-      name: 'James Carter',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Advanced',
-      eligibility: 'Eligible',
-      selected: true,
-      currentRound: 'applied'
-    },
-    {
-      id: '3',
-      name: 'Oliver Bennett',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Advanced',
-      eligibility: 'Eligible',
-      selected: true,
-      currentRound: 'applied'
-    },
-    {
-      id: '4',
-      name: 'Amelia Clarke',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Intermediate',
-      eligibility: 'Eligible',
-      selected: false,
-      currentRound: 'applied'
-    },
-    {
-      id: '5',
-      name: 'Tunde Okoye',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Intermediate',
-      eligibility: 'Eligible',
-      selected: false,
-      currentRound: 'applied'
-    },
-    {
-      id: '6',
-      name: 'Isabela Costa',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Beginner',
-      eligibility: 'Not Eligible',
-      selected: false,
-      currentRound: 'applied'
-    },
-    {
-      id: '7',
-      name: 'Thabo Nkosi',
-      appliedDate: '28/6/2025',
-      credits: 500,
-      proficiencyLevel: 'Beginner',
-      eligibility: 'Not Eligible',
-      selected: false,
-      currentRound: 'applied'
-    }
-  ];
+  };
 
   constructor(
     private apiService: ApiService,
@@ -142,6 +104,98 @@ export class ManageCandidatesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCandidates();
+    // Debug logging
+    console.log('Component initialized');
+    console.log('Initial candidates:', this.candidates);
+    console.log('Active tab:', this.activeTab);
+  }
+
+  // Get current round configuration
+  get currentRoundConfig(): RoundConfig {
+    return this.roundConfigs[this.activeTab];
+  }
+
+  // Check if current round is assessment type
+  get isAssessmentRound(): boolean {
+    return this.currentRoundConfig?.type === 'assessment';
+  }
+
+  // Check if current round is interview type
+  get isInterviewRound(): boolean {
+    return this.currentRoundConfig?.type === 'interview';
+  }
+
+  // Check if current round is applied type
+  get isAppliedRound(): boolean {
+    return this.currentRoundConfig?.type === 'applied';
+  }
+
+  // Get table columns for current round
+  get tableColumns(): string[] {
+    if (this.isAppliedRound) {
+      return ['No.', 'Candidate Name', 'Applied Date', 'Resume', 'Credits', 'Proficiency Level', 'Eligibility', 'Select'];
+    } else if (this.isAssessmentRound) {
+      return ['No.', 'Candidate Name', 'Conducted On', 'Assessment Score', 'Result', 'Select'];
+    } else if (this.isInterviewRound) {
+      return ['No.', 'Candidate Name', 'Key Actions', 'Status', 'Result', 'Select'];
+    }
+    return [];
+  }
+
+  // Get CSS class for grid layout
+  get gridLayoutClass(): string {
+    if (this.isAppliedRound) {
+      return 'applied-grid';
+    } else if (this.isAssessmentRound) {
+      return 'assessment-grid';
+    } else if (this.isInterviewRound) {
+      return 'interview-grid';
+    }
+    return 'applied-grid';
+  }
+
+  // Check if move to next round button should be disabled
+  get isMoveButtonDisabled(): boolean {
+    if (this.isInterviewRound) {
+      const candidatesWithResults = this.filteredCandidates.filter(c => c.interviewResult);
+      const passedCandidates = this.filteredCandidates.filter(c => c.interviewResult === 'Pass');
+      return candidatesWithResults.length === 0 || passedCandidates.length === 0;
+    }
+    return this.selectedCount === 0;
+  }
+
+  // Returns true if the candidate should have their checkbox locked
+  isCandidateLocked(candidate: Candidate): boolean {
+    if (candidate.currentRound !== this.activeTab) {
+      return true;
+    }
+    
+    // For assessment rounds, lock failed candidates
+    if (this.isAssessmentRound && candidate.assessmentResult === 'Fail') {
+      return true;
+    }
+    
+    // For interview rounds, lock failed candidates
+    if (this.isInterviewRound && candidate.interviewResult === 'Fail') {
+      return true;
+    }
+    
+    return false;
+  }
+
+  getCurrentRoundNumber(): number {
+    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
+    const currentIndex = tabOrder.indexOf(this.activeTab);
+    return currentIndex > 0 ? currentIndex : 1;
+  }
+
+  getNextRoundNumber(): number {
+    const tabOrder = ['applied', 'round1', 'round2', 'round3'];
+    const currentIndex = tabOrder.indexOf(this.activeTab);
+    if (currentIndex === -1 || currentIndex >= tabOrder.length - 1) {
+      return tabOrder.length - 1;
+    }
+    return currentIndex + 1;
   }
 
   onBackClick(): void {
@@ -150,11 +204,14 @@ export class ManageCandidatesComponent implements OnInit {
 
   setActiveTab(tab: 'applied' | 'round1' | 'round2' | 'round3'): void {
     this.activeTab = tab;
+    this.showCalendarInfo = false;
+    console.log('Active tab changed to:', tab);
+    console.log('Filtered candidates:', this.filteredCandidates.length);
   }
 
-
   get filteredCandidates(): Candidate[] {
-    return this.candidates.filter(candidate => candidate.currentRound === this.activeTab);
+    const filtered = this.candidates.filter(candidate => candidate.currentRound === this.activeTab);
+    return filtered;
   }
 
   get selectedCount(): number {
@@ -169,8 +226,6 @@ export class ManageCandidatesComponent implements OnInit {
       round3: this.candidates.filter(c => c.currentRound === 'round3').length
     };
   }
-
-
 
   getNextRoundText(): string {
     switch (this.activeTab) {
@@ -191,7 +246,46 @@ export class ManageCandidatesComponent implements OnInit {
     }
   }
 
+  // Toggle calendar info display
+  toggleCalendarInfo(): void {
+    this.showCalendarInfo = !this.showCalendarInfo;
+  }
+
+  // Toggle candidate evaluation form
+  toggleCandidateEvaluation(candidateId: string): void {
+    this.showCandidateEvaluation[candidateId] = !this.showCandidateEvaluation[candidateId];
+  }
+
+  // Save candidate evaluation
+  saveCandidateEvaluation(candidate: Candidate, rating: number, feedback: string, result: 'Pass' | 'Fail'): void {
+    candidate.rating = rating;
+    candidate.feedback = feedback;
+    candidate.interviewResult = result;
+    candidate.interviewStatus = 'Conducted';
+    
+    // Auto-select if passed
+    if (result === 'Pass') {
+      candidate.selected = true;
+    } else {
+      candidate.selected = false;
+    }
+    
+    this.showCandidateEvaluation[candidate.id] = false;
+  }
+
+  // Schedule interview
+  scheduleInterview(candidate: Candidate): void {
+    candidate.interviewScheduled = true;
+    candidate.interviewStatus = 'Scheduled';
+    candidate.interviewDateTime = '25/7/2025 - 10:30 am';
+  }
+
   moveToNextRound(): void {
+    if (this.isMoveButtonDisabled) {
+      this.showNoCandidatesPopup = true;
+      return;
+    }
+    
     const selectedCandidates = this.filteredCandidates.filter(c => c.selected);
     if (selectedCandidates.length === 0) {
       this.showNoCandidatesPopup = true;
@@ -204,23 +298,38 @@ export class ManageCandidatesComponent implements OnInit {
     const selectedCandidates = this.filteredCandidates.filter(c => c.selected);
     const nextRound = this.getNextRound();
     if (!nextRound) return;
+
     selectedCandidates.forEach(candidate => {
       candidate.currentRound = nextRound;
       candidate.selected = false;
+      
+      // Reset round-specific fields for next round
+      if (this.isAssessmentRound) {
+        delete candidate.assessmentScore;
+        delete candidate.assessmentResult;
+        delete candidate.conductedOn;
+      } else if (this.isInterviewRound) {
+        candidate.interviewScheduled = false;
+        delete candidate.interviewDateTime;
+        candidate.interviewStatus = 'Not Scheduled';
+        delete candidate.interviewResult;
+        delete candidate.rating;
+        delete candidate.feedback;
+      }
     });
+
     this.activeTab = nextRound;
     this.showConfirmMovePopup = false;
     setTimeout(() => {
       this.showAfterConfirmMovePopup = true;
     }, 0);
   }
+
   pauseApplications(): void {
-    // TODO: Add logic to pause applications (e.g., update job status)
     this.showAfterConfirmMovePopup = false;
   }
 
   keepAcceptingApplications(): void {
-    // TODO: Add logic to keep accepting applications (e.g., update job status)
     this.showAfterConfirmMovePopup = false;
   }
 
@@ -249,9 +358,108 @@ export class ManageCandidatesComponent implements OnInit {
     return eligibility === 'Eligible' ? 'eligibility-eligible' : 'eligibility-not-eligible';
   }
 
+  getResultClass(result: string): string {
+    return result === 'Pass' ? 'result-pass' : 'result-fail';
+  }
+
   private loadCandidates(): void {
-    // In a real app, you would fetch candidates from a service
-    // For now, we'll use the sample data
-    this.candidates = [...this.sampleCandidates];
+    // Enhanced sample data with assessment and interview fields
+
+    this.candidates = [
+      // Applied candidates
+      {
+        id: '1',
+        name: 'Sonia Shaikh',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: true,
+        currentRound: 'applied'
+      },
+      {
+        id: '2',
+        name: 'James Carter',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: true,
+        currentRound: 'applied'
+      },
+      // Assessment round (Round 1)
+      {
+        id: '3',
+        name: 'Oliver Bennett',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Advanced',
+        eligibility: 'Eligible',
+        selected: true,
+        currentRound: 'round1',
+        assessmentScore: 91,
+        assessmentResult: 'Pass',
+        conductedOn: '28/6/2025'
+      },
+      {
+        id: '4',
+        name: 'Amelia Clarke',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'round1',
+        conductedOn: 'Not Conducted'
+      },
+      {
+        id: '5',
+        name: 'Tunde Okoye',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Intermediate',
+        eligibility: 'Eligible',
+        selected: false,
+        currentRound: 'round1',
+        assessmentScore: 77,
+        assessmentResult: 'Fail',
+        conductedOn: '2/7/2025'
+      },
+      // Interview round (Round 2)
+      {
+        id: '6',
+        name: 'Isabela Costa',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Beginner',
+        eligibility: 'Not Eligible',
+        selected: false,
+        currentRound: 'round2',
+        interviewScheduled: true,
+        interviewDateTime: '25/7/2025 - 10:30 am',
+        interviewStatus: 'Conducted',
+        interviewResult: 'Pass',
+        rating: 4.5,
+        feedback: 'Good communication.'
+      },
+      {
+        id: '7',
+        name: 'Thabo Nkosi',
+        appliedDate: '28/6/2025',
+        credits: 500,
+        proficiencyLevel: 'Beginner',
+        eligibility: 'Not Eligible',
+        selected: false,
+        currentRound: 'round2',
+        interviewScheduled: true,
+        interviewDateTime: '26/7/2025 - 11:00 am',
+        interviewStatus: 'Conducted',
+        interviewResult: 'Fail',
+        rating: 2.5,
+        feedback: 'Needs improvement.'
+      }
+    ];
+    
+    console.log('Candidates loaded in loadCandidates():', this.candidates.length);
   }
 }

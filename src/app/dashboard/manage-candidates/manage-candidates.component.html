@@ -12,138 +12,245 @@
     <img src="assets/icons/candidates-header-icon.png" alt="Candidates Icon" class="header-icon" />
   </div>
 
-
-
   <!-- Candidates Section -->
   <div class="candidates-section">
-
-     <!-- Interview Rounds Tabs -->
-  <div class="interview-rounds-container">
-    <div class="tabs">
-      <div class="tab" 
-           [class.active]="activeTab === 'applied'"
-           (click)="setActiveTab('applied')">
-        Applied ({{ candidatesCounts.applied }})
-      </div>
-      <div class="tab" 
-           [class.active]="activeTab === 'round1'"
-           (click)="setActiveTab('round1')">
-        Round 1 ({{ candidatesCounts.round1 }})
-      </div>
-      <div class="tab" 
-           [class.active]="activeTab === 'round2'"
-           (click)="setActiveTab('round2')">
-        Round 2 ({{ candidatesCounts.round2 }})
-      </div>
-      <div class="tab" 
-           [class.active]="activeTab === 'round3'"
-           (click)="setActiveTab('round3')">
-        Round 3 ({{ candidatesCounts.round3 }})
-      </div>
-    </div>
-
-    <!-- Candidates Table -->
-    <div class="candidates-table" *ngIf="filteredCandidates.length > 0">
-      <div class="candidates-table-header">
-        <span>No.</span>
-        <span>Candidate Name</span>
-        <span>Applied Date</span>
-        <span>Resume</span>
-        <span>Credits</span>
-        <span>Proficiency Level</span>
-        <span>Eligibility</span>
-        <span>Select</span>
+    <!-- Interview Rounds Tabs -->
+    <div class="interview-rounds-container">
+      <div class="tabs">
+        <div class="tab" 
+             [class.active]="activeTab === 'applied'"
+             (click)="setActiveTab('applied')">
+          Applied ({{ candidatesCounts.applied }})
+        </div>
+        <div class="tab" 
+             [class.active]="activeTab === 'round1'"
+             (click)="setActiveTab('round1')">
+          Round 1 ({{ candidatesCounts.round1 }})
+        </div>
+        <div class="tab" 
+             [class.active]="activeTab === 'round2'"
+             (click)="setActiveTab('round2')">
+          Round 2 ({{ candidatesCounts.round2 }})
+        </div>
+        <div class="tab" 
+             [class.active]="activeTab === 'round3'"
+             (click)="setActiveTab('round3')">
+          Round 3 ({{ candidatesCounts.round3 }})
+        </div>
       </div>
 
-      <div class="candidates-table-row" *ngFor="let candidate of filteredCandidates; let i = index">
-        <span>{{ i + 1 }}.</span>
-        <span class="candidate-name">{{ candidate.name }}</span>
-        <span>{{ candidate.appliedDate }}</span>
-        <span class="material-icons">download</span>
-        <span>{{ candidate.credits }}</span>
-        <span class="proficiency-level" [ngClass]="getProficiencyClass(candidate.proficiencyLevel)">
-          {{ candidate.proficiencyLevel }}
-        </span>
-        <span class="eligibility" [ngClass]="getEligibilityClass(candidate.eligibility)">
-          {{ candidate.eligibility }}
-        </span>
-       
-          <div class="checkbox-container">
-            <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
-              class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
-            <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
-              <span class="checkmark">✓</span>
-            </label>
-          </div>
-      </div>
-    </div>
-
-    <!-- Move to Next Round Button -->
-    <div class="move-round-container" *ngIf="activeTab !== 'round3'">
-      <button class="save-button" type="button" (click)="moveToNextRound()">
-        On to the Next
-        <span class="submit-icon">&#10132;</span>
-      </button>
-    </div>
-
-    <!-- Confirm Move Popup -->
-    <div class="success-popup-overlay" *ngIf="showConfirmMovePopup">
-      <div class="success-popup">
-        <div class="success-popup-header">Confirm Move to {{ getNextRoundText() }}</div>
-        <div class="success-popup-body">
-          <img src="assets/icons/select-candidate.png" alt="Confirm Icon" />
-          <p>
-            You're moving <b>{{ selectedCount }}</b> candidate{{ selectedCount === 1 ? '' : 's' }} to {{ getNextRoundText() }}.<br>
-            They’ll be notified that they’ve advanced. The others will get a message letting them know they haven’t moved forward.
-          </p>
-          <div class="dialog-buttons">
-            <button class="exit-btn" (click)="closeConfirmMovePopup()">Cancel</button>
-            <button class="dashboard-btn" (click)="confirmMoveToNextRound()">Send & Notify</button>
+      <!-- Round Information Header -->
+      <div class="round-info-header" *ngIf="!isAppliedRound">
+        <div class="round-info-left">
+          <h3>{{ currentRoundConfig.name }} Name: Deadline - {{ currentRoundConfig.deadline }} ({{ currentRoundConfig.status }})</h3>
+        </div>
+        <div class="round-info-right" *ngIf="isInterviewRound">
+          <div class="calendar-info-container">
+            <button *ngIf="currentRoundConfig.calendarPublished" 
+                    class="calendar-published-btn" 
+                    (click)="toggleCalendarInfo()">
+              <span class="calendar-icon">📅</span>
+              Calendar Published
+            </button>
+            <button *ngIf="!currentRoundConfig.calendarPublished" 
+                    class="publish-calendar-btn">
+              Publish Calendar
+            </button>
+            
+            <!-- Calendar Info Popup -->
+            <div class="calendar-info-popup" *ngIf="showCalendarInfo && currentRoundConfig.calendarPublished">
+              Already Published: [{{ currentRoundConfig.startDate }}] to [{{ currentRoundConfig.endDate }}], Interview time - {{ currentRoundConfig.interviewDuration }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Candidates Table -->
+      <div class="candidates-table" *ngIf="filteredCandidates.length > 0">
+        <!-- Dynamic Table Header -->
+        <div class="candidates-table-header" [ngClass]="gridLayoutClass">
+          <span *ngFor="let column of tableColumns">{{ column }}</span>
+        </div>
+        <div class="candidates-table-body">
+          <!-- Applied Round Rows -->
+          <div class="candidates-table-row" 
+               *ngFor="let candidate of filteredCandidates; let i = index"
+               [ngClass]="getRowClass(candidate)">
+            <!-- Applied Round Columns -->
+            <ng-container *ngIf="isAppliedRound">
+              <span class="row-number">{{ i + 1 }}.</span>
+              <span class="candidate-name">{{ candidate.name }}</span>
+              <span class="applied-date">{{ candidate.appliedDate }}</span>
+              <span class="resume-cell">
+                <span class="material-icons resume-download">download</span>
+              </span>
+              <span class="credits">{{ candidate.credits }}</span>
+              <span class="proficiency-level" [ngClass]="getProficiencyClass(candidate.proficiencyLevel)">
+                {{ candidate.proficiencyLevel }}
+              </span>
+              <span class="eligibility" [ngClass]="getEligibilityClass(candidate.eligibility)">
+                {{ candidate.eligibility }}
+              </span>
+              <div class="checkbox-container">
+                <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
+                  class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
+                <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
+                  <span class="checkmark">✓</span>
+                </label>
+              </div>
+            </ng-container>
 
-    <!-- No Candidates Selected Popup -->
-    <div class="success-popup-overlay" *ngIf="showNoCandidatesPopup">
-      <div class="success-popup">
-        <div class="success-popup-header">No Candidates Selected Yet</div>
-        <div class="success-popup-body">
-          <img src="assets/icons/not-select-candidate.png" alt="Warning Icon" />
-          <p>You haven’t moved any candidates to the next round yet.<br>
-          To begin, select candidates from this round that you'd like to move forward.</p>
-          <div class="dialog-buttons">
-            <button class="exit-btn" (click)="closeNoCandidatesPopup()">Cancel</button>
+            <!-- Assessment Round Columns -->
+            <ng-container *ngIf="isAssessmentRound">
+              <span class="row-number">{{ i + 1 }}.</span>
+              <span class="candidate-name" [class.selected-candidate]="candidate.selected">{{ candidate.name }}</span>
+              <span class="conducted-date">{{ candidate.conductedOn || '--' }}</span>
+              <span class="assessment-score">{{ candidate.assessmentScore ? candidate.assessmentScore + '%' : '--' }}</span>
+              <span class="result-cell" [ngClass]="getResultClass(candidate.assessmentResult || '')">
+                {{ candidate.assessmentResult || '--' }}
+              </span>
+              <div class="checkbox-container">
+                <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
+                  class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
+                <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
+                  <span class="checkmark">✓</span>
+                </label>
+              </div>
+            </ng-container>
+
+            <!-- Interview Round Columns -->
+            <ng-container *ngIf="isInterviewRound">
+              <span class="row-number">{{ i + 1 }}.</span>
+              <span class="candidate-name">{{ candidate.name }}</span>
+              <div class="key-actions">
+                <button class="action-btn schedule-btn" (click)="scheduleInterview(candidate)">
+                  📅 Schedule Interview >
+                </button>
+                <button class="action-btn approve-btn" *ngIf="!showCandidateEvaluation[candidate.id]" 
+                        (click)="toggleCandidateEvaluation(candidate.id)">
+                  ✓ Approve for next round
+                </button>
+                <!-- Evaluation Form -->
+                <div class="evaluation-form" *ngIf="showCandidateEvaluation[candidate.id]">
+                  <div class="form-row">
+                    <label>Rating:</label>
+                    <select #ratingSelect>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </div>
+                  <div class="form-row">
+                    <label>Feedback:</label>
+                    <textarea #feedbackText placeholder="Enter feedback..."></textarea>
+                  </div>
+                  <div class="form-actions">
+                    <button class="pass-btn" (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Pass')">
+                      Pass
+                    </button>
+                    <button class="fail-btn" (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Fail')">
+                      Fail
+                    </button>
+                    <button class="cancel-btn" (click)="toggleCandidateEvaluation(candidate.id)">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <span class="status-cell">{{ candidate.interviewStatus || 'Not Scheduled' }}</span>
+              <span class="result-cell" [ngClass]="getResultClass(candidate.interviewResult || '')">
+                <span *ngIf="candidate.interviewResult === 'Pass'" class="result-with-view">
+                  ✓ Pass - View
+                </span>
+                <span *ngIf="candidate.interviewResult === 'Fail'" class="result-with-view">
+                  ✗ Fail - View
+                </span>
+                <span *ngIf="!candidate.interviewResult">--</span>
+              </span>
+              <div class="checkbox-container">
+                <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
+                  class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
+                <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)">
+                  <span class="checkmark">✓</span>
+                </label>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- After Confirm Move Popup -->
-    <div class="success-popup-overlay" *ngIf="showAfterConfirmMovePopup">
-      <div class="success-popup">
-        <div class="success-popup-header">Round {{ getCurrentRoundNumber() }} Started!</div>
-        <div class="success-popup-body">
-          <img src="assets/icons/select-candidate.png" alt="Success Icon" />
-          <p>
-            You've moved candidates to Round {{ getCurrentRoundNumber() }}.<br>
-            Would you like to keep accepting new applications, or pause the job for now?
-          </p>
-          <div class="dialog-buttons">
-            <button class="exit-btn" (click)="keepAcceptingApplications()">Keep Accepting</button>
-            <button class="dashboard-btn" (click)="pauseApplications()">Pause Applications</button>
+      <!-- Move to Next Round Button -->
+      <div class="move-round-container" *ngIf="activeTab !== 'round3'">
+        <button class="save-button" 
+                type="button" 
+                (click)="moveToNextRound()"
+                [disabled]="isMoveButtonDisabled"
+                [class.disabled]="isMoveButtonDisabled">
+          On to the Next
+          <span class="submit-icon">&#10132;</span>
+        </button>
+      </div>
+
+      <!-- Confirm Move Popup -->
+      <div class="success-popup-overlay" *ngIf="showConfirmMovePopup">
+        <div class="success-popup">
+          <div class="success-popup-header">Confirm Move to {{ getNextRoundText() }}</div>
+          <div class="success-popup-body">
+            <img src="assets/icons/select-candidate.png" alt="Confirm Icon" />
+            <p>
+              You're moving <b>{{ selectedCount }}</b> candidate{{ selectedCount === 1 ? '' : 's' }} to {{ getNextRoundText() }}.<br>
+              They'll be notified that they've advanced. The others will get a message letting them know they haven't moved forward.
+            </p>
+            <div class="dialog-buttons">
+              <button class="exit-btn" (click)="closeConfirmMovePopup()">Cancel</button>
+              <button class="dashboard-btn" (click)="confirmMoveToNextRound()">Send & Notify</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Empty States -->
-    <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
-      <p>No candidates have applied for this job yet.</p>
-    </div>
-    <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab !== 'applied'">
-      <p>No candidates in {{ getTabDisplayName(activeTab) }} yet.</p>
+      <!-- No Candidates Selected Popup -->
+      <div class="success-popup-overlay" *ngIf="showNoCandidatesPopup">
+        <div class="success-popup">
+          <div class="success-popup-header">No Candidates Selected Yet</div>
+          <div class="success-popup-body">
+            <img src="assets/icons/not-select-candidate.png" alt="Warning Icon" />
+            <p>You haven't moved any candidates to the next round yet.<br>
+            To begin, select candidates from this round that you'd like to move forward.</p>
+            <div class="dialog-buttons">
+              <button class="exit-btn" (click)="closeNoCandidatesPopup()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- After Confirm Move Popup -->
+      <div class="success-popup-overlay" *ngIf="showAfterConfirmMovePopup">
+        <div class="success-popup">
+          <div class="success-popup-header">Round {{ getCurrentRoundNumber() }} Started!</div>
+          <div class="success-popup-body">
+            <img src="assets/icons/select-candidate.png" alt="Success Icon" />
+            <p>
+              You've moved candidates to Round {{ getCurrentRoundNumber() }}.<br>
+              Would you like to keep accepting new applications, or pause the job for now?
+            </p>
+            <div class="dialog-buttons">
+              <button class="exit-btn" (click)="keepAcceptingApplications()">Keep Accepting</button>
+              <button class="dashboard-btn" (click)="pauseApplications()">Pause Applications</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty States -->
+      <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
+        <p>No candidates have applied for this job yet.</p>
+      </div>
+      <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab !== 'applied'">
+        <p>No candidates in {{ getTabDisplayName(activeTab) }} yet.</p>
+      </div>
     </div>
   </div>
 </div>
