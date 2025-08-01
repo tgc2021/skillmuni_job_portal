@@ -17,24 +17,16 @@
     <!-- Interview Rounds Tabs -->
     <div class="interview-rounds-container">
       <div class="tabs">
-        <div class="tab" 
-             [class.active]="activeTab === 'applied'"
-             (click)="setActiveTab('applied')">
+        <div class="tab" [class.active]="activeTab === 'applied'" (click)="setActiveTab('applied')">
           Applied ({{ candidatesCounts.applied }})
         </div>
-        <div class="tab" 
-             [class.active]="activeTab === 'round1'"
-             (click)="setActiveTab('round1')">
+        <div class="tab" [class.active]="activeTab === 'round1'" (click)="setActiveTab('round1')">
           Round 1 ({{ candidatesCounts.round1 }})
         </div>
-        <div class="tab" 
-             [class.active]="activeTab === 'round2'"
-             (click)="setActiveTab('round2')">
+        <div class="tab" [class.active]="activeTab === 'round2'" (click)="setActiveTab('round2')">
           Round 2 ({{ candidatesCounts.round2 }})
         </div>
-        <div class="tab" 
-             [class.active]="activeTab === 'round3'"
-             (click)="setActiveTab('round3')">
+        <div class="tab" [class.active]="activeTab === 'round3'" (click)="setActiveTab('round3')">
           Round 3 ({{ candidatesCounts.round3 }})
         </div>
       </div>
@@ -42,26 +34,26 @@
       <!-- Round Information Header -->
       <div class="round-info-header" *ngIf="!isAppliedRound">
         <div class="round-info-left">
-          <h3>{{ currentRoundConfig.name }} Name: Deadline - {{ currentRoundConfig.deadline }} ({{ currentRoundConfig.status }})</h3>
+          <h3>{{ currentRoundConfig.name }} Name: Deadline - {{ currentRoundConfig.deadline }} ({{
+            currentRoundConfig.status }})</h3>
         </div>
         <div class="round-info-right" *ngIf="isInterviewRound">
           <div class="calendar-info-container">
-            <button *ngIf="currentRoundConfig.calendarPublished" 
-                    class="calendar-published-btn" 
-                    (click)="toggleCalendarInfo()">
+            <button *ngIf="currentRoundConfig.calendarPublished" class="calendar-published-btn"
+              (click)="toggleCalendarInfo()">
               <span class="material-icons calendar-icon">event</span>
               Calendar Published
             </button>
-            <button *ngIf="!currentRoundConfig.calendarPublished" 
-                    class="publish-calendar-btn"
-                    (click)="publishCalendar()">
+            <button *ngIf="!currentRoundConfig.calendarPublished" class="publish-calendar-btn"
+              (click)="publishCalendar()">
               <span class="material-icons calendar-icon">event</span>
               Publish Calendar
             </button>
-            
+
             <!-- Calendar Info Popup -->
             <div class="calendar-info-popup" *ngIf="showCalendarInfo && currentRoundConfig.calendarPublished">
-              Already Published: [{{ currentRoundConfig.startDate }}] to [{{ currentRoundConfig.endDate }}], Interview time - {{ currentRoundConfig.interviewDuration }}
+              Already Published: [{{ currentRoundConfig.startDate }}] to [{{ currentRoundConfig.endDate }}], Interview
+              time - {{ currentRoundConfig.interviewDuration }}
             </div>
           </div>
         </div>
@@ -75,9 +67,8 @@
         </div>
         <div class="candidates-table-body">
           <!-- Applied Round Rows -->
-          <div class="candidates-table-row" 
-               *ngFor="let candidate of filteredCandidates; let i = index"
-               [ngClass]="getRowClass(candidate)">
+          <div class="candidates-table-row" *ngFor="let candidate of filteredCandidates; let i = index"
+            [ngClass]="getRowClass(candidate)">
             <!-- Applied Round Columns -->
             <ng-container *ngIf="isAppliedRound">
               <span class="row-number">{{ i + 1 }}.</span>
@@ -107,7 +98,8 @@
               <span class="row-number">{{ i + 1 }}.</span>
               <span class="candidate-name" [class.selected-candidate]="candidate.selected">{{ candidate.name }}</span>
               <span class="conducted-date">{{ candidate.conductedOn || '--' }}</span>
-              <span class="assessment-score">{{ candidate.assessmentScore ? candidate.assessmentScore + '%' : '--' }}</span>
+              <span class="assessment-score">{{ candidate.assessmentScore ? candidate.assessmentScore + '%' : '--'
+                }}</span>
               <span class="result-cell" [ngClass]="getResultClass(candidate.assessmentResult || '')">
                 {{ candidate.assessmentResult || '--' }}
               </span>
@@ -129,8 +121,8 @@
                   <span class="material-icons" style="font-size: 16px;">calendar_today</span>
                   Schedule Interview >
                 </button>
-                <button class="action-btn approve-btn" *ngIf="!showCandidateEvaluation[candidate.id]" 
-                        (click)="approveCandidate(candidate)">
+                <button class="action-btn approve-btn" *ngIf="!showCandidateEvaluation[candidate.id]"
+                  (click)="approveCandidate(candidate)">
                   <span class="material-icons" style="font-size: 16px;">check_circle</span>
                   Approve for next round
                 </button>
@@ -151,10 +143,12 @@
                     <textarea #feedbackText placeholder="Enter feedback..."></textarea>
                   </div>
                   <div class="form-actions">
-                    <button class="pass-btn" (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Pass')">
+                    <button class="pass-btn"
+                      (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Pass')">
                       Pass
                     </button>
-                    <button class="fail-btn" (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Fail')">
+                    <button class="fail-btn"
+                      (click)="saveCandidateEvaluation(candidate, +ratingSelect.value, feedbackText.value, 'Fail')">
                       Fail
                     </button>
                     <button class="cancel-btn" (click)="toggleCandidateEvaluation(candidate.id)">
@@ -166,23 +160,20 @@
               <span class="status-cell">{{ candidate.interviewStatus || 'Not Scheduled' }}</span>
               <span class="result-cell">
                 <!-- Add Button for candidates without results -->
-                <button *ngIf="!candidate.interviewResult && !showCandidateEvaluation[candidate.id]" 
-                        class="result-action-btn add-btn"
-                        (click)="toggleCandidateEvaluation(candidate.id)">
+                <button *ngIf="!candidate.interviewResult && !showCandidateEvaluation[candidate.id]"
+                  class="result-action-btn add-btn" (click)="showFeedbackPopup(candidate)">
                   <span class="material-icons" style="font-size: 14px;">add</span>
                   Add
                 </button>
                 <!-- View Button for candidates with Pass results -->
-                <button *ngIf="candidate.interviewResult === 'Pass'" 
-                        class="result-action-btn view-btn pass"
-                        (click)="viewCandidateResult(candidate)">
+                <button *ngIf="candidate.interviewResult === 'Pass'" class="result-action-btn view-btn pass"
+                  (click)="viewCandidateResult(candidate)">
                   <span class="material-icons" style="font-size: 14px;">check_circle</span>
                   <span class="button-label">Pass</span> - View
                 </button>
                 <!-- View Button for candidates with Fail results -->
-                <button *ngIf="candidate.interviewResult === 'Fail'" 
-                        class="result-action-btn view-btn fail"
-                        (click)="viewCandidateResult(candidate)">
+                <button *ngIf="candidate.interviewResult === 'Fail'" class="result-action-btn view-btn fail"
+                  (click)="viewCandidateResult(candidate)">
                   <span class="material-icons" style="font-size: 14px;">cancel</span>
                   <span class="button-label">Fail</span> - View
                 </button>
@@ -190,10 +181,8 @@
               <div class="checkbox-container">
                 <input type="checkbox" [id]="'candidate-' + i" [(ngModel)]="candidate.selected"
                   class="candidate-checkbox" [disabled]="isCandidateLocked(candidate)" />
-                <label [for]="'candidate-' + i" 
-                       class="checkbox-label" 
-                       [class.locked]="isCandidateLocked(candidate)"
-                       [class.passed]="candidate.interviewResult === 'Pass'">
+                <label [for]="'candidate-' + i" class="checkbox-label" [class.locked]="isCandidateLocked(candidate)"
+                  [class.passed]="candidate.interviewResult === 'Pass'">
                   <span class="checkmark">✓</span>
                 </label>
               </div>
@@ -204,12 +193,8 @@
 
       <!-- Move to Next/Offer Job Button (always visible, label is dynamic) -->
       <div class="move-round-container">
-        <button class="save-button" 
-                type="button" 
-                (click)="moveToNextRound()"
-                [disabled]="isMoveButtonDisabled"
-                [class.disabled]="isMoveButtonDisabled"
-                [class.interview-disabled]="isInterviewRound && !hasPassedCandidates">
+        <button class="save-button" type="button" (click)="moveToNextRound()" [disabled]="isMoveButtonDisabled"
+          [class.disabled]="isMoveButtonDisabled" [class.interview-disabled]="isInterviewRound && !hasPassedCandidates">
           {{ getMoveButtonText() }}
           <span class="submit-icon">&#10132;</span>
         </button>
@@ -222,8 +207,10 @@
           <div class="success-popup-body">
             <img src="assets/icons/select-candidate.png" alt="Confirm Icon" />
             <p>
-              You're moving <b>{{ selectedCount }}</b> candidate{{ selectedCount === 1 ? '' : 's' }} to {{ getNextRoundText() }}.<br>
-              They'll be notified that they've advanced. The others will get a message letting them know they haven't moved forward.
+              You're moving <b>{{ selectedCount }}</b> candidate{{ selectedCount === 1 ? '' : 's' }} to {{
+              getNextRoundText() }}.<br>
+              They'll be notified that they've advanced. The others will get a message letting them know they haven't
+              moved forward.
             </p>
             <div class="dialog-buttons">
               <button class="exit-btn" (click)="closeConfirmMovePopup()">Cancel</button>
@@ -240,7 +227,7 @@
           <div class="success-popup-body">
             <img src="assets/icons/not-select-candidate.png" alt="Warning Icon" />
             <p>You haven't moved any candidates to the next round yet.<br>
-            To begin, select candidates from this round that you'd like to move forward.</p>
+              To begin, select candidates from this round that you'd like to move forward.</p>
             <div class="dialog-buttons">
               <button class="exit-btn" (click)="closeNoCandidatesPopup()">Cancel</button>
             </div>
@@ -272,6 +259,66 @@
       </div>
       <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab !== 'applied'">
         <p>No candidates in {{ getTabDisplayName(activeTab) }} yet.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add this HTML after the existing popups in your manage-candidates.component.html -->
+
+<!-- Interview Feedback Popup -->
+<div class="success-popup-overlay" *ngIf="showInterviewFeedbackPopup">
+  <div class="success-popup interview-feedback-popup">
+    <div class="success-popup-header">Interview Feedback & Result</div>
+    <div class="success-popup-body interview-feedback-body">
+      <p class="feedback-subtitle">Add your notes, rate the candidate, and mark the outcome.</p>
+
+      <!-- Star Rating -->
+      <div class="star-rating-container">
+        <div class="star-rating">
+          <span class="star" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.active]="i < selectedRating"
+            [class.hover]="i < hoverRating" (click)="setRating(i + 1)" (mouseenter)="setHoverRating(i + 1)"
+            (mouseleave)="setHoverRating(0)">
+            ★
+          </span>
+        </div>
+      </div>
+
+      <!-- Feedback Text Area -->
+      <div class="feedback-input-container">
+        <div class="feedback-label-container">
+          <label class="feedback-label">Your Comment:</label>
+          <span class="word-limit">Upto 100 words</span>
+        </div>
+        <textarea class="feedback-textarea" placeholder="Type in the Feedback here...." [(ngModel)]="feedbackText"
+          maxlength="500" rows="4">
+        </textarea>
+      </div>
+
+      <!-- Pass/Fail Selection -->
+      <div class="pass-fail-container">
+        <p class="pass-fail-question">Did the Candidate Pass or Fail?</p>
+        <div class="pass-fail-options">
+          <label class="radio-option">
+            <input type="radio" name="passOrFail" value="Pass" [(ngModel)]="selectedResult">
+            <span class="radio-button"></span>
+            <span class="radio-label">Pass</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="passOrFail" value="Fail" [(ngModel)]="selectedResult">
+            <span class="radio-button"></span>
+            <span class="radio-label">Fail</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="dialog-buttons feedback-buttons">
+        <button class="exit-btn" (click)="closeFeedbackPopup()">Cancel</button>
+        <button class="dashboard-btn" (click)="submitFeedback()" [disabled]="!canSubmitFeedback()">
+          All Done
+        </button>
       </div>
     </div>
   </div>

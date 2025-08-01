@@ -1,5 +1,3 @@
-
-// ...existing code...
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ApiService } from '../../services/api.service';
@@ -48,7 +46,13 @@ interface RoundConfig {
 export class ManageCandidatesComponent implements OnInit {
   candidates: Candidate[] = [];
   activeTab: 'applied' | 'round1' | 'round2' | 'round3' = 'applied';
-
+ // Interview Feedback Popup properties
+  showInterviewFeedbackPopup = false;
+  selectedRating = 0;
+  hoverRating = 0;
+  feedbackText = '';
+  selectedResult: 'Pass' | 'Fail' | '' = '';
+  currentFeedbackCandidate: Candidate | null = null;
   // Approve candidate for next round (show Pass - View in Result column)
   approveCandidate(candidate: Candidate): void {
     candidate.interviewResult = 'Pass';
@@ -277,10 +281,7 @@ export class ManageCandidatesComponent implements OnInit {
     this.showCalendarInfo = !this.showCalendarInfo;
   }
 
-  // Toggle candidate evaluation form
-  toggleCandidateEvaluation(candidateId: string): void {
-    this.showCandidateEvaluation[candidateId] = !this.showCandidateEvaluation[candidateId];
-  }
+
 
   // Save candidate evaluation
   saveCandidateEvaluation(candidate: Candidate, rating: number, feedback: string, result: 'Pass' | 'Fail'): void {
@@ -632,5 +633,76 @@ get hasPassedCandidates(): boolean {
   return this.filteredCandidates.some(c => c.interviewResult === 'Pass');
 }
 
-// ...existing code...
+  showFeedbackPopup(candidate: Candidate): void {
+    this.currentFeedbackCandidate = candidate;
+    this.selectedRating = candidate.rating || 0;
+    this.feedbackText = candidate.feedback || '';
+    this.selectedResult = candidate.interviewResult || '';
+    this.hoverRating = 0;
+    this.showInterviewFeedbackPopup = true;
+  }
+
+  // Method to close the feedback popup
+  closeFeedbackPopup(): void {
+    this.showInterviewFeedbackPopup = false;
+    this.currentFeedbackCandidate = null;
+    this.selectedRating = 0;
+    this.hoverRating = 0;
+    this.feedbackText = '';
+    this.selectedResult = '';
+  }
+
+  // Method to set the star rating
+  setRating(rating: number): void {
+    this.selectedRating = rating;
+  }
+
+  // Method to set hover rating for star animation
+  setHoverRating(rating: number): void {
+    this.hoverRating = rating;
+  }
+
+  // Method to check if feedback can be submitted
+  canSubmitFeedback(): boolean {
+    return this.selectedRating > 0 && 
+           this.feedbackText.trim().length > 0 && 
+           this.selectedResult !== '';
+  }
+
+  // Method to submit the feedback
+  submitFeedback(): void {
+    if (!this.canSubmitFeedback() || !this.currentFeedbackCandidate) {
+      return;
+    }
+
+    // Update the candidate with feedback data
+    this.currentFeedbackCandidate.rating = this.selectedRating;
+    this.currentFeedbackCandidate.feedback = this.feedbackText.trim();
+    this.currentFeedbackCandidate.interviewResult = this.selectedResult as 'Pass' | 'Fail';
+    this.currentFeedbackCandidate.interviewStatus = 'Conducted';
+
+    // Auto-select candidate if they passed
+    if (this.selectedResult === 'Pass') {
+      this.currentFeedbackCandidate.selected = true;
+    } else {
+      this.currentFeedbackCandidate.selected = false;
+    }
+
+    console.log('Feedback submitted for:', this.currentFeedbackCandidate.name);
+    console.log('Rating:', this.selectedRating);
+    console.log('Feedback:', this.feedbackText);
+    console.log('Result:', this.selectedResult);
+
+    // Close the popup
+    this.closeFeedbackPopup();
+  }
+
+  // Update the existing toggleCandidateEvaluation method to use the new popup
+  toggleCandidateEvaluation(candidateId: string): void {
+    const candidate = this.filteredCandidates.find(c => c.id === candidateId);
+    if (candidate) {
+      this.showFeedbackPopup(candidate);
+    }
+  }
+
 }
