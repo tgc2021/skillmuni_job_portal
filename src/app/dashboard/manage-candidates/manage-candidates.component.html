@@ -253,13 +253,16 @@
         </div>
       </div>
 
-      <!-- Empty States -->
-      <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
-        <p>No candidates have applied for this job yet.</p>
-      </div>
-      <div class="empty-state" *ngIf="filteredCandidates.length === 0 && activeTab !== 'applied'">
-        <p>No candidates in {{ getTabDisplayName(activeTab) }} yet.</p>
-      </div>
+     <!-- Enhanced Empty State for "Applied" tab -->
+<div class="custom-empty-state" *ngIf="filteredCandidates.length === 0 && activeTab === 'applied'">
+  <img src="assets/icons/no-applicants.png" alt="No Applicants Icon" class="empty-state-icon" />
+  <h3 class="empty-state-title">No Applicants Yet</h3>
+  <p class="empty-state-text">
+    Once candidates start applying, you’ll see them listed here.<br />
+    Sit tight — we’ll let you know when the first one shows up!
+  </p>
+</div>
+
     </div>
   </div>
 </div>

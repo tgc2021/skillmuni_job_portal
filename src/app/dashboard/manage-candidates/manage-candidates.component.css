@@ -845,13 +845,27 @@
   transform: none;
 }
 
-.empty-state {
+.custom-empty-state {
   text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  background: #f9f9f9;
-  border-radius: 8px;
-  margin-top: 20px;
+  margin-top: 40px;
+}
+
+.empty-state-icon {
+  width: 100px;
+}
+
+.empty-state-title {
+  color: #f58634;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.empty-state-text {
+  font-size: 15px;
+  color: #34437a;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 /* Responsive Design */
