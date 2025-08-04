@@ -1,3 +1,20 @@
+/* Flex layout for pass/fail question and options */
+.pass-fail-container {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+.pass-fail-question {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.pass-fail-options {
+  display: flex;
+  gap: 16px;
+}
 .result-action-btn.add-btn {
   display: flex;
   align-items: center;
@@ -5,7 +22,8 @@
   gap: 8px;
   background: white;
   border: none;
-color: #34437a;  padding: 8px 12px;
+  color: #34437a;
+  padding: 8px 12px;
   border-radius: 15px;
   font-size: 13px;
   font-weight: 600;
@@ -75,7 +93,7 @@ color: #34437a;  padding: 8px 12px;
   background: #ffffff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   overflow: hidden;
-  border: 1px solid #2F2854;
+  border: 1px solid #2f2854;
   text-align: center;
   animation: fadeInScale 0.25s ease;
 }
@@ -86,7 +104,7 @@ color: #34437a;  padding: 8px 12px;
   font-size: 16px;
   font-weight: 600;
   color: #2f3260;
-  border-bottom: 1px solid #2F2854;
+  border-bottom: 1px solid #2f2854;
 }
 
 .success-popup-body {
@@ -101,7 +119,6 @@ color: #34437a;  padding: 8px 12px;
   font-size: 14px;
   color: #2f3260;
   font-weight: 500;
-  line-height: 1.5;
 }
 
 .dialog-buttons {
@@ -283,8 +300,8 @@ color: #34437a;  padding: 8px 12px;
   position: relative;
 }
 
-
-.calendar-published-btn:hover, .publish-calendar-btn:hover {
+.calendar-published-btn:hover,
+.publish-calendar-btn:hover {
   background: #2a3561;
 }
 
@@ -351,10 +368,12 @@ color: #34437a;  padding: 8px 12px;
 
 /* Assessment Round Grid */
 .candidates-table-header.assessment-grid {
-grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
+  grid-template-columns: 60px 1fr 140px 160px 100px 80px;
+}
 
 .candidates-table-row.assessment-grid {
-grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
+  grid-template-columns: 60px 1fr 140px 160px 100px 80px;
+}
 
 /* Interview Round Grid */
 .candidates-table-header.interview-grid {
@@ -411,7 +430,8 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   font-weight: 700;
 }
 
-.applied-date, .conducted-date {
+.applied-date,
+.conducted-date {
   font-size: 14px;
   color: #34437a;
 }
@@ -427,9 +447,8 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   color: #2f3260;
 }
 
-
 .credits {
-  color: #2f3260
+  color: #2f3260;
 }
 
 .assessment-score {
@@ -576,7 +595,8 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 }
 
 /* Calendar Published Button */
-.calendar-published-btn, .publish-calendar-btn {
+.calendar-published-btn,
+.publish-calendar-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -592,7 +612,8 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   min-height: 40px;
 }
 
-.calendar-published-btn:hover, .publish-calendar-btn:hover {
+.calendar-published-btn:hover,
+.publish-calendar-btn:hover {
   background: #2a3561;
 }
 
@@ -654,7 +675,9 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   justify-content: flex-end;
 }
 
-.pass-btn, .fail-btn, .cancel-btn {
+.pass-btn,
+.fail-btn,
+.cancel-btn {
   padding: 4px 12px;
   border: none;
   border-radius: 4px;
@@ -752,7 +775,12 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   align-items: center;
   justify-content: center;
   padding: 20px 0;
-  background: linear-gradient(to bottom, rgba(246, 248, 255, 0) 0%, #f6f8ff 30%, #f6f8ff 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(246, 248, 255, 0) 0%,
+    #f6f8ff 30%,
+    #f6f8ff 100%
+  );
   pointer-events: none;
 }
 
@@ -834,7 +862,7 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
     gap: 10px;
     text-align: center;
   }
-  
+
   /* Mobile Grid Layouts - Stack columns vertically */
   .candidates-table-header.applied-grid,
   .candidates-table-row.applied-grid,
@@ -870,26 +898,58 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   }
 
   /* Applied Round Mobile Labels */
-  .applied-grid .row-number::before { content: "No."; }
-  .applied-grid .candidate-name::before { content: "Candidate Name"; }
-  .applied-grid .applied-date::before { content: "Applied Date"; }
-  .applied-grid .resume-cell::before { content: "Resume"; }
-  .applied-grid .credits::before { content: "Credits"; }
-  .applied-grid .proficiency-level::before { content: "Proficiency Level"; }
-  .applied-grid .eligibility::before { content: "Eligibility"; }
+  .applied-grid .row-number::before {
+    content: "No.";
+  }
+  .applied-grid .candidate-name::before {
+    content: "Candidate Name";
+  }
+  .applied-grid .applied-date::before {
+    content: "Applied Date";
+  }
+  .applied-grid .resume-cell::before {
+    content: "Resume";
+  }
+  .applied-grid .credits::before {
+    content: "Credits";
+  }
+  .applied-grid .proficiency-level::before {
+    content: "Proficiency Level";
+  }
+  .applied-grid .eligibility::before {
+    content: "Eligibility";
+  }
 
   /* Assessment Round Mobile Labels */
-  .assessment-grid .row-number::before { content: "No."; }
-  .assessment-grid .candidate-name::before { content: "Candidate Name"; }
-  .assessment-grid .conducted-date::before { content: "Conducted On"; }
-  .assessment-grid .assessment-score::before { content: "Assessment Score"; }
-  .assessment-grid .result-cell::before { content: "Result"; }
+  .assessment-grid .row-number::before {
+    content: "No.";
+  }
+  .assessment-grid .candidate-name::before {
+    content: "Candidate Name";
+  }
+  .assessment-grid .conducted-date::before {
+    content: "Conducted On";
+  }
+  .assessment-grid .assessment-score::before {
+    content: "Assessment Score";
+  }
+  .assessment-grid .result-cell::before {
+    content: "Result";
+  }
 
   /* Interview Round Mobile Labels */
-  .interview-grid .row-number::before { content: "No."; }
-  .interview-grid .candidate-name::before { content: "Candidate Name"; }
-  .interview-grid .status-cell::before { content: "Status"; }
-  .interview-grid .result-cell::before { content: "Result"; }
+  .interview-grid .row-number::before {
+    content: "No.";
+  }
+  .interview-grid .candidate-name::before {
+    content: "Candidate Name";
+  }
+  .interview-grid .status-cell::before {
+    content: "Status";
+  }
+  .interview-grid .result-cell::before {
+    content: "Result";
+  }
 
   .key-actions {
     margin: 10px 0;
@@ -943,7 +1003,6 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   }
 }
 
-
 /* Interview Feedback Popup Specific Styles */
 .interview-feedback-popup {
   max-width: 520px;
@@ -951,7 +1010,7 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 }
 
 .interview-feedback-body {
-  padding: 30px 25px;
+  padding: 25px;
 }
 
 .feedback-subtitle {
@@ -1021,7 +1080,7 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   width: 100%;
   min-height: 100px;
   padding: 12px 16px;
-  border: 2px solid #e2e8f0;
+  border: 1px solid #2f2854;
   border-radius: 12px;
   font-size: 14px;
   color: #2f3260;
@@ -1045,29 +1104,38 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 
 /* Pass/Fail Selection Styles */
 .pass-fail-container {
-  margin-bottom: 30px;
-  text-align: center;
+  text-align: left;
 }
 
 .pass-fail-question {
   font-size: 16px;
-  font-weight: 600;
-  color: #2f3260;
-  margin-bottom: 15px;
+  font-weight: 400;
+  color: #1a1a1a;
 }
 
 .pass-fail-options {
   display: flex;
-  justify-content: center;
-  gap: 30px;
+  align-items: center;
+  gap: 20px;
 }
 
 .radio-option {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
+  padding: 5px 10px;
+  min-width: 50px;
   cursor: pointer;
   position: relative;
+  border: 1px solid #2f2854;
+  border-radius: 12px;
+  background: white;
+  transition: all 0.2s ease;
+  justify-content: center;
+}
+
+.radio-option:hover {
+  border-color: #9ca3af;
 }
 
 .radio-option input[type="radio"] {
@@ -1078,22 +1146,18 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
 }
 
 .radio-button {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #cbd5e1;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #2f2854;
   border-radius: 50%;
   background: white;
   position: relative;
-  transition: all 0.3s ease;
-}
-
-.radio-option input[type="radio"]:checked + .radio-button {
-  border-color: #34437a;
-  background: #34437a;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .radio-option input[type="radio"]:checked + .radio-button::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1101,14 +1165,33 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: white;
+  background: #3b82f6;
+}
+
+.radio-option input[type="radio"]:checked {
+  & + .radio-button + .radio-label {
+    color: #1a1a1a;
+  }
+}
+
+.radio-option input[type="radio"]:checked ~ .radio-label {
+  color: #1a1a1a;
 }
 
 .radio-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #2f3260;
+  font-size: 14px;
+  font-weight: 400;
   user-select: none;
+  transition: color 0.2s ease;
+}
+
+.radio-option:has(input[type="radio"]:checked) .radio-label {
+  color: #1a1a1a;
+}
+
+/* Fallback for browsers that don't support :has() */
+.radio-option input[type="radio"]:checked ~ * {
+  color: #1a1a1a;
 }
 
 /* Feedback Dialog Buttons */
@@ -1134,28 +1217,84 @@ grid-template-columns: 60px 1fr 140px 160px 100px 80px;}
     margin: 20px;
     max-width: none;
   }
-  
+
   .interview-feedback-body {
     padding: 25px 20px;
   }
-  
+
   .star {
     font-size: 28px;
   }
-  
+
   .star-rating {
     gap: 6px;
   }
-  
+
   .pass-fail-options {
-    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
-  
+
+  .radio-option {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .feedback-buttons {
     flex-direction: column;
     gap: 12px;
   }
-  
+
+  .feedback-buttons button {
+    width: 100%;
+  }
+}
+/* Feedback Dialog Buttons */
+.feedback-buttons {
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.feedback-buttons .dashboard-btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.feedback-buttons .dashboard-btn:disabled:hover {
+  background: #cbd5e1;
+  transform: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .interview-feedback-popup {
+    margin: 20px;
+    max-width: none;
+  }
+
+  .interview-feedback-body {
+    padding: 25px 20px;
+  }
+
+  .star {
+    font-size: 28px;
+  }
+
+  .star-rating {
+    gap: 6px;
+  }
+
+  .pass-fail-options {
+    gap: 20px;
+  }
+
+  .feedback-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .feedback-buttons button {
     width: 100%;
   }
